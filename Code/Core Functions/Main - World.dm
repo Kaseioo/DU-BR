@@ -10,7 +10,7 @@ client/preload_rsc=1
 var/Version="v34"
 
 world
-	hub = "NexusExodus"
+	hub = "Roundstage.NexusExodus"
 	hub_password = "KGJ$@Hnmw134!"
 	turf = /turf/Other/Blank
 	cache_lifespan = 3
