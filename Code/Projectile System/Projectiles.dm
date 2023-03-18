@@ -928,7 +928,7 @@ obj/Blast
 		if(m.grabber || m.KO || m.regenerator_obj) hit_chance = 100
 		if(prob(hit_chance) || !Deflectable || m.Disabled())
 			if(!m.regenerator_obj && m.precog && m.precogs && prob(m.precog_chance) && !m.KO && (m.Flying || m.icon_state == "") && m.Ki > m.max_ki * 0.2 && !m.Disabled())
-				m.precog--
+				m.precogs--
 				var/turf/old_loc = m.loc
 				step(m, turn(dir,pick(-45,45)), 32)
 				if(m.loc != old_loc) return 1
