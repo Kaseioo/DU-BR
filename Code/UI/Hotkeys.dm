@@ -391,9 +391,32 @@ proc/Generate_hotbar_type_icons()
 proc/GridPosToListPos(gp)
 	var/comma_pos = findtext(gp, ",")
 	if(comma_pos) gp = copytext(gp, comma_pos + 1, length(gp) + 1)
+
 	return text2num(gp)
+proc/RetrieveParamsInformation(params)
+	var/drop_coords = null;
+	var/drop_pair = null;
+	var/list/pairs = dd_text2list(params, ";");
+	// Find the pair that contains the drop cell information
+	for(var/pair in pairs)
+	{
+		if(findtext(pair, "drop-cell"))
+		{		
+			drop_pair = pair;
+			break;
+		}
+	}
+	// Extract the drop cell coordinates from the drop pair	
+	if(drop_pair != null)
+	{
+		var/drop_str = dd_replaceText(drop_pair, "drop-cell=", "");
+		drop_coords = drop_str
+	}
+	return drop_coords;
+
 
 client/MouseDrop(obj/src_object, over_object, src_location, over_location, src_control, over_control, params)
+
 	if(mob && isobj(src_object) && over_location && over_control == "hotbar.key_grid")
 
 		//what was dragged is only an icon representing an object, so get the actual object from it
@@ -403,7 +426,7 @@ client/MouseDrop(obj/src_object, over_object, src_location, over_location, src_c
 				src_object = mob.hotbar_objects[list_pos]
 
 		if(src_object && src_object.loc == mob && src_object.can_hotbar)
-			var/list_pos = GridPosToListPos(over_location)
+			var/list_pos = GridPosToListPos(RetrieveParamsInformation(params))
 			if(mob.hotbar.len < list_pos) mob.hotbar.len = list_pos
 
 			//there is never any reason for them to drag the exact same object onto the exact same key its already on, but if allowed to do so

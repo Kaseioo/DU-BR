@@ -280,7 +280,6 @@
 #include "Code\Races\Alien Starter Moves.dm"
 #include "Code\Races\Nameks.dm"
 #include "Code\Races\Oozaru.dm"
-#include "Code\Races\SSj Red.dm"
 #include "Code\Races\Ultra Instinct.dm"
 #include "Code\Races\Bio Android\Bios.dm"
 #include "Code\Races\Icer\Gold Icer.dm"
