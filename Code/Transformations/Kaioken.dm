@@ -61,7 +61,7 @@ mob/proc/God_FistStop()
 mob/var/tmp/obj/God_Fist/God_Fist_obj
 
 obj/God_Fist
-	//name = "God Fist"
+	name = "Kaioken"
 	teachable=1
 	Skill=1
 	Teach_Timer=5
@@ -87,8 +87,8 @@ obj/God_Fist
 		God_Fist_Toggle()
 
 	verb/God_Fist_Toggle()
-		set category="Other"
-		//set name = "God Fist"
+		set category="Skills"
+		set name = "Kaioken Toggle"
 		if(usr.Redoing_Stats)
 			usr<<"You can not use this while choosing stat mods"
 			return
@@ -108,7 +108,6 @@ obj/God_Fist
 
 mob/proc/God_Fist(obj/God_Fist/K) if(!K.Using)
 	K.Using=1
-	BPpcnt=100
 	src<<"<font color=red>You have now enabled [K]. Tap the power up (G) key to use it."
 
 mob/proc/God_Fist_Revert(obj/God_Fist/K)
@@ -117,8 +116,6 @@ mob/proc/God_Fist_Revert(obj/God_Fist/K)
 	if(K.Using)
 		God_FistStop()
 		K.Using=0
-		if(BPpcnt>100)
-			BPpcnt=100
 		src<<"You stop using [K]"
 
 mob/proc/Body_Parts(Amount=5,Range=1)
