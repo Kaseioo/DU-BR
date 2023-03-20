@@ -178,7 +178,7 @@ mob/proc/get_bp(factor_powerup=1)
 		if(Overdrive) Total_cyber_bp*=1.5
 		if(Ki>max_ki) Total_cyber_bp*=(Ki/max_ki) ** 0.5
 		//else Total_cyber_bp*=(Ki/max_ki)**0.42
-		//if(ssj) for(var/v in 1 to ssj) Total_cyber_bp/=1.35
+		if(ssj) for(var/v in 1 to ssj) Total_cyber_bp/=1.35
 		Total_cyber_bp/=sf_count+1
 		bp+=Total_cyber_bp
 
@@ -1296,7 +1296,7 @@ mob/proc/powerup_soft_cap()
 	if(ssj == 3) max_powerup *= 0.6
 	if(ssj == 4) max_powerup *= ssj4_powerup_mod
 
-	if(beaming || charging_beam) max_powerup *= 2
+	if(beaming || charging_beam) max_powerup *= 1.2
 	return max_powerup
 
 mob/proc/energy_mod_powerup_soft_cap()
