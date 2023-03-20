@@ -233,11 +233,11 @@ obj/Attacks/Final_Flash
 
 	verb/Final_Flash()
 		//set category="Skills"
-		set name = "Final Beam"
+		set name = "Final Flash"
 		usr.Beam_Macro(src)
 
 obj/Attacks/Onion_Gun
-	name = "Onion Gun"
+	name = "Galick Gun"
 	Cost_To_Learn=0
 	Wave=1
 	hotbar_type="Beam"

@@ -271,3 +271,97 @@ mob/verb/Who()
 		if(IsAdmin()) Who+=" - [A.Race]"
 	Who+="<br>Amount: [Amount]"
 	src<<browse(Who,"window=Who;size=600x600")
+	
+mob/verb/Play_Music()
+	set category="Other"
+	switch(input(src,"You can play some built in music for whatever reason.") in \
+	list("Cancel","Gohan","Gohan 2","Goku SSj","Goku SSj3","Super Namek","Ai Wo Torimodose",\
+	"Ai Wo Torimodose 2","Pikkon","Vegeta","Ssj Vegeta","Ussj Trunks","Ginyu","Cell the Boogieman",\
+	"Majin Buu","Cell powers up","Prince of Saiyans","Super Buu"))
+		if("Cancel") src<<sound(0)
+		if("Gohan")
+			var/sound_repeat
+			switch(alert(src,"Loop music?","Options","No","Yes"))
+				if("Yes") sound_repeat=1
+			spawn player_view(10,src)<<sound('Gohanangers.ogg',repeat=sound_repeat,volume=100)
+		if("Gohan 2")
+			var/sound_repeat
+			switch(alert(src,"Loop music?","Options","No","Yes"))
+				if("Yes") sound_repeat=1
+			spawn player_view(10,src)<<sound('GohanHitsTree.ogg',repeat=sound_repeat,volume=40)
+		if("Goku SSj")
+			var/sound_repeat
+			switch(alert(src,"Loop music?","Options","No","Yes"))
+				if("Yes") sound_repeat=1
+			spawn player_view(10,src)<<sound('DBZ Goku Super Saiyan Theme.ogg',repeat=sound_repeat,volume=100)
+		if("Goku SSj3")
+			var/sound_repeat
+			switch(alert(src,"Loop music?","Options","No","Yes"))
+				if("Yes") sound_repeat=1
+			spawn player_view(10,src)<<sound('SSJ3Powerup.ogg',repeat=sound_repeat,volume=100)
+		if("Super Namek")
+			var/sound_repeat
+			switch(alert(src,"Loop music?","Options","No","Yes"))
+				if("Yes") sound_repeat=1
+			spawn player_view(10,src)<<sound('Super Namek.ogg',repeat=sound_repeat,volume=60)
+		if("Ai Wo Torimodose")
+			var/sound_repeat
+			switch(alert(src,"Loop music?","Options","No","Yes"))
+				if("Yes") sound_repeat=1
+			spawn player_view(10,src)<<sound('Ai Wo Torimodose 2.ogg',repeat=sound_repeat,volume=60)
+		if("Ai Wo Torimodose 2")
+			var/sound_repeat
+			switch(alert(src,"Loop music?","Options","No","Yes"))
+				if("Yes") sound_repeat=1
+			spawn player_view(10,src)<<sound('Ai Wo Torimodose.ogg',repeat=sound_repeat,volume=80)
+		if("Pikkon")
+			var/sound_repeat
+			switch(alert(src,"Loop music?","Options","No","Yes"))
+				if("Yes") sound_repeat=1
+			spawn player_view(10,src)<<sound('PikkonsTheme.ogg',repeat=sound_repeat,volume=60)
+		if("Vegeta")
+			var/sound_repeat
+			switch(alert(src,"Loop music?","Options","No","Yes"))
+				if("Yes") sound_repeat=1
+			spawn player_view(10,src)<<sound('Vegeta.ogg',repeat=sound_repeat,volume=60)
+		if("Ssj Vegeta")
+			var/sound_repeat
+			switch(alert(src,"Loop music?","Options","No","Yes"))
+				if("Yes") sound_repeat=1
+			spawn player_view(10,src)<<sound('Ssj Vegeta.ogg',repeat=sound_repeat,volume=100)
+		if("Ussj Trunks")
+			var/sound_repeat
+			switch(alert(src,"Loop music?","Options","No","Yes"))
+				if("Yes") sound_repeat=1
+			spawn player_view(10,src)<<sound('Ussj Trunks.ogg',repeat=sound_repeat,volume=60)
+		if("Ginyu")
+			var/sound_repeat
+			switch(alert(src,"Loop music?","Options","No","Yes"))
+				if("Yes") sound_repeat=1
+			spawn player_view(10,src)<<sound('Ginyu.ogg',repeat=sound_repeat,volume=50)
+		if("Cell the Boogieman")
+			var/sound_repeat
+			switch(alert(src,"Loop music?","Options","No","Yes"))
+				if("Yes") sound_repeat=1
+			spawn player_view(10,src)<<sound('Boogieman.ogg',repeat=sound_repeat,volume=70)
+		if("Majin Buu")
+			var/sound_repeat
+			switch(alert(src,"Loop music?","Options","No","Yes"))
+				if("Yes") sound_repeat=1
+			spawn player_view(10,src)<<sound('BuuIsFighting.ogg',repeat=sound_repeat,volume=80)
+		if("Cell powers up")
+			var/sound_repeat
+			switch(alert(src,"Loop music?","Options","No","Yes"))
+				if("Yes") sound_repeat=1
+			spawn player_view(10,src)<<sound('CellPowersUp.ogg',repeat=sound_repeat,volume=80)
+		if("Prince of Saiyans")
+			var/sound_repeat
+			switch(alert(src,"Loop music?","Options","No","Yes"))
+				if("Yes") sound_repeat=1
+			spawn player_view(10,src)<<sound('PrinceofSaiyans.ogg',repeat=sound_repeat,volume=100)
+		if("Super Buu")
+			var/sound_repeat
+			switch(alert(src,"Loop music?","Options","No","Yes"))
+				if("Yes") sound_repeat=1
+			spawn player_view(10,src)<<sound('SuperBuu.ogg',repeat=sound_repeat,volume=80)
+	player_view(10,src)<<sound(0)	
