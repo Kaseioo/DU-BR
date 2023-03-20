@@ -108,10 +108,8 @@ obj/God_Fist
 
 mob/proc/God_Fist(obj/God_Fist/K) if(!K.Using)
 	K.Using=1
-	if(powerup_obj) powerup_obj.Powerup=0
 	BPpcnt=100
-	src<<"<font color=red>You have now enabled [K]. Tap the power up (G) key to use it. It replaces normal powerup and is more powerful but drains both health and energy \
-	to use instead of just energy."
+	src<<"<font color=red>You have now enabled [K]. Tap the power up (G) key to use it."
 
 mob/proc/God_Fist_Revert(obj/God_Fist/K)
 	if(!K) for(var/obj/God_Fist/KK in src) K=KK

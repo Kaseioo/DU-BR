@@ -23,7 +23,7 @@ mob/proc
 
 var/bp_tier_effect=1.5
 var/anger_bp_effect=1
-var/cyber_bp_cuts_natural_bp_by=0.25
+var/cyber_bp_cuts_natural_bp_by=0
 
 mob/proc/Anger_mult()
 	if(KO) return 1 //so it has no impact on how hard it is to kill a death regenerator
@@ -522,7 +522,7 @@ mob/proc
 				return*/
 
 	CoreMaxGainsMult()
-		var/n = 2.3 // * zenkai_mod**0.1
+		var/n = 2.3 * zenkai_mod**0.1
 
 		var/lungs = Lungs
 		//if(ultra_pack) lungs--
@@ -1661,9 +1661,8 @@ mob/proc
 	hp_ki_bp_loss_mult()
 		//after watching DB Super and seeing how as a battle continues, their power really only rises, not falls, I'm doing that too
 		//meaning no more power loss from low ki/hp, until ki hits 0 then we have code elsewhere to make your bp fall very low for about 20 seconds
-		return 1
 
-		/*var
+		var
 			max_loss = 0.99 //0.7 = lose 70% of your bp
 			health_weight = 1 / bp_loss_from_low_hp
 			ki_weight = 1 / bp_loss_from_low_ki
@@ -1671,10 +1670,10 @@ mob/proc
 			hp = Health / 100
 			ki = Ki / max_ki
 			mult = lowest_bp + (((1 - lowest_bp) * ((health_weight * hp) + (ki_weight * ki)) / (health_weight + ki_weight)))
-		return mult*/
+		return mult
 
-/*
-mob/proc/ki_mult()
+
+/*mob/proc/ki_mult()
 	if(Ki<0) Ki=0
 	var/Ratio=(Ki/max_ki)**(0.85*bp_loss_from_low_ki)
 	if(KO) Ratio=1
@@ -1692,7 +1691,6 @@ mob/proc/hp_mult()
 	if(Ratio<0.01) Ratio=0.01
 	return Ratio
 */
-
 mob/proc/SplitformCount()
 	var/Amount = 0
 	if(!splitform_list) splitform_list=new/list //runtime error "bad list" for some reason

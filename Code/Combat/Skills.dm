@@ -2215,7 +2215,8 @@ proc/Get_self_destruct_damage(mob/a,mob/b)
 	if(a.Class=="Spirit Doll") dmg*=1.5
 
 	if(a.Regenerate || (locate(/obj/Module/Rebuild) in a.active_modules)) dmg *= 0.5
-
+	return dmg;
+	
 mob/proc/AOE_auto_dodge(mob/attacker,turf/origin,min_dist=7,max_dist=10)
 	if(KO||KB||Frozen||Safezone) return
 	var/turf/original_loc=loc

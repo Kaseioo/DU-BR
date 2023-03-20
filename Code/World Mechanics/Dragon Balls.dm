@@ -76,7 +76,7 @@ mob/proc/WishForPower(amount=0.5, no_strongest_increase)
 
 	//var/new_relative_base_bp=base_bp/bp_mod
 	//LogBug("[Bug_Keys()] wished for power. [src]'s BP: [Commas(relative_base_bp)]. Highest BP: [Commas(highest_relative_base_bp)]. \
-	BP after wish: [Commas(new_relative_base_bp)]", rgb(255,150,0))
+	//"BP after wish: ([Commas(new_relative_base_bp)], rgb(255,150,0))"
 
 	wishes_for_power++
 	Health=100
