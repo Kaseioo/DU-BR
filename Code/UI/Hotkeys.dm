@@ -154,7 +154,7 @@ obj/Dice_Roll
 
 mob/verb/Dice_Roll()
 	set category = "Other"
-	player_view(20,src) << "<font color=cyan>[src] rolled a [rand(0,10)]"
+	player_view(20,src) << "<font color=cyan>[src] rolled a [rand(1,20)]"
 
 obj/Flash_Step
 	can_hotbar=1
