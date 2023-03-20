@@ -189,7 +189,7 @@ obj/Play_Music
 	verb/Hotbar_use()
 		set waitfor=0
 		set hidden=1
-		//usr.Play_Music()
+		usr.Play_Music()
 
 obj/Injure
 	hotbar_type="Melee"
