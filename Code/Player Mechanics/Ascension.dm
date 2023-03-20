@@ -517,14 +517,13 @@ mob/proc/SSj_Hair()
 		else if(ssj==1) overlays+=ssjfphair
 		else if(ssj==2) overlays+=ssj2hair
 		else if(ssj==3)
-			//if(ssj3hair=='Hair_GokuSSj3.dmi'&&ssj3drain>=300) overlays+='SSJ3 Mastered.dmi'
-			//else overlays+=ssj3hair
-			overlays+=ssj3hair
+			if(ssj3hair=='Hair_GokuSSj3.dmi'&&ssj3drain>=300) overlays+='SSJ3 Mastered.dmi'
+			else overlays+=ssj3hair
 		else if(ssj==4) overlays+=ssj4hair
-	/*var/T='Fox Tail.dmi'
+	var/T='Fox Tail.dmi'
 	T+=rgb(120,120,60)
 	overlays-=T
-	if(Tail&&ssj&&ssj<4&&!ismystic) overlays+=T*/
+	if(Tail&&ssj&&ssj<4&&!ismystic) overlays+=T
 
 mob/var/tmp/transing
 mob/var/ssj_bp_mult=1
