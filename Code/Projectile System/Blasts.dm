@@ -1238,7 +1238,7 @@ obj/Attacks/Explosion
 			usr<<"Explosion deactivated. Now when you click the ground you will warp there instead."
 			On=0
 
-//mob/var/tmp/last_scattershot=0 //world.time
+mob/var/tmp/last_scattershot=0 //world.time
 
 mob
 	var
@@ -1246,7 +1246,7 @@ mob
 			using_scattershot
 			lastStopScattershot = -9999
 
-mob/proc
+/*mob/proc
 	TryScatterShot(obj/Attacks/Scatter_Shot/s)
 		if(using_scattershot)
 			StopScatterShotting(s)
@@ -1347,6 +1347,7 @@ mob/proc
 		if(l && l.len) //avoid "pick from empty list" error spam
 			var/turf/t = pick(l)
 			if(t) b.ScatterShotGoTo(t)
+*/
 
 obj/Blast
 	var
@@ -1406,14 +1407,14 @@ obj/Attacks/Scatter_Shot
 
 	verb/Hotbar_use()
 		set hidden=1
-		//Scatter_Shot()
-		usr.TryScatterShot(src)
+		Scatter_Shot()
+		//usr.TryScatterShot(src)
 
 	verb/Scatter_Shot()
-		//set category="Skills"
-		usr.TryScatterShot(src)
+		set category="Skills"
+		//usr.TryScatterShot(src)
 
-		/*if(usr.beaming||usr.Beam_stunned()) return
+		if(usr.beaming||usr.Beam_stunned()) return
 		if("Scatter shot" in usr.active_prompts) return
 
 		var/minutes=1
@@ -1480,7 +1481,7 @@ obj/Attacks/Scatter_Shot
 		usr.Ki-=usr.GetSkillDrain(mod = Drain, is_energy = 1)
 		Skill_Increase(5,usr)
 		usr.attacking=0
-		spawn(30+usr.Speed_delay_mult(severity=0.5)*4) if(src) Using=0*/
+		spawn(30+usr.Speed_delay_mult(severity=0.5)*4) if(src) Using=0
 
 mob/var/tmp/lastSokidan = 0 //world.time
 
