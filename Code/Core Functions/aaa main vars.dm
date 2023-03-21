@@ -35,7 +35,7 @@ var
 	daynight_enabled = 1
 	fireflies = 1
 
-	lssj_always_angry = 0
+	lssj_always_angry = 1
 	lssjTakeDmgMult = 0.8
 
 	bp_exponent = 0.25 //how much bp matters in a fight
