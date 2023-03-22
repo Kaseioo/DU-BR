@@ -26,7 +26,10 @@ obj/proc/beam_move_loop(mob/m)
 	if(m.beamMoveLoop) return
 	m.beamMoveLoop = 1
 	sleep(beam_delay)
+	var/operation = 0;
 	while(src && m)
+		if(m.beaming && !beam_objects.len)
+			break
 		if(!m.beaming && !beam_objects.len)
 			break
 		else
@@ -40,6 +43,7 @@ obj/proc/beam_move_loop(mob/m)
 					break
 				if(o.dir in list(NORTHEAST,NORTHWEST,SOUTHEAST,SOUTHWEST)) is_diagonal = 1
 				if(!o.beam_loop_running)
+					if(!Get_step(o,o.dir)) break;
 					var/turf/next = Get_step(o,o.dir)
 					if(next)
 						if(next.density) o.Beam()
@@ -51,8 +55,8 @@ obj/proc/beam_move_loop(mob/m)
 				if(o && o.z)
 					if(!Get_step(o, o.dir))
 						o.DeleteNoWait()
-					else
-						l += o
+					else				
+						l += o					
 			for(var/obj/Blast/o in beam_objects) if(!(locate(/obj/beam_redirector) in o.loc))
 				if(!(o.icon_state in list("blank")))
 					o.Beam_Appearance()

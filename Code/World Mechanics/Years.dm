@@ -178,22 +178,17 @@ mob/proc/Mate(obj/Mate/M)
 		M.Next_Use=world.realtime+(60*60*10)
 	else
 		for(var/mob/P in Get_step(src,dir)) if(P.client)
-			if(!P.KO) switch(alert(P,"[src] wants to mate with you","","No","Yes","Bitch slap"))
+			if(!P.KO) switch(alert(P,"[src] wants to mate with you","","No","Yes"))
 				if("No") return
-				if("Bitch slap")
-					player_view(15,src)<<"[P] bitch slaps [src]"
-					Knockback(P,10)
-					return
 			if(getdist(src,P)>1) return
-			if(P.KO) player_view(15,src)<<"[src] rapes [P]"
-			Mate_Graphics(P)
 			if(!Can_Mate())
-				player_view(15,src)<<"[src] is sterile"
+				player_view(15,src)<<"[src] can't mate"
 				return
-			if(!P) return
 			if(!P.Can_Mate())
-				player_view(15,src)<<"[P] is sterile"
+				player_view(15,src)<<"[P] can't mate"
 				return
+			Mate_Graphics(P)
+			if(!P) return
 			var/Mother
 			if(gender=="female") Mother=src
 			if(P.gender=="female") Mother=P
@@ -235,7 +230,6 @@ mob/proc/Mate_Graphics(mob/M)
 	SafeTeleport(M.loc)
 	M.icon_state="KO"
 	dir=EAST
-	overlays+='CD.dmi'
 	pixel_y=15
 	pixel_x=-10
 	var/N=100
@@ -251,7 +245,6 @@ mob/proc/Mate_Graphics(mob/M)
 	if(M) M.icon_state=m_old_state
 	pixel_x=old_x
 	pixel_y=old_y
-	overlays-='CD.dmi'
 
 mob/proc/Mate_Check()
 	for(var/mob/P in players) for(var/obj/Mate/M in P) if(M.Waiting&&M.Race==Race)

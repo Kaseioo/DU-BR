@@ -426,14 +426,6 @@ obj/Blast
 			if(!Owner)
 				del(src)
 				return
-
-			//GROW/SHRINK WITH RANGE
-			/*if(ismob(Owner) && !lose_power_with_range)
-				var/range_from_owner = getdist(src,Owner)
-				if(range_from_owner>=1)
-					transform = matrix() * (1.015 ** range_from_owner)*/
-			//-----------------
-
 			/*if(ismob(Owner)&&Owner.IsTens())
 				var/death_damage=Damage/loop_delay/Beam_Delay
 				var/death_resist=Owner.BP*Owner.Res*10*Owner.Regenerate**0.5*ki_power
@@ -451,7 +443,7 @@ obj/Blast
 					m.beam_deflect_difficulty = deflect_difficulty
 					m.dir=get_dir(m,src)
 					var/deflect_chance = 1 * global_beam_deflect_mod * Beam_Delay * loop_delay * (5 / deflect_difficulty) * (m.BP/Owner.BP) * (1/(Acc_mult(Clamp(Owner.Off/m.Def,0.1,10))))
-					deflect_chance = 100 //so long as it takes stamina to deflect beams it can be 100% by default
+					deflect_chance = 40 //so long as it takes stamina to deflect beams it can be 100% by default
 					if(m.beaming || m.KO) deflect_chance=0
 					if(m.BeamStruggling()) deflect_chance /= 10000 //only choice is to struggle out of the beam
 					if(m.standing_powerup) deflect_chance *= standing_powerup_deflect_mult
@@ -463,8 +455,6 @@ obj/Blast
 						deflect_chance*=Owner.Speed_accuracy_mult(defender=m)
 
 					if(istype(m, /mob/Body) || m.KO) deflect_chance=0
-
-					deflect_chance = 0 //I JUST PLAIN TURNED IT OFF FOR NOW ITS ANNOYING HAVING TO RE-FIRE YOUR BEAM EVERY TIME THEY DEFLECT IT
 
 					var/stamDrain = 50 * (Owner.BP / m.BP)**0.33
 					stamDrain *= (Owner.Pow / ((m.Res * 0.33) + (m.Str * 0.33) + (m.Pow * 0.33)))**0.33
@@ -486,8 +476,6 @@ obj/Blast
 				beam_radius=Clamp(beam_radius,0,1)
 				beam_radius=ToOne(beam_radius)
 				if(is_makosen || deflected) beam_radius=0
-
-				beam_radius = 0 //off
 
 				for(var/mob/A in range(beam_radius,src)) if((A.loc==loc || A!=Owner) && (A.loc==loc || get_dir(src,A) != dir))
 					if(A.ultra_instinct)
@@ -571,6 +559,10 @@ obj/Blast
 									if(range_mult_dmg<0.5) range_mult_dmg=0.5
 									dmg *= range_mult_dmg
 								//-------------
+								//GROW/SHRINK WITH RANGE
+								if(range_from_owner>=1)
+									transform = matrix() * (1.015 ** range_from_owner)
+								//-----------------
 
 							dmg*=sagas_bonus(Owner,P)
 							if(ismob(Owner)) Owner.training_period(P)
@@ -594,7 +586,7 @@ obj/Blast
 									kb_dist=ToOne(kb_dist)
 									kb_dist=Clamp(kb_dist,0,15)
 									var/kb_dir=pick(turn(dir,45),turn(dir,-45),dir)
-									//Make_Shockwave(P,256)
+									Make_Shockwave(P,256)
 									P.Knockback(Owner,Distance=kb_dist,override_dir=kb_dir)
 									if(P) //bad mob error
 										var/area/a=P.current_area
@@ -765,8 +757,8 @@ obj/Blast
 						delete_on_next_move=1
 						//Owner.ToTens("9")
 					break
-			//sleep(TickMult(loop_delay))
-			sleep(world.tick_lag)
+			sleep(TickMult(loop_delay))
+			//sleep(world.tick_lag)
 
 	proc/Explode()
 		set waitfor=0
@@ -1004,7 +996,7 @@ obj/Blast
 						break
 				else
 					Explode()
-					//if(!Beam) Make_Shockwave(A,sw_icon_size=Get_projectile_shockwave_size(src))
+					if(!Beam) Make_Shockwave(A,sw_icon_size=Get_projectile_shockwave_size(src))
 					var/obj/Blast/b=A
 					var/this_cutting_power=BP**0.2 * Force**0.2 * percent_damage
 					var/their_cutting_power=b.BP**0.2 * b.Force**0.2 * b.percent_damage
@@ -1040,7 +1032,7 @@ obj/Blast
 
 		if(isturf(A) && A.density)
 			Explode()
-			//if(A != last_object_shockwaved_against) Make_Shockwave(A,sw_icon_size=Get_projectile_shockwave_size(src))
+			if(A != last_object_shockwaved_against) Make_Shockwave(A,sw_icon_size=Get_projectile_shockwave_size(src))
 			last_object_shockwaved_against=A
 			var/turf_destroyed = 0
 			var/destroy_blast_anyway = 0

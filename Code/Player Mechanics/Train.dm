@@ -170,7 +170,7 @@ mob/proc/Raise_BP(Amount=1,apply_hbtc_gains=1)
 
 	RecordHighestBPEverGotten()
 
-	if(cyber_bp || has_modules()) Amount /= 4
+	//if(cyber_bp || has_modules()) Amount /= 4
 	if(Zombie_Power) Amount*=0.9
 	if(Safezone) Amount*=0.25
 
@@ -523,7 +523,7 @@ mob/proc/Leech(mob/P,N=1,no_adapt=0,give_as_hbtc_bp=0,android_matters=1,weights_
 	if(!P.client) N/=2
 	//if(key in epic_list) N*=25
 	N*=decline_gains()
-	if(android_matters) if(cyber_bp || has_modules()) N /= 10
+	if(android_matters) if(P.Android) N /= 10
 	for(var/obj/items/Force_Field/ff in item_list) N/=2
 	if(OP_build()) N*=2
 	if(AtBattlegrounds()) N *= 2

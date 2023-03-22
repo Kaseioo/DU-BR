@@ -36,7 +36,7 @@ var
 	fireflies = 1
 
 	lssj_always_angry = 1
-	lssjTakeDmgMult = 0.8
+	lssjTakeDmgMult = 0.6
 
 	bp_exponent = 0.25 //how much bp matters in a fight
 	one_shot_start = 4 //you will begin inflicting insane damage against someone if you are more than this multiple stronger than them,
@@ -76,7 +76,7 @@ var
 	shield_exponent = 0.4 //how much affect more energy mod will have on reducing shield damage
 
 	swordBleedDmg = 0.2 //if 0.5, half of the swords overall damage is applied as bleed damage, and SUBTRACTED from the regular dmg so dont worry about that
-	sword_damage_mod = 0.3 //applies to the bonus only, so +70% damage becomes +(70x0.8)% damage assuming the mod is 0.8, so not 1.7x0.8
+	sword_damage_mod = 0.7 //applies to the bonus only, so +70% damage becomes +(70x0.8)% damage assuming the mod is 0.8, so not 1.7x0.8
 	sword_drain_mult = 0.5 //melee drain *= 1 + (sword.Damage - 1) * sword_drain_mult
 	sword_refire_mod = 0 //was 0.3 //delay *= 1 + (s.Damage - 1) * sword_refire_mod
 	swordDodgeMod = 0.5 //accuracy /= 1 + (equipped_sword.Damage - 1) * swordDodgeMod

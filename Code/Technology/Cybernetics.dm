@@ -91,9 +91,9 @@ obj/Module
 		name = "Giant Version"
 		Cost=1000000
 		Android_Only=1
-		desc="Scale up the design of your body, which will have x1.15 strength, 1.3x durability, 1.3x resistance, \
+		desc="Scale up the design of your body, which will have x1.3 strength, 1.3x durability, 1.3x resistance, \
 		and 0.5x speed"
-		Giant=1;Strx=1.15;Endx=1.3;Spdx=0.5;Resx=1.3
+		Giant=1;Strx=1.3;Endx=1.3;Spdx=0.5;Resx=1.3
 
 	Body_Swap
 		Cost=10000000
@@ -135,8 +135,8 @@ obj/Module
 
 	Decline_Increase
 		Cost=100000
-		desc="This will add 50 years to your life span."
-		Life_Add=50
+		desc="This will add 200 years to your life span."
+		Life_Add=200
 
 	Drone_AI
 		var/list/Commands=new
@@ -180,11 +180,6 @@ obj/Module
 		you will take damage. Your resistance, durability, energy, recovery and regeneration will \
 		decrease by 5% with this module installed. Your shield ability will be weakened by 20%"
 		Blast_Absorb=1
-		Kix=0.95
-		Endx=0.95
-		Resx=0.95
-		Regx=0.95
-		Recx=0.95
 		New()
 			spawn if(suffix)
 				var/mob/m=loc
@@ -208,9 +203,9 @@ obj/Module
 
 	Generator
 		Cost=1000000
-		desc="This will x2 your energy, but /2 your recovery and regeneration. +5% shield power, but no \
+		desc="This will x2.5 your energy, but /2 your recovery and regeneration. +5% shield power, but no \
 		shield power increase from the extra energy mod."
-		Kix=2;Recx=0.5;Regx=0.5
+		Kix=2.5;Recx=0.5;Regx=0.5
 		New()
 			spawn if(suffix)
 				var/mob/m=loc
@@ -239,8 +234,8 @@ obj/Module
 	Brute_New
 		name = "Brute"
 		Cost=1000000
-		desc="x1.15 strength, x0.5 regeneration and recovery, 0.9x defense"
-		Strx=1.15;Regx=0.5;Recx=0.5;Defx=0.9
+		desc="x1.3 strength, x0.5 regeneration and recovery"
+		Strx=1.3;Regx=0.5;Recx=0.5;
 
 	Armor //OLD
 		name="Cybernetic Armor"
@@ -257,8 +252,8 @@ obj/Module
 	Armor_New
 		name="Cybernetic Armor"
 		Cost=1000000
-		desc="x1.15 durability, x1.15 resistance, x0.5 regeneration and recovery, x0.9 force and 0.8x energy"
-		Endx=1.15;Resx=1.15;Regx=0.5;Recx=0.5;Powx=0.9;Kix=0.8
+		desc="x1.2 durability, x1.2 resistance, x0.5 regeneration and recovery"
+		Endx=1.2;Resx=1.2;Regx=0.5;Recx=0.5
 		New()
 			spawn if(suffix)
 				var/mob/m=loc

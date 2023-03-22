@@ -27,11 +27,11 @@ mob/proc
 		if(is_kiting) return
 		if(old_loc) //signifies this proc was called from zanzoken
 			is_kiting=1
-			//Tens("<font color=red>[src] is now kiting [Opponent]")
+			Tens("<font color=red>[src] is now kiting [Opponent]")
 	Reset_kiting()
 		if(!is_kiting) return
 		is_kiting=0
-		//Tens("<font color=cyan>[src] is no longer kiting")
+		Tens("<font color=cyan>[src] is no longer kiting")
 
 
 
@@ -164,7 +164,7 @@ mob/proc
 				attackers+=m
 		if(attackers.len<2) return
 		for(var/mob/m in attackers)
-			//if(!m.is_teamer) Tens("<font color=cyan>[m] is now a teamer for attacking [src]")
+			if(!m.is_teamer) Tens("<font color=cyan>[m] is now a teamer for attacking [src]")
 			m.is_teamer=1
 			m.Teamer_loop()
 
@@ -196,7 +196,7 @@ mob/proc
 
 			return //the code below here is the old teamer checking system, the code above is NEEDED still to create attack backlogs
 			if(!M.is_teamer&&M.Is_teaming(src))
-				//Tens("<font color=red>[M] is now a teamer for attacking [src] alongside [M.Is_teaming(src)]")
+				Tens("<font color=red>[M] is now a teamer for attacking [src] alongside [M.Is_teaming(src)]")
 				M.is_teamer=1
 				M.Teamer_loop()
 
@@ -228,14 +228,8 @@ mob/proc
 			is_teamer=1
 			sleep(50)
 		is_teamer=0
-		//Tens("<font color=cyan>[src] is no longer a teamer")
+		Tens("<font color=cyan>[src] is no longer a teamer")
 		teamer_loop_running=0
-
-
-
-
-
-
 
 mob/var
 	tmp/fearful
@@ -324,7 +318,7 @@ mob/proc
 				if(stand_still_time()<=65)
 					src<<"<font color=red>By attempting to run your character has become fearful of their enemy"
 
-					//Tens("<font color=red>[src] has become fearful of [chaser]")
+					Tens("<font color=red>[src] has become fearful of [chaser]")
 
 					fearful=1
 
@@ -382,4 +376,4 @@ mob/proc
 		fearful=0
 		is_runner=0
 		total_chase_time=0
-		//Tens("<font color=cyan>[src] is no longer fearful")
+		Tens("<font color=cyan>[src] is no longer fearful")

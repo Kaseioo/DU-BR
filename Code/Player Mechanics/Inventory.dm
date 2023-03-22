@@ -94,7 +94,7 @@ obj/items/EMP_Mine
 		for(var/mob/m in player_view(9,src))
 			if(m.Is_Cybernetic())
 				//m.Health/=2
-				m.Ki=0
+				m.Ki+=-25
 				if(m.Health<15) m.KO("electromagnetic pulse")
 		for(var/v in 1 to 3)
 			Make_Shockwave(src,5,'Electricgroundbeam2.dmi')
@@ -3140,7 +3140,7 @@ mob/var
 mob/proc/focusin_loop()
 	set waitfor=0
 	for(var/v in 1 to 300)
-		for(var/mob/m in player_view(30,src)) if(base_bp+hbtc_bp<(m.base_bp+m.hbtc_bp) * 0.8)
+		for(var/mob/m in player_view(30,src)) if(base_bp+hbtc_bp<((m.base_bp+m.hbtc_bp) * 0.8))
 			//var/old_bp=base_bp
 			Leech(m, 24, no_adapt = 1, weights_count = 0)
 			//hbtc_bp+=base_bp-old_bp

@@ -198,7 +198,7 @@ obj/Dash_Attack
 		Dash_Attack()
 
 	verb/Dash_Attack()
-		//set category="Skills"
+		set category="Skills"
 		usr.Dash_Attack()
 
 mob/var/tmp
@@ -213,7 +213,7 @@ mob/proc/Dash_Attack()
 	if(!istype(t,/turf)) return
 
 	if(dash_attacking || lunge_attacking || grabbedObject || in_dragon_rush) return
-	if(world.time - lastDashAttack < 100 / (Speed_delay_mult(severity = melee_delay_severity) / speedDelayMultMod)) return
+	if(world.time - lastDashAttack < 100) return
 	if(tournament_override()) return
 	var/Drain = 145 * (max_ki / 3000)**0.5
 	if(Ki<Drain)
@@ -221,10 +221,10 @@ mob/proc/Dash_Attack()
 		return
 	if(Beam_stunned()) return
 	dash_attacking = 1
-	var/damage_mult = 0.75
+	var/damage_mult = 1
 	original_dash_dir=dir
 	lastDashAttack = world.time
-	for(var/steps in 1 to 15)
+	for(var/steps in 1 to 25)
 		if(KB) break //causes a bug where the person hits the target many many times doing massive damage
 		else
 			var/turf/old_loc=loc
@@ -234,14 +234,13 @@ mob/proc/Dash_Attack()
 				desired_dash_dir=0
 			step(src,dash_dir)
 			var/mob/P
-			if(loc==old_loc) for(P in Get_step(src,dir))
-				SafeTeleport(P.loc)
-				break
-			else for(P in loc) if(P!=src) break
-			if(loc==old_loc)
-				break
+			//if(loc==old_loc) for(P in Get_step(src,dir))
+			//	SafeTeleport(P.loc)
+			//	break
+			//else for(P in loc) if(P!=src) break
+			//if(loc==old_loc)
+			//	break
 			if(P)
-
 				var/Damage = damage_mult * get_melee_damage(P, allow_one_shot = 0)
 				var/Acc = get_melee_accuracy(P) * 2
 
@@ -253,18 +252,14 @@ mob/proc/Dash_Attack()
 						P.Ki -= Damage * P.ShieldDamageReduction() * (P.max_ki/100)/(P.Eff**shield_exponent)*P.Generator_reduction(is_melee=1)
 					else
 						if(P.dir == dir) Damage *= 2 //hit from behind
-						if(Damage >= 100 + P.Health) insta_kill = 1
 						P.TakeDamage(Damage)
 					if(P.Health <= 0 || P.Ki <= 0) P.KO(src)
-					if(Fatal)
-						if(P)
-							if(P.KO || insta_kill) spawn(15) if(P) P.Death(src)
 					if(P) P.DashAttackPart2(src, KB_Distance)
 				else
 					flick('Zanzoken.dmi',P)
 					step(P,turn(dir,pick(90,-90)))
 			AfterImage(20)
-			damage_mult += 1
+			damage_mult += 0.3
 			sleep(TickMult(0.7 * Speed_delay_mult(severity=0.25)))
 	Ki-=Drain
 	dash_attacking=0

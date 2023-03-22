@@ -123,7 +123,7 @@ mob/proc/get_bp(factor_powerup=1)
 		if(is_ssj_blue) n *= ssj_blue_mult
 		if(is_ssg) n *= ssjg_bp_mult
 		if(is_gold_form) n *= gold_form_mult
-		n *= DropkickBPDebuff()
+		//n *= DropkickBPDebuff()
 		if(world.time - last_ki_hit_zero < zero_ki_bp_debuff_duration * 10)
 			n *= zero_ki_bp_mult
 		if(n < 1) n = 1
@@ -202,7 +202,7 @@ mob/proc/get_bp(factor_powerup=1)
 		if(battleground_master == src && AtBattlegrounds())
 			bp *= battleground_master_bp_mult
 
-		bp *= DropkickBPDebuff()
+		//bp *= DropkickBPDebuff()
 
 		if(world.time - last_ki_hit_zero < zero_ki_bp_debuff_duration * 10)
 			bp *= zero_ki_bp_mult
@@ -489,7 +489,7 @@ mob/proc
 
 	Braals_core_music()
 		set waitfor=0
-		/*var/currently_playing
+		var/currently_playing
 		while(src)
 			var/area/a=get_area()
 			if(istype(a,/area/Braal_Core))
@@ -511,7 +511,7 @@ mob/proc
 							else sleep(10)
 					else
 						src<<sound(0)
-						src<<sound('PrinceofYasais.ogg',volume=100)
+						src<<sound('PrinceofSaiyans.ogg',volume=100)
 						for(var/v in 1 to 133)
 							if(z!=18 || BP>Avg_BP*too_much) break
 							else sleep(10)
@@ -519,7 +519,7 @@ mob/proc
 			else
 				if(currently_playing) src<<sound(0)
 				currently_playing=0
-				return*/
+				return
 
 	CoreMaxGainsMult()
 		var/n = 2.3 * zenkai_mod**0.1
@@ -1138,7 +1138,7 @@ mob/proc/death_regen(set_loc=1)
 			icon='Death regenerate.dmi'
 			overlays.Remove(overlays)
 			KO(allow_anger=0)
-			sleep(TickMult(140/Regenerate**0.5))
+			sleep(TickMult(80/Regenerate**0.5))
 			if(Regenerate >= 0.4) FullHeal()
 			else
 				Health = 1
@@ -1296,7 +1296,6 @@ mob/proc/powerup_soft_cap()
 	if(ssj == 3) max_powerup *= 0.6
 	if(ssj == 4) max_powerup *= ssj4_powerup_mod
 
-	if(beaming || charging_beam) max_powerup *= 1.2
 	return max_powerup
 
 mob/proc/energy_mod_powerup_soft_cap()
@@ -1396,8 +1395,8 @@ mob/proc/Power_Control_Loop(obj/Power_Control/A)
 		if(KO && A.Powerup) Stop_Powering_Up()
 		if(A && A.Powerup && A.Powerup!=-1 && (Action!="Meditating" || BPpcnt<100))
 			var/pu_mod = 0.85
-			if(!standing_powerup) pu_mod = 0.3
-			if(!charging_beam) //if we are charging a beam then the bppcnt increase is handled elsewhere
+			if(!standing_powerup) pu_mod = 0.3 //if we are charging a beam then the bppcnt increase is handled elsewhere
+			if(!charging_beam)
 				BPpcnt += powerup_speed(Amount * pu_mod * 1.3)
 			if(BPpcnt>100) A.Skill_Increase(3*Amount,src)
 			if(BPpcnt>=100&&Stop_At_100)
@@ -1414,7 +1413,7 @@ mob/proc/Power_Control_Loop(obj/Power_Control/A)
 mob/proc/Charge_Drain()
 	if(BPpcnt<=100) return 0
 	//var/drain = 1.5 * Eff**0.5 * (BPpcnt/100)**3
-	var/drain = 1.5 * (BPpcnt / 100) ** 3
+	var/drain = 1.5 * (BPpcnt / 150) ** 3
 	/*
 	4000 x 24 energy, 500% powerup = 918 drain per second (1% per second) = 100 total seconds = 40 useful seconds
 	4000 x 1 energy, 500% powerup = 187.5  drain per second (4.69% per second) = 21.3 total seconds = 8.5 useful seconds

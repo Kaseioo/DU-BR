@@ -185,7 +185,7 @@ turf/Click(turf/T) if(isturf(T))
 				if(usr.ki_shield_on()) return
 				for(var/mob/M in T) if(M.density) return
 				for(var/obj/O in T) if(O.density) return
-				//if(usr.Dash_Attack(T)) return
+				if(usr.Dash_Attack(T)) return
 				for(var/obj/Attacks/At in usr.ki_attacks) if(At.charging||At.streaming||At.Using) return
 				if(T.z == usr.z && get_dist(T, usr) <= 20 && viewable(usr, T))
 					A.Skill_Increase(1,usr)

@@ -22,7 +22,7 @@ mob/proc/Zenkai(n=1)
 		zenkai_divider=10 //except in small amounts
 	var/zenkai=1
 	if(z == 7 && Tournament && (src in All_Entrants)) zenkai/=5
-	if(cyber_bp||has_modules()) zenkai/=4
+	//if(cyber_bp||has_modules()) zenkai/=4
 
 	var/difficulty_mod=Clamp((1.6*BP/Opponent.BP)**1.5,0.1,1)
 	zenkai*=difficulty_mod

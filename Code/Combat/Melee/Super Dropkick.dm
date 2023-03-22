@@ -48,7 +48,7 @@ mob
 
 		Dropkick()
 			//if(attacking) return
-			if(world.time - last_dropkick < 100) return
+			if(world.time - last_dropkick < 30) return
 			//if(!can_melee()) return
 			if(!CanMeleeFromOtherCauses()) return //this checks if anything OTHER than you currently doing attacks is also stopping you from being able to melee
 			var/mob/m = LungeTarget()
@@ -96,13 +96,12 @@ mob
 			//ClientColorFlick(rgb(255,0,0))
 			ClientColorInvertFlick()
 			if(m && hit)
-				ApplyStun(time = 60, no_immunity = 1, stun_power = 10)
 				player_view(15,src) << sound('strongpunch.ogg', volume = 60)
 				m.AlterInputDisabled(1)
 				m.ScreenShake(Amount = 15, Offset = 8)
 				//m.ClientColorFlick(rgb(255,0,0))
 				m.ClientColorInvertFlick()
-				var/dmg = get_melee_damage(m, count_sword = 0) * 25
+				var/dmg = get_melee_damage(m, count_sword = 0) * 7.5
 				var/hp_before_dmg = m.Health
 				m.TakeDamage(dmg)
 				if(dmg >= 100 + hp_before_dmg) m.KO(src, allow_anger = 0)
@@ -130,9 +129,6 @@ mob
 							m.Death(src)
 
 			last_dropkick_debuff_triggered = world.time
-			cant_anger_until_time = world.time + (2 * 600)
-			Ki = 0
-			Health = 1
 			AddStamina(-99999)
 			attacking = 0
 			sleep(3)
