@@ -181,3 +181,4 @@ mob/var
 	Demonic
 	stun_resistance_mod=1
 	ascension_bp=1000000
+	Limit_Breaker_Mastery = 5

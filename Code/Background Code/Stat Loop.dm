@@ -1474,14 +1474,14 @@ mob/proc/Swordless_strength()
 	if(s) n /= s.Damage
 	return n
 
-
-
-
 mob/proc/Limit_Breaker_Loop()
 	set waitfor=0
 	sleep(2)
 	if(limit_breaker_on)
-		sleep(rand(50,1200))
+		Limit_Breaker_Mastery += rand(0.5, 1.5) * mastery_mod
+		if(Limit_Breaker_Mastery > 60) Limit_Breaker_Mastery = 60
+
+		sleep(rand(Limit_Breaker_Mastery * 10, Limit_Breaker_Mastery * 20))
 		Limit_Revert()
 
 mob/var/tmp/Status_Running
