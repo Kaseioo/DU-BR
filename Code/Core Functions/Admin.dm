@@ -1425,7 +1425,7 @@ proc
 
 mob/Admin1/verb/Rename(atom/A in Rename_List())
 	set category="Admin"
-	var/Old_Name=A.name
+	var/Old_Name=A.name 
 	var/New_Name=input(src,"Renaming [A]","",Old_Name) as text
 	if(!A) return
 	A.name=New_Name
@@ -1849,17 +1849,19 @@ mob/Admin4/verb/Replace(atom/A as turf|obj in view(10))
 var/list/Give_List
 obj/var/Givable=1
 
-mob/Admin2/verb/GiveItem(mob/A in world)
+mob/Admin2/verb/GiveItem(mob/A in world, Search as text)
 	set category="Admin"
+	Give_List = null
 	if(!Give_List)
 		Give_List=list("Cancel","Rank")
 		for(var/O in typesof(/obj))
-			var/obj/B=new O
-			if(B)
-				B.referenceObject = 1
-			if(B && B.Givable && !istype(B,/obj/items/Clothes))
-				if((key in coded_admins) || (B.type != /obj/Auto_Shadow_Spar && B.type))
-					Give_List+=B
+			if(findtext("[O]",Search) || !Search)
+				var/obj/B=new O
+				if(B)
+					B.referenceObject = 1
+				if(B && B.Givable && !istype(B,/obj/items/Clothes))
+					if((key in coded_admins) || (B.type != /obj/Auto_Shadow_Spar && B.type))
+						Give_List+=B
 	var/obj/O=input(src,"Choose what to give [A]") in Give_List
 	if(O=="Cancel") return
 	if(O=="Rank")
@@ -1867,24 +1869,29 @@ mob/Admin2/verb/GiveItem(mob/A in world)
 		return
 	A.contents+=new O.type
 	Log(src,"[key] gave [A.key] a [O]")
+
 var/list/Make_List
 obj/var/Makeable=1
-mob/Admin2/verb/Make()
+mob/Admin2/verb/Make(atom/A in world, Search as text)
 	set category="Admin"
+	Make_List = null
 	if(!Make_List)
 		Make_List=list("Cancel")
 		for(var/O in typesof(/obj))
-			var/obj/B=new O
-			if(B)
-				B.referenceObject = 1
-			if(B&&B.Makeable&&!istype(B,/obj/items/Clothes)) Make_List+=B
+			if(findtext("[O]",Search) || !Search)
+				var/obj/B=new O
+				if(B)
+					B.referenceObject = 1
+				if(B&&B.Makeable&&!istype(B,/obj/items/Clothes)) Make_List+=B
 		Make_List+="**********MOBS**********"
 		for(var/O in typesof(/mob))
 			var/mob/B=new O
-			if(B) Make_List+=B
+			if(findtext("[B]",Search) || !Search)
+				if(B) Make_List+=B
 	var/obj/O=input(src,"Choose what to make") in Make_List
 	if(O in list("Cancel","**********MOBS**********")) return
-	var/mob/M=new O.type(locate(x,y,z))
+	// spawns object based on turf coords
+	var/mob/M=new O.type(locate(A.x,A.y,A.z))
 	if(ismob(M)) M.Savable_NPC=1
 	spawn(10) if(M) M.SafeTeleport(loc)
 	Log(src,"[key] made a [M]")
@@ -2070,11 +2077,21 @@ proc/Delete_List(mob/m)
 	for(var/mob/A in view(20,src)) for(var/obj/O in A) L+=O
 	return L
 
-mob/Admin2/verb/Delete(atom/A in Delete_List(src))
+mob/Admin2/verb/Delete(Search as text)
 	set category="Admin"
+	var/list/L=Delete_List(src)
+	var/list/L2=new
+	for(var/atom/A in L) if(findtext(A.name,Search)) L2+=A
+	var/atom/A=input(src,"Delete what?") in L2
 	if(ismob(A)) world<<"<font color=#FFFF00>[A] has been kicked from the server"
 	else Log(src,"[key] deleted [A]")
 	del(A)
+
+mob/Admin2/verb/DeleteAtom(atom/Target in Delete_List(src))
+	set category="Admin"
+	if(ismob(Target)) world<<"<font color=#FFFF00>[Target] has been kicked from the server"
+	else Log(src,"[key] deleted Atom [Target]")
+	del(Target)
 
 mob/Admin1/verb/Kick(mob/m in world)
 	set category = "Admin"
