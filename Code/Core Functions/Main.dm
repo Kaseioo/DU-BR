@@ -887,7 +887,7 @@ mob/proc/Yasai(Can_Elite=1,force_elite,force_low_class)
 		ssjat*=0.9
 		Class="Low Class"
 	else if(force_elite) Elite_Yasai()
-	else if(Can_Elite&&(world.time>3000||))
+	else if(Can_Elite&&(world.time>3000))
 		var/elites=0
 		for(var/mob/m in players) if(m.Race=="Yasai"&&m.Class=="Elite") elites++
 		if((Yasai_Count()>=10&&elites/Yasai_Count()<elite_chance/100))
