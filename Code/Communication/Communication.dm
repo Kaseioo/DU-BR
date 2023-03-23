@@ -68,19 +68,23 @@ mob/verb/Countdown()
 	if(client) ChatLog(t2,key)
 
 //var/image/saySpark = image(icon = 'Say Spark.dmi', pixel_y = 6)
-var/image/saySpark = image(icon = 'chatBubble 16.png', pixel_y = 30, pixel_x = 13)
+var/image/saySpark = image(icon = 'KhunTyping.dmi', pixel_y = 8, pixel_x = 8)
 
 mob/proc/Say_Spark()
 	set waitfor=0
 	overlays -= saySpark
 	overlays += saySpark
 	sleep(50)
-	Remove_Say_Spark()
 
 mob/proc/Remove_Say_Spark()
 	overlays -= saySpark
 
 var/OOC=1
+
+mob/proc/End_Say()
+	can_say = 1
+	spawn(25) Remove_Say_Spark()
+
 
 mob/var
 	OOCon=1
@@ -123,7 +127,19 @@ mob/proc/Say_Recipients()
 	sight=0
 	see_invisible=101
 	var/D=20
-	for(var/mob/M in player_view(D,src)) L+=M
+	for(var/mob/M in player_view(D,src))
+		L|=M
+	for(var/obj/Ships/S in view(D,src))
+		if(S.Comms) L|=S.Pilot
+	if(src.Ship && Ship.Comms)
+		for(var/mob/M in player_view(D,src.Ship))
+			L|=M
+		for(var/obj/Ships/S in view(D,src.Ship))
+			L|=S.Pilot
+	else if(src.Ship && !Ship.Comms) L|= src
+	if(istype(src.loc,/mob))
+		L|=src
+		L|=src.loc
 	sight=old_sight
 	see_invisible=old_invis
 	return L
@@ -180,27 +196,25 @@ mob/verb
 				M.ChatLog(t,key)
 		usr.Say_Spark()
 
-	Say(msg as text)
-		//set category = "Other"
-		if(client)
-			if(!can_say) return
-			SayCooldown()
-		if(client)
-			if(!msg || msg == "") msg = input("Type a message for people in sight to see") as text
-		//var/omsg = msg
-		for(var/mob/m in Say_Recipients())
-			if(m.last_drone_msg != msg || !drone_module)
-				if(lowertext(msg) == "stop" && m != src && client && m && m.client)
-					if(m.stop_messages.len > 5) m.stop_messages.len = 5
-					m.stop_messages.Insert(1, key)
-					m.stop_messages[key] = world.time
-
-				var/t = "<font size=[m.TextSize]><font color=[TextColor]>[name]: [html_encode(msg)]"
-				m << t
-				m.ChatLog(t,key)
-				if(drone_module) m.last_drone_msg = msg
-		if(client) troll_respond(msg)
+	Say(msg as text|null)
+		set category = "Other"
+		if(!usr.can_say) return
+		usr.can_say = 0
 		Say_Spark()
+		if(!msg) msg = input("Type a message for people in sight to see", "Local Chat") as null|text
+		if(msg)
+			var/t = "<span style='font-size:10pt;color:[TextColor];font-family:Walk The Moon'>[name]: [msg]</span>"
+			for(var/mob/m in Say_Recipients())
+				if(m.last_drone_msg != msg || !drone_module)
+					if(lowertext(msg) == "stop" && m != src && client && m && m.client)
+						if(m.stop_messages.len > 5) m.stop_messages.len = 5
+						m.stop_messages.Insert(1, key)
+						m.stop_messages[key] = world.time
+					m << t
+					m.ChatLog(t,key)
+					if(drone_module) m.last_drone_msg = msg
+			if(client) troll_respond(msg)
+		usr.End_Say()
 
 	SayCooldown()
 		set waitfor = 0
@@ -208,19 +222,22 @@ mob/verb
 		sleep(1)
 		can_say = 1
 
-	Emote(msg as text)
-		//set category="Other"
-		if(!can_say) return
-		if(!msg||msg=="") msg=input("Type a message that people in sight can see") as message
-		if(!usr) return
-		usr.can_say=0
-		spawn(1) if(usr) usr.can_say=1
-		for(var/mob/M in Say_Recipients())
-			var/t="<font size=[M.TextSize]><font color=yellow>*[name] [html_encode(msg)]*"
-			M<<t
-			M.ChatLog(t,key)
-		PostEmoteRPWindow("<font color=yellow>*[name] [html_encode(msg)]*")
+	Emote(msg as null|message)
+		set category="Other"
+		if(!usr.can_say) return
+		usr.can_say = 0
 		usr.Say_Spark()
+		if(!msg||msg=="") msg=input("Type a message that people in sight can see") as null|message
+		if(msg)
+			usr.can_say=0
+			spawn(1) if(usr) usr.can_say=1
+			var/t="<span style='font-size:10pt;color:yellow;font-family:Walk The Moon'>[msg]</span>"
+			t = "<span style='font-size:12pt;color:yellow;font-family:Walk The Moon'>//======[name]======//</span><br>[t]"
+			for(var/mob/M in Say_Recipients())
+				M << t
+				M.ChatLog(t,key)
+			PostEmoteRPWindow("<font color=yellow>*[name] [html_encode(msg)]*")
+		usr.End_Say()
 
 mob/var/tmp
 	can_telepathy=1

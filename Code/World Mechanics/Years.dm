@@ -3,7 +3,7 @@ mob/Admin4/verb/Year_Speed()
 	Year_Speed=input(src,"Set how fast the years will pass","Options",Year_Speed) as num
 	if(Year_Speed<0.1) Year_Speed=0.1
 var/Year_Speed=1
-var/Year=0
+var/Year=1000
 mob/var/BirthYear=0
 mob/var/Decline_Rate=1
 mob/var/LogYear=0 //The last year you logged out
@@ -43,8 +43,8 @@ mob/proc/Gray_Hair() if(!buffed())
 			overlays+='Wrinkles.dmi'
 mob/proc/Age_Update()
 	if(!BirthYear) BirthYear=Year
-	real_age=Year-BirthYear
-	if(!Dead&&LogYear) Age+=Year-LogYear
+	real_age=(Year-BirthYear)*1
+	if(!Dead&&LogYear) Age+=(Year-LogYear)*1
 	LogYear=Year
 	if(!Dead&&Age>Lifespan()&&z!=13&&((z!=6&&Demonic)||!Demonic)) Die()
 	if(Age>Decline/2&&icon=='Namek Young.dmi') icon='Namek Adult.dmi'
@@ -58,8 +58,6 @@ mob/proc/Age_Update()
 	Gray_Hair()
 
 mob/proc/decline_gains()
-
-	return 1 //off
 
 	if(player_with_highest_base_bp == src) return 1
 

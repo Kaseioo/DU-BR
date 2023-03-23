@@ -38,7 +38,7 @@ var
 	lssj_always_angry = 1
 	lssjTakeDmgMult = 0.6
 
-	bp_exponent = 0.25 //how much bp matters in a fight
+	bp_exponent = 0.50 //how much bp matters in a fight
 	one_shot_start = 4 //you will begin inflicting insane damage against someone if you are more than this multiple stronger than them,
 	//often 1 shotting them into a bloody mess like Saitama
 	one_shot_dmg_mult = 2 //do this many times normal damage
@@ -48,14 +48,14 @@ var
 
 	dura_regen_mod = 0.4 //this is for the system where higher durability (and resistance?) will slower your regen rate because it is like having more health to heal
 
-	stun_damage_mod = 0.4 //reduces damage you take from any ki attack if you are stunned when it hits you
+	stun_damage_mod = 0.6 //reduces damage you take from any ki attack if you are stunned when it hits you
 	arbitraryStunPower = 1.5
 	arbitraryStunTime = 1.5
 
 	//!!!!!!!!!! DO NOT USE modless_gain_exponent anymore. modless_gain_mult IS THE REPLACEMENT THAT IS MORE LINEAR WHICH IS BETTER
 	modless_gain_exponent = 0.7 //adjusting these 2 vars can fix a lot of the balance problems. remember they are sort of intertwined
 		//REMEMBER CHANGING modless_gain_exponent WILL NEED ALL PLAYERS TO REDO STATS
-	balance_rating_mult = 0.48 //0.42 //0 = off. lower = retains more balance rating when changing stats.
+	balance_rating_mult = 0 //0.42 //0 = off. lower = retains more balance rating when changing stats.
 	modless_gain_mult = 0.4 //we started using this instead of modless_gain_exponent to have more predictable numbers and just see how it goes
 
 	base_melee_damage = 3.5

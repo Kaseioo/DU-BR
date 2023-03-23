@@ -90,7 +90,6 @@ mob
 
 		DragonRushPointsToWin(mob/b)
 			var/mult = (BP / b.BP)**0.25 * (Spd / b.Spd)**0.25 * (Off / b.Def)**0.25
-			if(Class == "Legendary Yasai") mult *= 0.5
 			return ToOne(6 / mult)
 
 		IsValidDragonRushLoc(turf/t)

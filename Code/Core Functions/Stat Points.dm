@@ -133,7 +133,7 @@ mob/proc
 
 	StrengthBeyondRaceCap()
 		var/cap = 9999
-		/*switch(Race)
+		switch(Race)
 			if("Yasai")
 				switch(Class)
 					if(null) cap = 2
@@ -154,12 +154,12 @@ mob/proc
 			if("Kai") cap = 5
 			if("Frost Lord") cap = 1.9
 			if("Demon") cap = 2
-			if("Tsujin") cap = 2.5*/
+			if("Tsujin") cap = 2.5
 		if(strmod >= cap) return 1
 
 	DuraBeyondRaceCap()
 		var/cap = 9999
-		/*switch(Race)
+		switch(Race)
 			if("Yasai")
 				switch(Class)
 					if(null) cap = 2
@@ -180,12 +180,12 @@ mob/proc
 			if("Kai") cap = 5
 			if("Frost Lord") cap = 1.9
 			if("Demon") cap = 2
-			if("Tsujin") cap = 2.5*/
+			if("Tsujin") cap = 2.5
 		if(endmod >= cap) return 1
 
 	SpeedBeyondRaceCap()
 		var/cap = 9999
-		/*switch(Race)
+		switch(Race)
 			if("Yasai")
 				switch(Class)
 					if(null) cap = 2
@@ -206,12 +206,12 @@ mob/proc
 			if("Kai") cap = 5
 			if("Frost Lord") cap = 1.9
 			if("Demon") cap = 2
-			if("Tsujin") cap = 2.5*/
+			if("Tsujin") cap = 2.5
 		if(spdmod >= cap) return 1
 
 	ForceBeyondRaceCap()
 		var/cap = 9999
-		/*switch(Race)
+		switch(Race)
 			if("Yasai")
 				switch(Class)
 					if(null) cap = 2
@@ -232,12 +232,12 @@ mob/proc
 			if("Kai") cap = 5
 			if("Frost Lord") cap = 1.9
 			if("Demon") cap = 2
-			if("Tsujin") cap = 2.5*/
+			if("Tsujin") cap = 2.5
 		if(formod >= cap) return 1
 
 	ResBeyondRaceCap()
 		var/cap = 9999
-		/*switch(Race)
+		switch(Race)
 			if("Yasai")
 				switch(Class)
 					if(null) cap = 2
@@ -258,7 +258,7 @@ mob/proc
 			if("Kai") cap = 5
 			if("Frost Lord") cap = 1.9
 			if("Demon") cap = 2
-			if("Tsujin") cap = 2.5*/
+			if("Tsujin") cap = 2.5
 		if(resmod >= cap) return 1
 
 	RegenBeyondRaceCap()

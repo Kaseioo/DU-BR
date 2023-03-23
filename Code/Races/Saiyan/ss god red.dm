@@ -51,10 +51,10 @@ var
 	ssjg_god_ki_req=15
 	ssjg_speed_mult=1.3 // global levers for balancing the form
 	ssjg_def_mult=1.3
-	ssjg_res_mult=0.9
-	ssjg_for_mult=0.8
+	ssjg_res_mult=1
+	ssjg_for_mult=1
 	ssjg_regen_mult=1.3
-	ssjg_recov_mult=0.9
+	ssjg_recov_mult=1
 	ssjg_stamina_regen=1.4			  // If there is a means of applying this to stamina regen while in SSG, it should 100% be added.
 
 mob/proc/SSG()

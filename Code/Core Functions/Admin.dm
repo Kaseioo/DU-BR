@@ -418,7 +418,7 @@ mob/Admin4/verb/Override_All_Spawns()
 
 
 var/auto_reboot_hours = 12
-var/custom_buffs_allowed = 0
+var/custom_buffs_allowed = 1
 
 //this is to fix a bug that i dont know the cause of where blank mobs accumulate endlessly and cause lag. they go away on reboot
 //they all have xyz: 0,0,0. loc: . icon: .
@@ -757,7 +757,7 @@ mob/Admin2/verb/PlayerLogs(mob/M in players)
 
 
 var/cyber_bp_mod = 1.35
-var/allow_age_choosing
+var/allow_age_choosing = 1
 var/max_gravity=500
 
 mob/Admin1/verb/whos_in_safezone()
@@ -1601,7 +1601,7 @@ proc/Wipe(delete_map=1,delete_items=1,cost_threshold=0,turf_health=20000,delete_
 	Prison_Money = 0
 	Bounties=new/list
 	destroyed_planets=new/list
-	Year=1
+	Year=1000
 	SaveWorld(save_map=0)
 	fdel("NPCs")
 	if(delete_map)

@@ -101,8 +101,8 @@ mob/proc
 		else if(sb.can_fire_genki_dama) SpiritBombThrow(sb)
 
 	SpiritBombThrow(obj/Attacks/Genki_Dama/sb)
-		//if(LastSpiritBombValid()) animate(last_Genki_Dama) //stops it from appearing to grow after you've already thrown it before it was fully grown
-		sb.charging = 0 //NEW SEPT 14th 2019
+		if(LastSpiritBombValid()) animate(last_Genki_Dama) //stops it from appearing to grow after you've already thrown it before it was fully grown
+		//sb.charging = 0 //NEW SEPT 14th 2019
 		sb.can_fire_genki_dama = 0 //NEW SEPT 14th 2019
 		sb.next_use = world.time + (sb.self_cooldown * 10)
 		flick("Attack",src)

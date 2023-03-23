@@ -27,10 +27,10 @@ mob/Admin4/verb/Server_Control_Panel()
 mob/Admin5/verb/Test_Creation()
 	set category = "Yeet"
 	set name = "Test Creation Process"
-	src.EditInfo()
+	//src.EditInfo()
 
 
-upForm
+/*upForm
 	viewinfo
 		window_title = "Player Info"
 		window_size = "300x220"
@@ -118,6 +118,8 @@ upForm
 			initFormVar("info", "decline", M.Decline)
 			initFormVar("info", "name", M.name)
 			initFormVar("info", "age", M.Age)
+			initFormVar("info", "BirthAge", (Year - M.Age)*1)
+			initFormVar("info", "real_age", M.Age)
 			initFormVar("info", "gender", M.gender)
 			initFormVar("info", "desc", M.desc)
 
@@ -126,6 +128,8 @@ upForm
 			if(fname == "info")
 				M.name = getFormVar("info", "name")
 				M.Age = getFormVar("info", "age")
+				M.BirthYear = getFormVar("info", "BirthAge")
+				M.real_age = getFormVar("info", "real_age")
 				M.gender = getFormVar("info", "gender")
 				M.desc = getFormVar("info", "desc")
 
@@ -219,7 +223,8 @@ upForm
 			"}
 
 			UpdatePage(page)
-
+*/
+upForm
 	admin_panel
 		window_title = "Admin Panel"
 		window_size = "700x600"

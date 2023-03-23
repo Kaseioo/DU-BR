@@ -5,7 +5,7 @@ mob/proc/NewZenkaiMods()
 
 mob/proc/GetNewZenkaiMod()
 	switch(Race)
-		if("Half Yasai") return 0.5
+		if("Half Yasai") return 1
 		if("Yasai") return 1
 		if("Human") return 0
 		if("Tsujin") return 0
@@ -23,7 +23,7 @@ mob/proc/GetNewZenkaiMod()
 			return 0
 	return 0
 
-var/human_bp_mod = 1.1
+var/human_bp_mod = 1.33
 
 mob/proc/Get_race_starting_bp_mod()
 	if(Class == "Spirit Doll") return human_bp_mod * 0.9
@@ -65,22 +65,6 @@ mob/proc/Disabled_Verb_Check()
 		//verbs-=/mob/verb/Mark_Someone_as_Evil
 
 mob/proc/code_banned()
-	//if((key in list("HeavenOfZombies","Guhan")||client.address=="94.212.98.47"||client.computer_id=="3421801848")
-		//ban_alert("You are permanently banned for knowing a game breaking bug then refusing to reveal it then eventually saying you'll reveal it if you get something in return then when I refuse you blackmail me and say you'll just tell everyone except me the bug so that the game will get ruined")
-		//return 1
-	if(key=="Anonymous Inc."||client.address=="184.153.94.156"||client.computer_id=="1877630120")
-		ban_alert("Rebanned because Exgen asked me to because you didn't change identities and play \
-		anonymously without letting anyone know you are Newton like the conditions of your unban \
-		said, so he figured out it was you and said reban you")
-		return 1
-	if(key=="Newton378"||client.address=="67.242.129.177"||client.computer_id=="3853748069")
-		ban_alert("Rebanned because Exgen asked me to because you didn't change identities and play \
-		anonymously without letting anyone know you are Newton like the conditions of your unban \
-		said, so he figured out it was you and said reban you")
-		return 1
-	//if(key=="Romcio4"||client.address=="109.162.21.8"||client.computer_id=="1649663113")
-	//	ban_alert("You are permanently banned for attacking servers")
-	//	return 1
 	return 0
 mob/proc/ban_alert(msg)
 	//spawn alert(src,msg)
@@ -91,6 +75,138 @@ mob/proc/Carry_over_imprisonments()
 	F["Imprisonments"]>>Imprisonments
 
 mob/var/character_made_time = 0
+mob/proc/Choose_Login() if(client)
+	if(code_banned())
+		sleep(10)
+		del(src)
+		return
+	if(alts=="disallowed")
+		if(client) for(var/mob/m in players) if(m!=src&&m.client&&m.client.address==client.address)
+			src<<"<font color=red><font size=4>Alts are not allowed on this server"
+			sleep(15)
+			del(src)
+			return
+	if(alts=="allowed only if seperate computers")
+		if(client) for(var/mob/m in players) if(m!=src&&m.client)
+			if(m.client.address==client.address&&m.client.computer_id==client.computer_id)
+				src<<"<font color=red><font size=4>Alts are only allowed if using seperate computers"
+				sleep(15)
+				del(src)
+				return
+	Carry_over_imprisonments()
+	switch(alert(src,"Make your choice","","New","Load"))
+		if("New")
+			if(world.time<300&&can_login)
+				alert(src,"You can not make a new character until at least 30 seconds have passed since the \
+				last reboot")
+				Choose_Login()
+				return
+			if(Cant_Remake())
+				alert(src,"You can not remake because you have accepted a rank that is not allowed to remake. \
+				The only way to remake is to have an admin delete your save or edit your Can_Remake variable to 1.")
+				Choose_Login()
+				return
+			if(Max_Players&&Players_with_z()>=Max_Players)
+				alert(src,"The max amount of players is [Max_Players]. You can not log in until someone logs off")
+				Choose_Login()
+				return
+			var/t=Spam_relogger()
+			if(t)
+				t=round((t-world.time)/10)
+				alert(src,"You are relogging too much, this lags everyone else greatly. You must wait \
+				[t] seconds before you can load your character again")
+				Choose_Login()
+				return
+			New_Character()
+			spawn(30) if(src)
+				src<<"<-- Drag this bar to size the map and chatbox+tabs to the way you want it for your screen"
+				src<<"<font size=3><font color=cyan>To see what buttons do what, click the Settings button in the top right (or press Escape) and \
+				choose 'View hotbar menu'"
+		if("Load")
+			if(!can_login)
+				alert(src,"You must wait until the server is finished loading")
+				Choose_Login()
+				return
+			if(Max_Players&&Players_with_z()>=Max_Players)
+				alert(src,"The max amount of players is [Max_Players]. You can not log in until someone logs off")
+				Choose_Login()
+				return
+			var/t=Spam_relogger()
+			if(t)
+				t=round((t-world.time)/10)
+				alert(src,"You are relogging too much, this lags everyone else greatly. You must wait \
+				[t] seconds before you can load your character again")
+				Choose_Login()
+				return
+			Load()
+	Check_if_counterpart_is_alive_or_dead()
+	/*spawn(3000) if(src)
+		src<<"<b><font color=cyan>There are things called 'packs' in this game, which means in-game \
+		benefits such as faster power gains and so on. They cost real money. To view the packs click \
+		the 'Get Packs' button near the top of the screen. Currently [packed_player_count()] / \
+		[Player_Count()] players have packs of any kind."*/
+	if(Frozen)
+		src<<"<font color=yellow>You logged in paralyzed. You will stop being paralyzed in 1 minute."
+		spawn(600) if(src) Frozen=0
+	if(!(locate(/obj/Auras) in src)) contents+=new/obj/Auras
+	if(!(locate(/obj/Crandal) in src)) contents+=new/obj/Crandal
+	if(!(locate(/obj/Colorfy) in src)) contents+=new/obj/Colorfy
+	Fill_Active_Freezes_List()
+	Disabled_Verb_Check()
+	if(!name||name=="") name=key
+	if(!Mob_ID) Mob_ID=get_mob_id()
+	//if(Race=="Demon"&&!(locate(/obj/Demon_Contract) in src)) contents+=new/obj/Demon_Contract
+	if(key=="Super Saiyan X") if(!(locate(/obj/SSX_Planet) in src)) contents+=new/obj/SSX_Planet
+	if(key=="Sonku") if(!(locate(/obj/Sonku_Planet) in src)) contents+=new/obj/Sonku_Planet
+	Remove_Duplicate_Moves()
+	RP_President()
+	Add_Voting()
+	Fullscreen_Check()
+	if(!(locate(/obj/Auto_Attack) in src)) contents+=new/obj/Auto_Attack
+	//Center_Icon(src)
+	Rearrange_Mode_Check()
+	Council_Check()
+	Special_Key_Stuff()
+	Age_Update()
+	Safezone()
+	check_duplicate_dragon_balls()
+	get_tier()
+	alt_alignment_check()
+	logged_in_on_destroyed_planet_check()
+	Update_tab_button_text()
+	//fix halfies having 0 base bp and bp mod
+	if(base_bp<1) base_bp=1
+	if(bp_mod<0.1) bp_mod=0.1
+	if(energy_cap&&max_ki/Eff>energy_cap) max_ki=energy_cap*Eff
+	if(Race=="Majin") Undo_all_t_injections()
+	Calm() //because if they relog angry they can stay perma anger instead of just a short burst
+	Evil_overlay()
+	Delete_excess_buffs()
+	if(last_anger>world.time) last_anger=0
+
+	if(Race=="Majin"&&Regenerate==2) Regenerate=majin_new_regen
+	if(Race=="Majin"&&bp_mod==2.35) bp_mod=new_majin_bp_mod
+	if(Race=="Majin"&&majin_stat_version<=2)
+		alert(src,"Due to recent changes to Majins, you must now redo your stats before you can do anything")
+		Redo_Stats()
+
+	//if(stat_version<=2)
+	//	alert(src,"Due to recent changes in the stat system you must now redo your stats before you can do anything")
+	//	Redo_Stats()
+	stat_version=3
+
+	if(regen<=0||recov<=0)
+		src<<"<font size=6><font color=red>Your character was deleted for using the Android stat bug"
+		sleep(1)
+		Delete_Save(src)
+
+	Rank_Check()
+
+	if(sagas)
+		hero_seniority_check()
+		villain_seniority_check()
+
+	Add_hotbar_proxies()
 
 mob/proc/ClickMakeNewCharacter()
 	if(playerCharacter) return //this person is already loaded into a character somehow. prevents the race stacking bug
@@ -98,18 +214,18 @@ mob/proc/ClickMakeNewCharacter()
 	if(world.time<50 && can_login)
 		alert(src,"You can not make a new character until at least 5 seconds have passed since the \
 		last reboot")
-		//Choose_Login()
+		Choose_Login()
 		return
 
-	/*if(Cant_Remake())
+	if(Cant_Remake())
 		alert(src,"You can not remake because you have accepted a rank that is not allowed to remake. \
 		The only way to remake is to have an admin delete your save or edit your Can_Remake variable to 1.")
 		Choose_Login()
-		return*/
+		return
 
 	if(Max_Players&&Players_with_z()>=Max_Players)
 		alert(src,"The max amount of players is [Max_Players]. You can not log in until someone logs off")
-		//Choose_Login()
+		Choose_Login()
 		return
 
 	var/t=Spam_relogger()
@@ -117,7 +233,7 @@ mob/proc/ClickMakeNewCharacter()
 		t=round((t-world.time)/10)
 		alert(src,"You are relogging too much, this lags everyone else greatly. You must wait \
 		[t] seconds before you can load your character again")
-		//Choose_Login()
+		Choose_Login()
 		return
 
 	New_Character()
@@ -176,11 +292,6 @@ mob/proc
 		src << sound(0)
 		spawn(200) Great_Ape_revert()
 		if(Race=="Puranto") verbs+=typesof(/mob/Puranto/verb)
-		/*spawn(3000) if(src)
-			src<<"<b><font color=cyan>There are things called 'packs' in this game, which means in-game \
-			benefits such as faster power gains and so on. They cost real money. To view the packs click \
-			the 'Get Packs' button near the top of the screen. Currently [packed_player_count()] / \
-			[Player_Count()] players have packs of any kind."*/
 		load_player_settings()
 		Check_if_counterpart_is_alive_or_dead()
 		if(Frozen)
@@ -286,28 +397,6 @@ mob/proc
 		if(!(locate(/obj/Resources) in src))
 			contents += GetCachedObject(/obj/Resources)
 			src << "Resource Bag was missing. New resource bag given to [src]"
-
-		/*
-		copyright
-		src << "\
-		<font size=2><font color=[rgb(255,140,0)]>Important links:<br>\
-		<a href='https://gamejolt.com/games/dragon-universe/393678'>GameJolt Page</a><br>\
-		<a href='https://discord.gg/4DmPbC6'>Discord</a><br>\
-		<a href='https://dragon-universe-game.fandom.com/wiki/Dragon_Universe_Wiki'>Official Wiki</a><br>\
-		<a href='https://www.youtube.com/channel/UCLi2PkUoe5Hec732S6WY1MA?view_as=subscriber'>YouTube</a><br>\
-		<a href='https://du-webhub.herokuapp.com/'>Server List (Automatic)</a><br>\
-		"
-		*/
-		src << "\
-		<font size=2><font color=[rgb(255,140,0)]><br>\
-		<a href='https://www.patreon.com/dragonuniverse'>Patreon</a><br>\
-		<a href='https://discord.gg/4DmPbC6'>Discord</a><br>\
-		"
-
-		if(alt_rewards) src << "<font size=3><font color=[rgb(255,255,0)]>To help the game recover I have enabled 'Alt Rewards' temporarily to inflate \
-			our player count so the game will get a higher listing on BYOND. This means every minute each alt you have logged on you will get \
-			[alt_res_reward] resources in the bank of whichever alt last logged on last. And +[alt_bp_reward * 100 - 100]% BP gain for having [alts_needed_for_bp_reward] alts on but anything past that \
-			does nothing. Leaving them on the login screen works fine no need for a character."
 		DetermineViewSize()
 		//if(key == "Tens of DU"||key == "EXGenesis") Tens = src
 
@@ -369,9 +458,6 @@ var/next_lssj=0
 mob/proc/ApplyStartingBP()
 	if(base_bp < Start_BP * bp_mod) base_bp = Start_BP * bp_mod
 mob/proc
-	EditInfo()
-		upForm(src.client, src, /upForm/creation)
-mob/proc
 	New_Character(reincarnating,force_race,force_elite,dbz_hair,force_low_class)
 		if(force_elite) force_low_class = 0 //cant be both
 
@@ -385,20 +471,15 @@ mob/proc
 
 		if(alignment_on) choose_alignment()
 		if(!dbz_character&&Race!="Yeet")
-
-			EditInfo()
-			while(src.client.upForm_isViewingForm(/upForm/creation/))
-				sleep 5
 			Skin()
-			//icon = pick('BaseHumanPale.dmi', 'BaseHumanTan.dmi', 'BaseHumanDark.dmi')
 
 			if(Race=="Alien") Alien_Stuff()
 
-		//Choose_Hair(force_hair=dbz_hair)
-		RandomHair()
+		Choose_Hair(force_hair=dbz_hair)
 
 		if(!dbz_character)
-
+			Name()
+			Choose_Age()
 			if(!reincarnating) Race_Starting_Stats()
 			Go_to_spawn(First_time=1)
 			if(formod>=2||Pow>=200)
@@ -758,9 +839,9 @@ mob/proc/Half_Yasai()
 	leech_rate=1
 	med_mod=2
 	zenkai_mod=0.5
-	ssjat = 850000 //remember halfies have 2.5 bp mod so that already makes it easier to get the requirement
-	ssj2at = 120000000
-	ssj3at = 800000000
+	ssjat=rand(500000,700000)
+	ssj2at=rand(72000000,102000000)
+	ssj3at=rand(450000000,550000000)
 	ssjdrain /= 10
 	ssjmod*=4
 	ssj2mod*=2
@@ -796,19 +877,18 @@ mob/proc/Yasai(Can_Elite=1,force_elite,force_low_class)
 	leech_rate=1
 	med_mod=1
 	zenkai_mod=1.5
-	ssjat = 1000000
-	ssj2at = 150000000
-	ssj3at = 600000000
+	ssjat=rand(800000,1200000)
+	ssj2at=rand(102000000,132000000)
+	ssj3at=rand(360000000,440000000)
 	gravity_mastered=10
 	base_bp=rand(200,900)
-	/*if(!force_elite && (prob(50) || force_low_class))
+	if(!force_elite && (prob(50) || force_low_class))
 		base_bp=rand(5,20)
 		hbtc_bp=0
 		ssjat*=0.9
 		Class="Low Class"
 	else if(force_elite) Elite_Yasai()
 	else if(Can_Elite&&(world.time>3000||))
-	*/
 	var/elites=0
 	for(var/mob/m in players) if(m.Race=="Yasai"&&m.Class=="Elite") elites++
 	if((Yasai_Count()>=10&&elites/Yasai_Count()<elite_chance/100))

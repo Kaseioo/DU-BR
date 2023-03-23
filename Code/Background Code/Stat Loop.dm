@@ -118,7 +118,7 @@ mob/proc/get_bp(factor_powerup=1)
 			if(sf_count) if(Race in list("Bio-Android","Majin")) n*=1.25
 		n *= hp_ki_bp_loss_mult() / time_freeze_divider
 		n *= Anger_Powerup_SuperGod_Fist_Mix_Mult(factor_powerup)
-		//n*=feat_bp_multiplier
+		n*=feat_bp_multiplier
 		n *= LegendaryZeroDefenseBPMult()
 		if(is_ssj_blue) n *= ssj_blue_mult
 		if(is_ssg) n *= ssjg_bp_mult
@@ -641,7 +641,7 @@ mob/proc
 			if(!istype(a,/area/Braal_Core)) return
 			else
 				if(a.icon_state=="Smog")
-					var/dmg=2.4 // /dur_share()**0.3
+					var/dmg=2.4/dur_share()**0.3
 					var/lungs=Lungs
 					//if(ultra_pack) lungs--
 					if(lungs) dmg/=2

@@ -252,7 +252,7 @@ var/speedDelayMultMod = 2.3
 
 mob/proc/Speed_delay_mult(severity = 1)
 
-	var/ratio = Spd / avg_speed
+	var/ratio = Spd /30
 	var/mod = 1 //1 = perfectly average
 	var/minMod = 0.45 //was 0.25
 	if(ratio > 1) //high speed
@@ -268,11 +268,14 @@ mob/proc/Speed_delay_mult(severity = 1)
 	/*//var/speed_mult = Clamp((Max_Speed/Spd)**severity, 1, 6**severity)
 	var/speed_mult = Clamp((Max_Speed/Spd)**severity, 1, 1 + (5 * severity))
 	//if(key in epic_list) speed_mult=1
-	return speed_mult*/
+	*/
+	//var/speed_mult=Clamp((Max_Speed/Spd)**severity,1,10**severity)
+	//return speed_mult
+	
 
 mob/proc/Decline_Energy_Gain()
 	var/Amount=1
-	//Amount*=decline_gains()
+	Amount*=decline_gains()
 	return Amount
 
 var/Stat_Record=1

@@ -551,9 +551,9 @@ proc/Nuke_detonate(nuke_bp=0, turf/origin, range=30, radiation=1, overlay_prob=8
 							var/dmg = ((1.5*nuke_bp/Turf_Strength) / m.BP)**2 * 34
 							if(!m.client) dmg*=999
 							m.TakeDamage(dmg)
-							//m.radiation_level=100
+							m.radiation_level=100
 							if(m.Health<=0)
-								m.Death("nuclear explosion",really_dead,lose_hero=0,lose_immortality=0)
+								m.Death("nuclear explosion",really_dead,lose_hero=0,lose_immortality=1)
 						sleep(4)
 				if(t.Water)
 					if(radiation)
@@ -611,7 +611,7 @@ var/image/evil_overlay
 mob/proc/Evil_overlay()
 	if(!evil_overlay) Make_evil_overlay()
 	Remove_evil_overlay()
-	//if(alignment_on && alignment=="Evil") overlays+=evil_overlay
+	if(alignment_on && alignment=="Evil") overlays+=evil_overlay
 
 mob/proc/Remove_evil_overlay()
 	if(!evil_overlay) Make_evil_overlay()
@@ -647,7 +647,7 @@ mob/verb/Change_Alignment()
 		src<<"You can not change your alignment for another [round(hours)] hours and [round(hours*60%60)] \
 		minutes"
 		return
-	/*for(var/v in Ranks)
+	for(var/v in Ranks)
 		switch(alignment)
 			if("Good")
 				if(v in list("Elder","Cardinal Kai","North Kai","Kaioshin","Turtle","Korin","Popo","Guardian"))
@@ -656,7 +656,7 @@ mob/verb/Change_Alignment()
 			if("Evil")
 				if(v in list("Daimao"))
 					src<<"The [v] rank is evil only. You can not change alignment unless you remake."
-					return*/
+					return
 	choose_alignment()
 proc/both_good(mob/a,mob/b)
 	if(!ismob(a) || !ismob(b)) return
@@ -748,8 +748,8 @@ mob/proc/alt_alignment_check()
 
 
 mob/proc/balance_rating()
-
-	if(balance_rating_mult == 0) return 1 //means we have it off
+	
+	if(balance_rating_mult == 0) return 1//means we have it off
 
 	var/stat_avg = (Str / strmod + End / endmod + Spd / spdmod + Pow / formod + Res / resmod + Off / offmod + Def / defmod) / 7
 	var/balance_rating = 0

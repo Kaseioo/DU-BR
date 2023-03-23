@@ -423,11 +423,11 @@ var
 	ssj_mults_ver = 3
 
 	ssj4_anger_mult = 1
-	ssj4_recov_mult = 1
+	ssj4_recov_mult = 2
 	ssj4_speed_mult = 1.3
-	ssj4_regen_mult = 1.5
-	ssj4_powerup_mod = 0.5
-	ssj4_bp_mult = 1.5
+	ssj4_regen_mult = 2
+	ssj4_powerup_mod = 1.3
+	ssj4_bp_mult = 1.6
 
 mob/var/ssj_mults_assigned = 0
 mob/var/form_multiplier_overide=0
@@ -587,15 +587,14 @@ obj/Super_Yasai_4_Description
 		desc="\
 		Super Yasai 4 has the following effects:<br>\
 		[ssj4_bp_mult]x more BP than SSj2<br>\
-		[ssj4_anger_mult]x anger boost decrease<br>\
-		[ssj4_speed_mult]x speed increase<br>\
-		[ssj4_regen_mult]x regeneration increase<br>\
-		[ssj4_recov_mult]x recovery decrease<br>\
+		[ssj4_anger_mult]x anger boost <br>\
+		[ssj4_speed_mult]x speed <br>\
+		[ssj4_regen_mult]x regeneration<br>\
+		[ssj4_recov_mult]x recovery<br>\
 		[ssj4_powerup_mod]x powerup rate<br>\
 		"
 
 mob/proc/SSj4() if(!IsGreatApe() && !transing && !ssj && !ismystic)
-	if(Race=="Half Yasai") return
 	if(IsGod()) return
 	transing=1
 	ssj=4

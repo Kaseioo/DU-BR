@@ -56,8 +56,8 @@ mob/proc/Alien_Stuff()
 	//"Elite Alien +[Commas(Starting_BP)] BP (20 AP)"=20,
 	"Stretchy arms (10 AP)"=10,\
 	"Better blast homing (12 AP)"=12,\
-	/*"Less bp loss from low ki (17 AP)"=17,\
-	"Less bp loss from low health (10 AP)"=10,\*/
+	"Less bp loss from low ki (10 AP)"=10,\
+	"Less bp loss from low health (10 AP)"=10,\
 	"Giant Form (15 AP)" = 15,\
 	"Imitate (8 AP)" = 8,\
 	"Gyren Alien (50 AP)" = 50,\
@@ -132,7 +132,7 @@ mob/proc/Alien_Stuff()
 					switch(alert(src, "Technology you create is now much cheaper and better quality", "Options", "Yes", "No"))
 						if("No")
 							goto retry
-					Intelligence=0.95
+					Intelligence=1
 					Alien_points-=L[choice]
 				if("Alien transform (15 AP)")
 					switch(alert(src, "This gives you the ability to use a transformation that increases BP but drains energy", "Options", "Yes", "No"))

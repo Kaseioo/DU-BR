@@ -45,5 +45,5 @@ obj/Attacks/Genki_Dama/Death_Ball
 		Death_Ball()
 
 	verb/Death_Ball()
-		//set category = "Skills"
+		set category = "Skills"
 		usr.TrySpiritBomb2017(src)

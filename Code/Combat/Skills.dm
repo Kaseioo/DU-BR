@@ -225,42 +225,38 @@ mob/proc/Dash_Attack()
 	original_dash_dir=dir
 	lastDashAttack = world.time
 	for(var/steps in 1 to 25)
-		if(KB) break //causes a bug where the person hits the target many many times doing massive damage
-		else
-			var/turf/old_loc=loc
-			var/dash_dir=original_dash_dir
-			if(desired_dash_dir&&round(steps/3)==steps/3)
-				dash_dir=desired_dash_dir
-				desired_dash_dir=0
-			step(src,dash_dir)
-			var/mob/P
-			//if(loc==old_loc) for(P in Get_step(src,dir))
-			//	SafeTeleport(P.loc)
-			//	break
-			//else for(P in loc) if(P!=src) break
-			//if(loc==old_loc)
-			//	break
-			if(P)
-				var/Damage = damage_mult * get_melee_damage(P, allow_one_shot = 0)
-				var/Acc = get_melee_accuracy(P) * 2
-
-				var/KB_Distance = (BP/P.BP)*(Str/P.End)*5
-				if(prob(Acc))
-					flick("Attack",src)
-					var/insta_kill
-					if(P.ki_shield_on())
-						P.Ki -= Damage * P.ShieldDamageReduction() * (P.max_ki/100)/(P.Eff**shield_exponent)*P.Generator_reduction(is_melee=1)
+		if(KB) continue //causes a bug where the person hits the target many many times doing massive damage
+		var/turf/old_loc=loc
+		var/dash_dir=original_dash_dir
+		if(desired_dash_dir&&round(steps/3)==steps/3)
+			dash_dir=desired_dash_dir
+			desired_dash_dir=0
+		step(src,dash_dir)
+		for(var/mob/P in mob_view(1,usr))
+			if(P != usr)
+				world<<"this variable (P) = [P]"
+				if(P && ismob(P))
+					world<<"After the mob";
+					var/Damage = damage_mult * get_melee_damage(P, allow_one_shot = 0)
+					var/Acc = get_melee_accuracy(P) * 2
+					Damage *= BP / P.BP
+					var/KB_Distance = (BP/P.BP)*(Str/P.End)*5
+					if(prob(Acc))
+						world<<"Should flick Attack";
+						flick("Attack",src)
+						if(P.ki_shield_on())
+							P.Ki -= Damage * P.ShieldDamageReduction() * (P.max_ki/100)/(P.Eff**shield_exponent)*P.Generator_reduction(is_melee=1)
+						else
+							if(P.dir == dir) Damage *= 2 //hit from behind
+							P.TakeDamage(Damage)
+						if(P.Health <= 0 || P.Ki <= 0) P.KO(src)
+						if(P) P.DashAttackPart2(src, KB_Distance)
 					else
-						if(P.dir == dir) Damage *= 2 //hit from behind
-						P.TakeDamage(Damage)
-					if(P.Health <= 0 || P.Ki <= 0) P.KO(src)
-					if(P) P.DashAttackPart2(src, KB_Distance)
-				else
-					flick('Zanzoken.dmi',P)
-					step(P,turn(dir,pick(90,-90)))
-			AfterImage(20)
-			damage_mult += 0.3
-			sleep(TickMult(0.7 * Speed_delay_mult(severity=0.25)))
+						flick('Zanzoken.dmi',P)
+						step(P,turn(dir,pick(90,-90)))
+		AfterImage(20)
+		damage_mult += 0.3
+		sleep(TickMult(0.7 * Speed_delay_mult(severity=0.25)))
 	Ki-=Drain
 	dash_attacking=0
 

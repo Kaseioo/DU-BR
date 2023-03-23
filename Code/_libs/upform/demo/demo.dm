@@ -1,5 +1,5 @@
 
-upForm/global_css = " body, table { font-family: Verdana; font-size: 10pt } "
+/*upForm/global_css = " body, table { font-family: Verdana; font-size: 10pt } "
 
 var/upForm/playerlist
 
@@ -241,6 +241,8 @@ upForm
 			var/mob/M = src.getHost()
 			initFormVar("info", "name", M.name)
 			initFormVar("info", "age", M.age)
+			initFormVar("info", "BirthYear", (Year - M.age)*1)
+			initFormVar("info", "real_age", M.age)
 			initFormVar("info", "gender", M.gender)
 			initFormVar("info", "desc", M.desc)
 
@@ -249,6 +251,8 @@ upForm
 			if(fname == "info")
 				M.name = getFormVar("info", "name")
 				M.age = Math.Max(getFormVar("info", "age"), M.incline_age)
+				M.BirthYear = getFormVar("info", "BirthYear")
+				M.real_age = getFormVar("info", "real_age")
 				M.gender = getFormVar("info", "gender")
 				M.desc = getFormVar("info", "desc")
 
@@ -343,4 +347,4 @@ upForm
 
 			UpdatePage(page)
 
-
+*/

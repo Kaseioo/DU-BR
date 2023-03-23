@@ -57,7 +57,7 @@ mob/proc/Buster_Barrage(obj/Attacks/Buster_Barrage/B)
 		var/obj/Blast/A=get_cached_blast()
 
 		var/dmg_pct = 5
-		if(Class == "Legendary Yasai") dmg_pct *= 1.5
+		if(Class == "Legendary Yasai") dmg_pct *= 2
 
 		A.setStats(src,Percent = dmg_pct,Off_Mult=1,Explosion=0)
 		A.weaker_obstacles_cant_destroy_blast = 1
@@ -1176,7 +1176,7 @@ obj/Attacks/Time_Freeze
 		Time_Freeze()
 
 	verb/Time_Freeze()
-		//set category="Skills"
+		set category="Skills"
 		if(usr.attacking||usr.tournament_override(fighters_can=1)) return
 		if(usr.Frozen) return
 		if(usr.KO) return
@@ -1814,7 +1814,7 @@ obj/Attacks/Shockwave
 					Distance=round(Distance)
 					if(Distance>30) Distance=30
 					P.Shockwave_Knockback(Distance,usr.loc, bypass_immunity = 1)
-					var/dmg=1*(usr.BP/P.BP)**bp_exponent*((usr.Pow+usr.Swordless_strength())/(P.Res+P.End))**0.4 * (ki_power+melee_power)/2
+					var/dmg=2*(usr.BP/P.BP)**bp_exponent*((usr.Pow+usr.Swordless_strength())/(P.Res+P.End))**0.4 * (ki_power+melee_power)/2
 
 					dmg*=sagas_bonus(usr,P)
 					usr.training_period(P)

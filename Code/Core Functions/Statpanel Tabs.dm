@@ -421,7 +421,7 @@ mob/proc/Stat_Stat() if(statpanel("Stats"))
 
 	if(has_god_ki || InGodKiRealm()) stat("God Ki Mastery %:", round(god_ki_mastery))
 	stat("Move Speed (pixels):", round(stepSizeLabel,0.1))
-	stat("Melee Speed:", round(1 / (Speed_delay_mult(severity = melee_delay_severity) / speedDelayMultMod), 0.01))
+	stat("Melee Speed:", round(1 / (Speed_delay_mult(severity = melee_delay_severity)/speedDelayMultMod), 0.01))
 
 	SleepTab(8)
 
@@ -660,7 +660,7 @@ mob/proc
 
 	strpcnt_rate()
 		var/n=Swordless_strength()/(Stat_Record*1.5)
-		n*=1.35
+		n*=1.8
 
 		if(race_stats_only_mode) n = Swordless_strength() / race_stats_default_stat_level
 
@@ -673,7 +673,7 @@ mob/proc
 
 	durpcnt_rate()
 		var/n=End/(Stat_Record*1.5)
-		n*=1.35
+		n*=1.8
 
 		if(Class == "Legendary Yasai") n /= lssjTakeDmgMult
 		if(jirenAlien) n /= jirenTakeDmgMult
@@ -690,7 +690,7 @@ mob/proc
 
 	spdpcnt_rate()
 		var/n=Spd/(Stat_Record*1.5)
-		n*=1.35
+		n*=1.8
 
 		if(race_stats_only_mode) n = Spd / race_stats_default_stat_level
 
@@ -703,7 +703,7 @@ mob/proc
 
 	powpcnt_rate()
 		var/n=Pow/(Stat_Record*1.5)
-		n*=1.35
+		n*=1.8
 
 		if(race_stats_only_mode) n = Pow / race_stats_default_stat_level
 
@@ -716,7 +716,7 @@ mob/proc
 
 	respcnt_rate()
 		var/n=Res/(Stat_Record*1.5)
-		n*=1.35
+		n*=1.8
 
 		if(Class == "Legendary Yasai") n /= lssjTakeDmgMult
 		if(jirenAlien) n /= jirenTakeDmgMult
@@ -733,7 +733,7 @@ mob/proc
 
 	offpcnt_rate()
 		var/n=Off/(Stat_Record*1.5)
-		n*=1.35
+		n*=1.8
 
 		if(race_stats_only_mode) n = Off / race_stats_default_stat_level
 
@@ -746,7 +746,7 @@ mob/proc
 
 	defpcnt_rate()
 		var/n=Def/(Stat_Record*1.5)
-		n*=1.35
+		n*=1.8
 
 		if(race_stats_only_mode) n = Def / race_stats_default_stat_level
 

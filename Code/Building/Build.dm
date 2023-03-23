@@ -112,6 +112,7 @@ proc/MapLoad()
 				if(!o.Builder && (o.type in list(/obj/Edges, /obj/Surf, /obj/Trees, /obj/Turfs)))
 					o.reallyDelete = 1
 					o.respawn_on_delete = 0
+					o.DeleteNoWait();
 					o.SafeTeleport(null)
 
 			if(Amount == 20000)
@@ -174,6 +175,7 @@ proc/MapLoadExternal(savefile/F)
 			if(!o.Builder && (o.type in list(/obj/Edges, /obj/Surf, /obj/Trees, /obj/Turfs)))
 				o.reallyDelete = 1
 				o.respawn_on_delete = 0
+				o.DeleteNoWait();
 				o.SafeTeleport(null)
 	world<<"<font color=yellow>External map loaded (+[DebugAmount] turfs)"
 

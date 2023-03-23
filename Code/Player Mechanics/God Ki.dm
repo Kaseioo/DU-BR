@@ -1,5 +1,5 @@
 var
-	god_ki_req = 100000000 //bp per mod
+	god_ki_req = 200000000 //bp per mod
 	god_online
 	min_god_boost = 1.5
 

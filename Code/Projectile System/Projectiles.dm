@@ -400,7 +400,6 @@ obj/Blast
 
 			//apparently beams do too much dmg and other ki attacks do almost none so we fix that here
 			if(Beam) Dmg *= 0.5
-			else Dmg *= 2.5
 
 			A.Ki -= Dmg
 			if(A.Ki <= 0) A.Shield_Revert()
@@ -443,7 +442,7 @@ obj/Blast
 					m.beam_deflect_difficulty = deflect_difficulty
 					m.dir=get_dir(m,src)
 					var/deflect_chance = 1 * global_beam_deflect_mod * Beam_Delay * loop_delay * (5 / deflect_difficulty) * (m.BP/Owner.BP) * (1/(Acc_mult(Clamp(Owner.Off/m.Def,0.1,10))))
-					deflect_chance = 40 //so long as it takes stamina to deflect beams it can be 100% by default
+					deflect_chance = 0 
 					if(m.beaming || m.KO) deflect_chance=0
 					if(m.BeamStruggling()) deflect_chance /= 10000 //only choice is to struggle out of the beam
 					if(m.standing_powerup) deflect_chance *= standing_powerup_deflect_mult
@@ -459,15 +458,16 @@ obj/Blast
 					var/stamDrain = 50 * (Owner.BP / m.BP)**0.33
 					stamDrain *= (Owner.Pow / ((m.Res * 0.33) + (m.Str * 0.33) + (m.Pow * 0.33)))**0.33
 					stamDrain *= global_beam_deflect_mod * deflect_difficulty
-					if(prob(deflect_chance) && m.CanBlastDeflect() && m.stamina >= stamDrain)
+					if(m.stamina >= stamDrain)
+						if(m.CanBlastDeflect())
 
-						m.AddStamina(-stamDrain)
+							m.AddStamina(-stamDrain)
 
-						flick("Attack",m)
-						var/obj/beam_redirector/br2 = new(loc)
-						br2.dir=pick(turn(dir,90),turn(dir,-90))
-						br=br2
-						break
+							flick("Attack",m)
+							var/obj/beam_redirector/br2 = new(loc)
+							br2.dir=pick(turn(dir,90),turn(dir,-90))
+							br=br2
+							break
 			if(!br)
 
 				//seems like we could use the beam_size var/for this

@@ -1018,6 +1018,7 @@ obj/Trees
 	Makeable=0
 	Knockable=0
 	Grabbable=0
+	respawn_on_delete=0
 	Dead_Zone_Immune=1
 	layer=4
 	density=1
@@ -2923,8 +2924,8 @@ turf
 			. = ..()
 
 	Water7
-		//icon='turfs.dmi'
-		//icon_state="lava"
+		icon='turfs.dmi'
+		icon_state="lava"
 		icon = 'Lava 2017.dmi'
 		icon_state = "0,0"
 		density=0
@@ -2969,7 +2970,7 @@ turf
 
 turf/proc/Water_Ripple(mob/P)
 	set waitfor=0
-	return //TEMP DISABLED
+	//return //TEMP DISABLED
 	var/image/I=image(icon='KiWater.dmi')
 	if(P.dir in list(NORTH,SOUTH)) I.icon_state="NS"
 	if(P.dir in list(EAST,WEST)) I.icon_state="EW"
@@ -2982,30 +2983,30 @@ turf/proc/Water_Enter(mob/P)
 		if(P.Flying || !P.density || P.KB)
 			Water_Ripple(P)
 			return 1
-		/*else if(P.Ki>P.Swim_Drain())
+		else if(P.Ki>P.Swim_Drain())
 			Swim(P)
-			return 1*/
+			return 1
 	else
 		Water_Ripple(P)
 		return 1
 
 turf/proc/Water_Exit(mob/P)
-	//for(var/A in P.overlays) if(A:icon) if(A:icon=='Water Overlay.dmi') P.overlays-=A
+	for(var/A in P.overlays) if(A:icon) if(A:icon=='Water Overlay.dmi') P.overlays-=A
 	return 1
 
 var/Swim_Drain=20
 mob/var/Swim_Mastery=1
 mob/proc/Swim_Drain() return (max_ki/Swim_Drain)/Swim_Mastery
 turf/proc/Swim(mob/P)
-	//P.overlays-='Water Overlay.dmi'
-	//spawn for(var/turf/T in range(0,P)) if(T.Water)
-		//P.overlays+='Water Overlay.dmi'
+	P.overlays-='Water Overlay.dmi'
+	spawn for(var/turf/T in range(0,P)) if(T.Water)
+		P.overlays+='Water Overlay.dmi'
 	P.Ki-=P.Swim_Drain()
 	P.Swim_Mastery+=0.02
 mob/proc/Swim(turf/Location)
 	overlays-='Water Overlay.dmi'
 	if(Location.Water) overlays+='Water Overlay.dmi'
-	//spawn if(src) for(var/turf/T in range(0,src)) if(T.Water) overlays+='Water Overlay.dmi'
+	spawn if(src) for(var/turf/T in range(0,src)) if(T.Water) overlays+='Water Overlay.dmi'
 obj/Surf
 	mapObject = 1
 	layer=2

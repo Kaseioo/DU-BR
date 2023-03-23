@@ -139,8 +139,8 @@ mob/proc
 		kikoho_loop=0
 
 	KikohoDamageTo(mob/m)
-		var/dmg = 27 * (BP / m.BP)**bp_exponent * (Pow / m.Res)**0.3
-		if(Race == "Human") dmg *= 1.5
+		var/dmg = 37 * (BP / m.BP)**bp_exponent * (Pow / m.Res)**0.3
+		if(Race == "Human") dmg *= 2
 		return dmg
 
 	FireKikoho(obj/Attacks/Kikoho/k)

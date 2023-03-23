@@ -1,4 +1,4 @@
-proc
+/*proc
 	Initialise_Race(mob/M, T)
 		if(!M.client) return
 		if(!M) return
@@ -32,6 +32,8 @@ upForm
 			initFormVar("info", "decline", M.Decline)
 			initFormVar("info", "name", M.name)
 			initFormVar("info", "age", M.Age)
+			initFormVar("info", "BirthAge", (Year - M.Age)*1)
+			initFormVar("info", "real_age", M.Age)
 			initFormVar("info", "gender", M.gender)
 			initFormVar("info", "desc", M.desc)
 
@@ -40,6 +42,8 @@ upForm
 			if(fname == "info")
 				M.name = getFormVar("info", "name")
 				M.Age = getFormVar("info", "age")
+				M.BirthAge = getFormVar("info", "BirthAge")
+				M.real_age = getFormVar("info", "real_age")
 				M.gender = getFormVar("info", "gender")
 				M.desc = getFormVar("info", "desc")
 
@@ -133,3 +137,4 @@ upForm
 			"}
 
 			UpdatePage(page)
+*/
