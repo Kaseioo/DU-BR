@@ -248,7 +248,6 @@ mob/proc/ClickMakeNewCharacter()
 
 	character_made_time = world.realtime
 	SpawnAtBattleGroundChoice()
-	NewCharHelpAlerts()
 	if(Race == "Android" || Race == "Majin")
 		max_ki = energy_cap * Eff
 		Ki = max_ki

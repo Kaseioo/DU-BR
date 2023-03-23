@@ -304,7 +304,6 @@ mob/proc/Fullscreen_Check(skipAlert) if(client)
 		winset(src,"mainwindow","is-maximized=true")
 	else
 		if(z) //just a quick way to avoid having this popup shown when they first launch the game but are just on the title screen
-			if(!skipAlert) HelpAlert("Use F11 to toggle fullscreen", 30)
 		winset(src,"mainwindow","titlebar=false")
 		winset(src,"button1","is-visible=true")
 		winset(src,"button2","is-visible=true")
