@@ -104,7 +104,7 @@ mob
 				var/dmg = get_melee_damage(m, count_sword = 0) * 7.5
 				var/hp_before_dmg = m.Health
 				m.TakeDamage(dmg)
-				if(dmg >= 100 + hp_before_dmg) m.KO(src, allow_anger = 0)
+				if(dmg >= 100 + hp_before_dmg) m.KO(src, allow_anger = 1)
 				else if(dmg >= hp_before_dmg) m.KO(src)
 				var/remaining_dmg = dmg - hp_before_dmg
 				if(remaining_dmg > 0) m.TakeDamage(remaining_dmg)
@@ -130,6 +130,9 @@ mob
 
 			last_dropkick_debuff_triggered = world.time
 			Health -=20
+			
+			if(Health < 0)
+				usr.KO(src)
 			AddStamina(-99999)
 			attacking = 0
 			sleep(3)

@@ -938,7 +938,7 @@ obj/Attacks/Cyber_Charge
 			player_view(10,usr)<<sound('Blast.wav',volume=30)
 			var/obj/Blast/A=get_cached_blast()
 			A.icon=icon
-			A.setStats(usr,Percent=20,Off_Mult=2,Explosion=1)
+			A.setStats(usr,Percent=10,Off_Mult=2,Explosion=1)
 			A.from_attack=src
 			A.step_size = 32 * 1
 			A.dir=usr.dir
@@ -1088,7 +1088,7 @@ obj/Attacks/Makosen
 		Makosen()
 
 	verb/Makosen()
-		//set category="Skills"
+		set category="Skills"
 		if(usr.cant_blast()) return
 		if(usr.Ki<usr.GetSkillDrain(mod = Drain, is_energy = 1)) return
 		usr.attacking=3
@@ -1110,7 +1110,7 @@ obj/Attacks/Makosen
 					Os-=1
 					var/image/I=image(icon=A.icon,icon_state=A.icon_state,pixel_x=rand(-32,32),pixel_y=rand(-32,32))
 					A.overlays+=I
-				//A.Deflectable=0
+				A.Deflectable=0
 				A.apply_short_range_beam_knock=0
 				A.layer=4
 				A.setStats(usr, Percent = 17, Off_Mult = 1,Explosion = 0)
@@ -1127,7 +1127,7 @@ obj/Attacks/Makosen
 
 				//to keep makosen from shooting thru 1 tile thick walls when you fire it right next to it
 				var/turf/t=A.loc
-				if(t && isturf(t) && t.Health>A.BP) del(A)
+				if(t && isturf(t) && t.Owner && t.Health>A.BP) del(A)
 
 				if(A) A.Beam()
 				spawn if(A && A.z) walk(A,A.dir,ShotSpeed * world.tick_lag)

@@ -338,12 +338,12 @@ mob/proc/anger(anger_mult=1,ssj_possible=1,reason) if(can_anger())
 			if(has_ssj_req(1.6) && (ssj_inspired >= 1 || (BP > ssjat * 3 && !SSjAble))) SSj()
 			if(has_ssj2_req(1.3) && (ssj_inspired >= 2 || (BP > ssj2at * 1.8 && !SSj2Able))) SSj2()
 			if(has_ssj3_req(1.3)&&(ssj_inspired >= 3 || (BP > ssj3at * 1.4 && !SSj3Able))) SSj3()
-			if(ssj==ssj_inspired) ssj_inspired=0
+			if(ssj==ssj_inspired) ssj_inspired=0D
 			*/
 			if(has_ssj_req(1.6) && !SSjAble) SSj()
 			if(has_ssj2_req(1.3) && !SSj2Able) SSj2()
 			if(has_ssj3_req(1.3) && !SSj3Able) SSj3()
-	spawn(400) Calm()
+	spawn(800) Calm()
 
 mob/proc/Calm()
 	if(anger>100)
@@ -412,13 +412,6 @@ mob/proc/KO(mob/Z,allow_anger=1)
 				var/can_anger
 				if(Z && ismob(Z) && Z.client && !(Z.ckey in anger_reasons))
 					can_anger = 1
-
-				//also let them get a double anger if they are being teamed on
-				for(var/mob/m in player_view(35,src))
-					if(m.client && m != src && m != Z && !m.KO && m.z == z && m.Extrapolated_target_is(src, hit_req = 7, min_time = 40, max_time = 300))
-						if(!(m.ckey in anger_reasons))
-							can_anger = 1
-							break
 
 				if(world.time > last_anger + anger_wait || can_anger)
 					var/ko_reason = Z
