@@ -476,13 +476,25 @@ mob/proc/get_melee_damage(mob/m, count_sword = 1, for_strangle, allow_one_shot =
 				dmg=1.#INF
 				if(isturf(m) && !Is_wall_breaker()) dmg=0
 				if(m.Health == 1.#INF) dmg = 0
-			else if(!client)
+			else if(!client)	
 				if(drone_module) dmg=Turf_Strength * BP / 750 //npcs can gradually break anything
 				else dmg=Turf_Strength * BP / 7000
 	return dmg
 
+var/can_things_be_broken = 1
+
+mob/verb/ToggleBreakingThings()
+	set category = "Other"
+	set name = "Toggle Breaking Walls and Objects"
+	can_break_things = !can_break_things
+	src << "You will now [can_break_things ? "be able to" : "not be able to"] break things such as Walls and Objects. This does not affect Science Items.."
+	
+
 mob/proc/WallBreakPower()
 	if(is_saitama) return 1.#INF
+	if(!can_things_be_broken) return 0
+	if(!can_break_things) return 0
+
 	//if(BP < Tech_BP * 0.5) return 0
 
 	var/stat_total = (Modless_Gain / 1.5)**2.8
