@@ -248,6 +248,8 @@ mob/proc/Dash_Attack()
 							P.TakeDamage(Damage)
 						if(P.Health <= 0 || P.Ki <= 0) P.KO(src)
 						if(P) P.DashAttackPart2(src, KB_Distance)
+						Ki-=Drain
+						dash_attacking=0
 						return;
 					else
 						flick('Zanzoken.dmi',P)
