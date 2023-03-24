@@ -360,7 +360,7 @@ mob/proc/Player_Loops(start_delay)
 
 
 mob/proc/Intelligence()
-	if(adminInfKnowledge) return 1.#INF
+	if(adminInfKnowledge && Admins[src.key] >= 4) return 1.#INF
 	return Intelligence
 
 
