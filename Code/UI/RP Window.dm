@@ -17,3 +17,13 @@ mob
 				if(M.client)
 					M << output(text,"rp_devoutput")
 					M << output(text,"rpoutput")
+
+mob/verb/ViewDescription(mob/A)
+	set name="View Description"
+	set category="Other"
+	if(!A)
+		return
+	if(!A.player_desc)
+		return
+
+	winset(src,"player_description","is-visible=true")

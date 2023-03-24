@@ -255,4 +255,10 @@ mob/Click()
 			break
 		usr.Target=src
 		if(player_desc && player_desc != "")
-			usr << html_encode(player_desc)
+			// remove a tags from the description
+			var/regex/regex = new("<a href=\"byond://(.*?)\">(.*?)</a>", "g")
+			var/desc = regex.Replace(player_desc, "$2")
+
+			usr << output(text,"player_description_output")
+
+			usr << desc
