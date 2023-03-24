@@ -203,6 +203,8 @@ mob/verb
 		Say_Spark()
 		if(!msg) msg = input("Type a message for people in sight to see", "Local Chat") as null|text
 		if(msg)
+			if(locate(/obj/items/Clothes/Neko_Collar) in item_list)
+				msg = "[msg]～"
 			var/t = "<span style='font-size:10pt;color:[TextColor];font-family:Walk The Moon'>[name]: [msg]</span>"
 			for(var/mob/m in Say_Recipients())
 				if(m.last_drone_msg != msg || !drone_module)
