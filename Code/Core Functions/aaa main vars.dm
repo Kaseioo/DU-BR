@@ -126,7 +126,6 @@ var
 mob/var
 	stamina = 100
 	max_stamina = 100
-
 	base_bp=1
 	bp_mod=1
 	Str=100
@@ -181,3 +180,4 @@ mob/var
 	Demonic
 	stun_resistance_mod=1
 	ascension_bp=1000000
+	Limit_Breaker_Mastery = 50

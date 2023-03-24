@@ -510,6 +510,7 @@ mob/verb/Stat_Focus()
 			else src<<"You will now train power instead of knowledge when meditating"
 
 
+var/isSparring = 0
 mob/proc/Leech(mob/P,N=1,no_adapt=0,give_as_hbtc_bp=0,android_matters=1,weights_count=1)
 	N *= adapt_mod * 0.2 //server leech modifier * arbitrary modifier
 	if(!P) return
@@ -544,7 +545,7 @@ mob/proc/Leech(mob/P,N=1,no_adapt=0,give_as_hbtc_bp=0,android_matters=1,weights_
 
 	while(N)
 		N--
-
+		isSparring = 1
 		LeechGodKi(P)
 
 		if(gravity_mastered<P.gravity_mastered)
@@ -598,6 +599,7 @@ mob/proc/Leech(mob/P,N=1,no_adapt=0,give_as_hbtc_bp=0,android_matters=1,weights_
 		P.Ki=old_ki
 		P.Health=old_health
 		P.BP=P.get_bp()
+	isSparring = 0
 
 mob/proc/Can_Train()
 	if(KO || attacking || !move) return
