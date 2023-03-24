@@ -1127,7 +1127,7 @@ obj/Attacks/Makosen
 
 				//to keep makosen from shooting thru 1 tile thick walls when you fire it right next to it
 				var/turf/t=A.loc
-				if(t && isturf(t) && t.Builder && t.Health>A.BP) del(A)
+				if(t && isturf(t) && t.Owner && t.Health>A.BP) del(A)
 
 				if(A) A.Beam()
 				spawn if(A && A.z) walk(A,A.dir,ShotSpeed * world.tick_lag)
