@@ -129,7 +129,7 @@ mob
 							m.Death(src)
 
 			last_dropkick_debuff_triggered = world.time
-			Health *=-20
+			Health -=20
 			AddStamina(-99999)
 			attacking = 0
 			sleep(3)

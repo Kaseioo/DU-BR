@@ -60,7 +60,7 @@ var
 
 	base_melee_damage = 3.5
 	base_melee_delay = 3 //was 3
-	melee_delay_severity = 0.5 //was 0.52
+	melee_delay_severity = 1 //was 0.52
 	lowSpeedDmgAdd = 0.2
 
 	superior_force_exponent = 0.35 //was .4

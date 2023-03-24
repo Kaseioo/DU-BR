@@ -225,7 +225,7 @@ mob/proc/Dash_Attack()
 	original_dash_dir=dir
 	lastDashAttack = world.time
 	for(var/steps in 1 to 25)
-		if(KB) continue //causes a bug where the person hits the target many many times doing massive damage
+		if(KB) return //causes a bug where the person hits the target many many times doing massive damage
 		var/turf/old_loc=loc
 		var/dash_dir=original_dash_dir
 		if(desired_dash_dir&&round(steps/3)==steps/3)
