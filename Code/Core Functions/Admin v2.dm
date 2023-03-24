@@ -14,7 +14,38 @@ proc/Debug(m as mob,t)
 	return 0
 	#endif
 
+mob/proc/manage_deadzone_pressure_immune_races()
+	if(Admins[src.key]>=4)
+		switch(input(src,"Add or remove from the Deadzone Pressure Immunity list") in list("Cancel","Add","Remove"))
+			if("Cancel") return
+			if("Add")
+				var/list/L=list("Cancel")
+				for(var/V in Race_List()) if(!(V in deadzone_pressure_immune_races)) L+=V
+				var/N=input(src,"Which race do you want to make Immune to Deadzone pressure bploss?") in L
+				deadzone_pressure_immune_races+=N
+				world<<"[N] has been made immune to Deadzone Pressure bploss by admins"
+			if("Remove")
+				var/N=input(src,"Which race do you want to make suffer from Deadzone pressure bploss again?") in deadzone_pressure_immune_races
+				if(N=="Cancel") return
+				deadzone_pressure_immune_races-=N
+				world<<"[N] has been made to suffer from Deadzone Pressure bploss by admins"
 
+mob/proc/manage_deadzone_pressure_resistant_races()
+	if(Admins[src.key]>=4)
+		switch(input(src,"Add or remove from the Deadzone Pressure Resistant list") in list("Cancel","Add","Remove"))
+			if("Cancel") return
+			if("Add")
+				var/list/L=list("Cancel")
+				for(var/V in Race_List()) if(!(V in deadzone_pressure_resistant_races)) L+=V
+				var/N=input(src,"Which race do you want to make resistant to Deadzone pressure bploss?") in L
+				deadzone_pressure_resistant_races+=N
+				world<<"[N] has been made resistant to Deadzone Pressure bploss by admins"
+			if("Remove")
+				var/N=input(src,"Which race do you want to make suffer from Deadzone pressure bploss again?") in deadzone_pressure_resistant_races
+				if(N=="Cancel") return
+				deadzone_pressure_resistant_races-=N
+				world<<"[N] has been made to suffer from Deadzone Pressure bploss by admins"
+				
 mob/proc
 	ServerSettings()
 		upForm(src.client, src, /upForm/admin_panel)
@@ -977,6 +1008,10 @@ upForm
 			switch(action)
 				if("close")
 					del(src)
+				if("deadzone_pressure_immune")
+					M.manage_deadzone_pressure_immune_races()
+				if("deadzone_pressure_resistant")
+					M.manage_deadzone_pressure_resistant_races()
 				if("menu")
 					if(C.mob == M)
 						if(upForm(C, C.mob, /upForm/admin_panel))
@@ -1025,6 +1060,23 @@ upForm
 			initFormVar("admin", "kai_heaven_boost", kai_heaven_boost)
 			initFormVar("admin", "dead_power_loss", dead_power_loss)
 			initFormVar("admin", "keep_body_loss", keep_body_loss)
+
+			initFormVar("admin", "deadzone_pressure_reduces_bp", 				deadzone_pressure)
+			
+			initFormVar("admin", "deadzone_pressure_resistant_race_bploss",   	deadzone_pressure_resistant_race_bploss)
+			initFormVar("admin", "deadzone_pressure_living_bploss", 			deadzone_pressure_living_bploss)
+			initFormVar("admin", "deadzone_pressure_keepbody_bploss", 			deadzone_pressure_keepbody_bploss)
+			initFormVar("admin", "deadzone_pressure_dead_bploss", 				deadzone_pressure_dead_bploss)
+
+			initFormVar("admin", "deadzone_pressure_immune_races", 				deadzone_pressure_immune_races)
+			initFormVar("admin", "deadzone_pressure_resistant_races", 			deadzone_pressure_resistant_races)
+
+			initFormVar("admin", "limitbreak_mastery",   						can_limit_breaker_be_mastered)
+			initFormVar("admin", "limitbreak_maximum_mastery", 					limit_breaker_maximum_mastery)
+			initFormVar("admin", "limitbreak_minimum_duration", 				limit_breaker_minimum_duration_multiplier)
+			initFormVar("admin", "limitbreak_maximum_duration", 				limit_breaker_maximum_duration_multiplier)
+
+
 			initFormVar("admin", "hakai_cooldown", hakai_cooldown)
 			initFormVar("admin", "hakai_bp_advantage_needed", hakai_bp_advantage_needed)
 			initFormVar("admin", "BASE_MOVE_DELAY", BASE_MOVE_DELAY)
@@ -1072,6 +1124,23 @@ upForm
 					if("kai_heaven_boost") setFormVar(fname, name, text2num(value))
 					if("dead_power_loss") setFormVar(fname, name, text2num(value))
 					if("keep_body_loss") setFormVar(fname, name, text2num(value))
+
+					if("deadzone_pressure_reduces_bp") 				setFormVar(fname, name, text2num(value))
+					if("deadzone_pressure_resistant_race_bploss") 	setFormVar(fname, name, text2num(value))
+					if("deadzone_pressure_living_bploss") 			setFormVar(fname, name, text2num(value))
+					if("deadzone_pressure_keepbody_bploss") 		setFormVar(fname, name, text2num(value))
+					if("deadzone_pressure_dead_bploss") 			setFormVar(fname, name, text2num(value))
+
+					if("deadzone_pressure_resistant_races") 		setFormVar(fname, name, value)
+					if("deadzone_pressure_immune_races") 			setFormVar(fname, name, value)
+
+					// limit break
+					if("limitbreak_mastery") 						setFormVar(fname, name, text2num(value))
+					if("limitbreak_maximum_mastery") 				setFormVar(fname, name, text2num(value))
+					if("limitbreak_minimum_duration") 				setFormVar(fname, name, text2num(value))
+					if("limitbreak_maximum_duration") 				setFormVar(fname, name, text2num(value))
+					
+
 					if("hakai_cooldown") setFormVar(fname, name, text2num(value))
 					if("hakai_bp_advantage_needed") setFormVar(fname, name, text2num(value))
 					if("BASE_MOVE_DELAY") setFormVar(fname, name, text2num(value))
@@ -1119,6 +1188,22 @@ upForm
 					kai_heaven_boost= getFormVar("admin", "kai_heaven_boost")
 					dead_power_loss= getFormVar("admin", "dead_power_loss")
 					keep_body_loss= getFormVar("admin", "keep_body_loss")
+
+					deadzone_pressure 								= getFormVar("admin", "deadzone_pressure_reduces_bp")
+
+					deadzone_pressure_resistant_race_bploss			= getFormVar("admin", "deadzone_pressure_resistant_race_bploss")
+					deadzone_pressure_living_bploss					= getFormVar("admin", "deadzone_pressure_living_bploss")
+					deadzone_pressure_keepbody_bploss				= getFormVar("admin", "deadzone_pressure_keepbody_bploss")
+					deadzone_pressure_dead_bploss					= getFormVar("admin", "deadzone_pressure_dead_bploss")
+
+					deadzone_pressure_immune_races 					= getFormVar("admin", "deadzone_pressure_immune_races")
+					deadzone_pressure_resistant_races 				= getFormVar("admin", "deadzone_pressure_resistant_races")
+
+					can_limit_breaker_be_mastered					= getFormVar("admin", "limitbreak_mastery")
+					limit_breaker_maximum_mastery					= getFormVar("admin", "limitbreak_maximum_mastery")
+					limit_breaker_minimum_duration_multiplier		= getFormVar("admin", "limitbreak_minimum_duration")
+					limit_breaker_maximum_duration_multiplier		= getFormVar("admin", "limitbreak_maximum_duration")
+
 					hakai_cooldown= getFormVar("admin", "hakai_cooldown")
 					hakai_bp_advantage_needed= getFormVar("admin", "hakai_bp_advantage_needed")
 					BASE_MOVE_DELAY= getFormVar("admin", "BASE_MOVE_DELAY")
@@ -1154,45 +1239,95 @@ upForm
 			    <tr><td colspan="2"><hr /></td></tr>
 			    </table>
 			  </tr></td>
-				<tr height="1em" valign="top"><td width="30%"><b>Hide Energy Toggle: <td width="60%"><center>(0=Off, 1=On)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="hide_energy_enabled" value="[getFormVar("admin","hide_energy_enabled")]" size="3" maxlength="1"/><span class="error">[errors["hide_energy_enabled"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><br><b>Hide Energy Toggle: <td width="60%"><center>(0=Off, 1=On)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="hide_energy_enabled" value="[getFormVar("admin","hide_energy_enabled")]" size="3" maxlength="1"/><span class="error">[errors["hide_energy_enabled"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>God Ki Toggle: <td width="60%"><center>(0=Off, 1=On)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="allow_god_ki" value="[getFormVar("admin","allow_god_ki")]" size="3" maxlength="1"/><span class="error">[errors["allow_god_ki"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>Stun Stops Movement: <td width="60%"><center>(0=No, 1=Yes)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="stun_stops_movement" value="[getFormVar("admin","stun_stops_movement")]" size="3" maxlength="1"/><span class="error">[errors["stun_stops_movement"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>Disable Shockwaves: <td width="60%"><center>(0=On, 1=Off)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="shockwaves_off" value="[getFormVar("admin","shockwaves_off")]" size="3" maxlength="1"/><span class="error">[errors["shockwaves_off"]]</span></td></tr>
+				
+				<tr><td><br><center><b>Toggles</b></center></td></tr>
+				
+				<tr height="1em" valign="top"><td width="30%"><br><b>Disable Shockwaves: <td width="60%"><center>(0=On, 1=Off)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="shockwaves_off" value="[getFormVar("admin","shockwaves_off")]" size="3" maxlength="1"/><span class="error">[errors["shockwaves_off"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Disable Explosions: <td width="60%"><center>(0=On, 1=Off)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="explosions_off" value="[getFormVar("admin","explosions_off")]" size="3" maxlength="1"/><span class="error">[errors["explosions_off"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Disable Dust: <td width="60%"><center>(0=On, 1=Off)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="dust_off" value="[getFormVar("admin","dust_off")]" size="3" maxlength="1"/><span class="error">[errors["dust_off"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>Allow Ultra Instinct: <td width="60%"><center>(0=Off, 1=On)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="allow_ultra_instinct" value="[getFormVar("admin","allow_ultra_instinct")]" size="3" maxlength="1"/><span class="error">[errors["allow_ultra_instinct"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>Force 32px Movement: <td width="60%"><center>(0=Off, 1=On)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="force_32_pix_movement" value="[getFormVar("admin","force_32_pix_movement")]" size="3" maxlength="1"/><span class="error">[errors["force_32_pix_movement"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>Allow Dragon Rush: <td width="60%"><center>(0=Off, 1=On)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="allow_dragon_rush" value="[getFormVar("admin","allow_dragon_rush")]" size="3" maxlength="1"/><span class="error">[errors["allow_dragon_rush"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Disable Stat Lowering: <td width="60%"><center>(0=On, 1=Off)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="lower_stats_off" value="[getFormVar("admin","lower_stats_off")]" size="3" maxlength="1"/><span class="error">[errors["lower_stats_off"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>Bind Limit: <td width="60%"><center>(0=No Limit, 1=Limit)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="limit_bind" value="[getFormVar("admin","limit_bind")]" size="3" maxlength="1"/><span class="error">[errors["limit_bind"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>Force Cyber BP on KOd: <td width="60%"><center>(0=Disallowed, 1=Allowed)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="can_cyber_KOd_people" value="[getFormVar("admin","can_cyber_KOd_people")]" size="3" maxlength="1"/><span class="error">[errors["can_cyber_KOd_people"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>Allow Custom Buffs: <td width="60%"><center>(0=Off, 1=On)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="custom_buffs_allowed" value="[getFormVar("admin","custom_buffs_allowed")]" size="3" maxlength="1"/><span class="error">[errors["custom_buffs_allowed"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>Enable Ignore SI: <td width="60%"><center>(0=Off, 1=On)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="can_ignore_SI" value="[getFormVar("admin","can_ignore_SI")]" size="3" maxlength="1"/><span class="error">[errors["can_ignore_SI"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>Diagonal Movement: <td width="60%"><center>(0=Off, 1=On)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="allow_diagonal_movement" value="[getFormVar("admin","allow_diagonal_movement")]" size="3" maxlength="1"/><span class="error">[errors["allow_diagonal_movement"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>Forced Injections: <td width="60%"><center>(0=Off, 1=On)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="forced_injections" value="[getFormVar("admin","forced_injections")]" size="3" maxlength="1"/><span class="error">[errors["forced_injections"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>Perma-Death: <td width="60%"><center>(0=Off, 1=On)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="Perma_Death" value="[getFormVar("admin","Perma_Death")]" size="3" maxlength="1"/><span class="error">[errors["Perma_Death"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Disable Ki: <td width="60%"><center>(0=On, 1=Off)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="Ki_Disabled" value="[getFormVar("admin","Ki_Disabled")]" size="3" maxlength="1"/><span class="error">[errors["Ki_Disabled"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>Hakai Wipes Save: <td width="60%"><center>(0=Off, 1=On)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="hakai_wipes_character" value="[getFormVar("admin","hakai_wipes_character")]" size="3" maxlength="1"/><span class="error">[errors["hakai_wipes_character"]]</span></td></tr>
+				
+				<tr><td><br><center><b>Mechanics</b></center></td></tr>
+				
+				<tr height="1em" valign="top"><td width="30%"><br><b>Allow Ultra Instinct: <td width="60%"><center>(0=Off, 1=On)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="allow_ultra_instinct" value="[getFormVar("admin","allow_ultra_instinct")]" size="3" maxlength="1"/><span class="error">[errors["allow_ultra_instinct"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Allow Dragon Rush: <td width="60%"><center>(0=Off, 1=On)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="allow_dragon_rush" value="[getFormVar("admin","allow_dragon_rush")]" size="3" maxlength="1"/><span class="error">[errors["allow_dragon_rush"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Allow Custom Buffs: <td width="60%"><center>(0=Off, 1=On)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="custom_buffs_allowed" value="[getFormVar("admin","custom_buffs_allowed")]" size="3" maxlength="1"/><span class="error">[errors["custom_buffs_allowed"]]</span></td></tr>
+				
+				<tr><td><br><center><b>Settings</b></center></td></tr>
+				
+				<tr height="1em" valign="top"><td width="30%"><br><b>Force Cyber BP on KOd: <td width="60%"><center>(0=Disallowed, 1=Allowed)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="can_cyber_KOd_people" value="[getFormVar("admin","can_cyber_KOd_people")]" size="3" maxlength="1"/><span class="error">[errors["can_cyber_KOd_people"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Forced Injections: <td width="60%"><center>(0=Off, 1=On)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="forced_injections" value="[getFormVar("admin","forced_injections")]" size="3" maxlength="1"/><span class="error">[errors["forced_injections"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Enable Ignore SI: <td width="60%"><center>(0=Off, 1=On)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="can_ignore_SI" value="[getFormVar("admin","can_ignore_SI")]" size="3" maxlength="1"/><span class="error">[errors["can_ignore_SI"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Perma-Death: <td width="60%"><center>(0=Off, 1=On)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="Perma_Death" value="[getFormVar("admin","Perma_Death")]" size="3" maxlength="1"/><span class="error">[errors["Perma_Death"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Death Setting:<td width="60%"><center>(Changes Death Mode)</center></td></b></td><td width="10%" colspan="3"><select class="form" name="death_setting" value="[getFormVar("admin","death_setting")]" size="3" /><option value="default">Default</option><option value="Rebirth upon death">Auto Reincarnate</option></select><span class="error">[errors["death_setting"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>Server Regeneration: <td width="60%"><center>(Changes Server Regeneration)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="Server_Regeneration" value="[getFormVar("admin","Server_Regeneration")]" size="3" maxlength="20"/><span class="error">[errors["Server_Regeneration"]]</span></td></tr>
+				
+				<tr><td><br><center><b>Stats</b></center></td></tr>
+				
+				<tr height="1em" valign="top"><td width="30%"><br><b>Server Regeneration: <td width="60%"><center>(Changes Server Regeneration)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="Server_Regeneration" value="[getFormVar("admin","Server_Regeneration")]" size="3" maxlength="20"/><span class="error">[errors["Server_Regeneration"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Server Recovery: <td width="60%"><center>(Changes Server Recovery)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="Server_Recovery" value="[getFormVar("admin","Server_Recovery")]" size="3" maxlength="20"/><span class="error">[errors["Server_Recovery"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>KO Time Multiplier: <td width="60%"><center>(1x Timer = 80 Seconds w/ 1x Regen)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="KO_Time" value="[getFormVar("admin","KO_Time")]" size="3" maxlength="20"/><span class="error">[errors["KO_Time"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>Reincarnation BP Retention Ratio: <td width="60%"><center>(0.01 = 1% Retention, 1=100% Retention)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="reincarnation_loss" value="[getFormVar("admin","reincarnation_loss")]" size="3" maxlength="20"/><span class="error">[errors["reincarnation_loss"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>Reincarnation BP Recovery: <td width="60%"><center>(Multiplies rate at which you regain BP after Reincarnation)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="reincarnation_recovery" value="[getFormVar("admin","reincarnation_recovery")]" size="3" maxlength="20"/><span class="error">[errors["reincarnation_recovery"]]</span></td></tr>
+				
 				<tr height="1em" valign="top"><td width="30%"><b>Melee Power: <td width="60%"><center>(Melee Damage Multiplier)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="melee_power" value="[getFormVar("admin","melee_power")]" size="3" maxlength="20"/><span class="error">[errors["melee_power"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Ki Power: <td width="60%"><center>(Ki Damage Multiplier)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="ki_power" value="[getFormVar("admin","ki_power")]" size="3" maxlength="20"/><span class="error">[errors["ki_power"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>Max Custom Buff BP Multi: <td width="60%"><center>(Limit of max multiplier for BP setting in Buffs)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="max_buff_bp" value="[getFormVar("admin","max_buff_bp")]" size="3" maxlength="20"/><span class="error">[errors["max_buff_bp"]]</span></td></tr>
+				
 				<tr height="1em" valign="top"><td width="30%"><b>Stun Time Multiplier: <td width="60%"><center>(Multiplies Stun Duration)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="global_stun_mod" value="[getFormVar("admin","global_stun_mod")]" size="3" maxlength="20"/><span class="error">[errors["global_stun_mod"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>God-Fist Damage Multiplier: <td width="60%"><center>(Changes God-Fist Damage)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="God_FistMod" value="[getFormVar("admin","God_FistMod")]" size="3" maxlength="20"/><span class="error">[errors["God_FistMod"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Knockback Multiplier: <td width="60%"><center>(Changes Knockback Mod)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="knockback_mod" value="[getFormVar("admin","knockback_mod")]" size="3" maxlength="20"/><span class="error">[errors["knockback_mod"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>Demon Boost in Hell: <td width="60%"><center>(BP Multiplier for Demons in Hell)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="demon_hell_boost" value="[getFormVar("admin","demon_hell_boost")]" size="3" maxlength="20"/><span class="error">[errors["demon_hell_boost"]]</span></td></tr>
+				
+				<tr height="1em" valign="top"><td width="30%"><b>God-Fist Damage Multiplier: <td width="60%"><center>(Changes God-Fist Damage)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="God_FistMod" value="[getFormVar("admin","God_FistMod")]" size="3" maxlength="20"/><span class="error">[errors["God_FistMod"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Max Custom Buff BP Multi: <td width="60%"><center>(Limit of max multiplier for BP setting in Buffs)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="max_buff_bp" value="[getFormVar("admin","max_buff_bp")]" size="3" maxlength="20"/><span class="error">[errors["max_buff_bp"]]</span></td></tr>
+				
+				<tr><td><br><center><b>Afterlife</b></center></td></tr>
+
+				<tr height="1em" valign="top"><td width="30%"><br><b>Demon Boost in Hell: <td width="60%"><center>(BP Multiplier for Demons in Hell)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="demon_hell_boost" value="[getFormVar("admin","demon_hell_boost")]" size="3" maxlength="20"/><span class="error">[errors["demon_hell_boost"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Kai Boost in Heaven: <td width="60%"><center>(BP Multiplier for Kais in Heaven)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="kai_heaven_boost" value="[getFormVar("admin","kai_heaven_boost")]" size="3" maxlength="20"/><span class="error">[errors["kai_heaven_boost"]]</span></td></tr>
+				
 				<tr height="1em" valign="top"><td width="30%"><b>Dead BP Retention Ratio: <td width="60%"><center>(0.5 = 50% Power, 1=100% Power)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="dead_power_loss" value="[getFormVar("admin","dead_power_loss")]" size="3" maxlength="20"/><span class="error">[errors["dead_power_loss"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Keep Body BP Retention Ratio: <td width="60%"><center>(0.5 = 50% Power, 1=100% Power)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="keep_body_loss" value="[getFormVar("admin","keep_body_loss")]" size="3" maxlength="20"/><span class="error">[errors["keep_body_loss"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>Hakai Cooldown: <td width="60%"><center>(300 = 30 Seconds, 10 = 1 Second)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="hakai_cooldown" value="[getFormVar("admin","hakai_cooldown")]" size="3" maxlength="20"/><span class="error">[errors["hakai_cooldown"]]</span></td></tr>
+				
+				<tr height="1em" valign="top"><td width="30%"><b>Reincarnation BP Retention Ratio: <td width="60%"><center>(0.01 = 1% Retention, 1=100% Retention)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="reincarnation_loss" value="[getFormVar("admin","reincarnation_loss")]" size="3" maxlength="20"/><span class="error">[errors["reincarnation_loss"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Reincarnation BP Recovery: <td width="60%"><center>(Multiplies rate at which you regain BP after Reincarnation)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="reincarnation_recovery" value="[getFormVar("admin","reincarnation_recovery")]" size="3" maxlength="20"/><span class="error">[errors["reincarnation_recovery"]]</span></td></tr>
+				
+				<tr height="1em" valign="top"><td width="30%"><b>Bind Limit: <td width="60%"><center>(0=No Limit, 1=Limit)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="limit_bind" value="[getFormVar("admin","limit_bind")]" size="3" maxlength="1"/><span class="error">[errors["limit_bind"]]</span></td></tr>
+
+				<tr><td><br><center><b>Deadzone Pressure</b></center></td></tr>
+
+				<tr height="1em" valign="top"><td width="30%"><br><b>Does Deadzone reduce the BP of races in it: <td width="60%"><center>(0 = False, 1 = True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="deadzone_pressure_reduces_bp" value="[getFormVar("admin","deadzone_pressure_reduces_bp")]" size="3" maxlength="20"/><span class="error">[errors["deadzone_pressure_reduces_bp"]]</span></td></tr>
+				
+				<tr height="1em" valign="top"><td width="30%"><b>BP loss for resistance races in the Deadzone: <td width="60%"><center>(0.5 = 0.5x their normal BP, 1 = no bploss)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="deadzone_pressure_resistant_race_bploss" value="[getFormVar("admin","deadzone_pressure_resistant_race_bploss")]" size="3" maxlength="20"/><span class="error">[errors["deadzone_pressure_resistant_race_bploss"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>BP loss for living players in the Deadzone: <td width="60%"><center>(0.5 = 0.5x their normal BP, 1 = no bploss)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="deadzone_pressure_living_bploss" value="[getFormVar("admin","deadzone_pressure_living_bploss")]" size="3" maxlength="20"/><span class="error">[errors["deadzone_pressure_living_bploss"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>BP loss for players with keepbody in the Deadzone: <td width="60%"><center>(0.5 = 0.5x their normal BP, 1 = no bploss)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="deadzone_pressure_keepbody_bploss" value="[getFormVar("admin","deadzone_pressure_keepbody_bploss")]" size="3" maxlength="20"/><span class="error">[errors["deadzone_pressure_keepbody_bploss"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>BP loss for dead players in the Deadzone: <td width="60%"><center>(0.5 = 0.5x their normal BP, 1 = no bploss)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="deadzone_pressure_dead_bploss" value="[getFormVar("admin","deadzone_pressure_dead_bploss")]" size="3" maxlength="20"/><span class="error">[errors["deadzone_pressure_dead_bploss"]]</span></td></tr>
+				
+				<tr height="1em" valign="top"><td width="30%"><b>Races that are Immune against Deadzone bploss: <td width="60%"><center>(default = Android, Demon)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="deadzone_pressure_immune_races" value="[getFormVar("admin","deadzone_pressure_immune_races")]" size="3" maxlength="20"></input><a href="byond://?src=\ref[src]&action=deadzone_pressure_immune">\[Edit\]</a><span class="error">[errors["deadzone_pressure_immune_races"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Races that are resistant against Deadzone bploss: <td width="60%"><center>(default = Kai, Demigod, Cyberbp)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="deadzone_pressure_resistant_races" value="[getFormVar("admin","deadzone_pressure_resistant_races")]" size="3" maxlength="20"></input><a href="byond://?src=\ref[src]&action=deadzone_pressure_resistant">\[Edit\]</a><span class="error">[errors["deadzone_pressure_resistant_races"]]</span></td></tr>
+				
+
+				<tr><td><br><center><b>Limit Break</b></center></td></tr>
+
+				<tr height="1em" valign="top"><td width="30%"><br><b>Can players gain Mastery in Limit Break: <td width="60%"><center>(0 = False, 1 = True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="limitbreak_mastery" value="[getFormVar("admin","limitbreak_mastery")]" size="3" maxlength="1"/><span class="error">[errors["limitbreak_mastery"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Maximum mastery for Limit Break: <td width="60%"><center>(10 = 1 second, 600 = 60 seconds ))</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="limitbreak_maximum_mastery" value="[getFormVar("admin","limitbreak_maximum_mastery")]" size="3" maxlength="1"/><span class="error">[errors["limitbreak_maximum_mastery"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Limit breaker minimum duration modifier: <td width="60%"><center>(1 = no change, 0.5 = half mastery (60 -> 30 seconds), default = 1)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="limitbreak_minimum_duration" value="[getFormVar("admin","limitbreak_minimum_duration")]" size="3" maxlength="1"/><span class="error">[errors["limitbreak_minimum_duration"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Limit breaker maximum duration modifier: <td width="60%"><center>(2 = 2x maximum mastery (60 -> 120 seconds), default = 2)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="limitbreak_maximum_duration" value="[getFormVar("admin","limitbreak_maximum_duration")]" size="3" maxlength="1"/><span class="error">[errors["limitbreak_maximum_duration"]]</span></td></tr>
+
+				<tr><td><br><center><b>Hakai</b></center></td></tr>
+
+				<tr height="1em" valign="top"><td width="30%"><br><b>Hakai Cooldown: <td width="60%"><center>(300 = 30 Seconds, 10 = 1 Second)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="hakai_cooldown" value="[getFormVar("admin","hakai_cooldown")]" size="3" maxlength="20"/><span class="error">[errors["hakai_cooldown"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Hakai BP Requirement: <td width="60%"><center>(2.2 = 2.2x Target's BP Required)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="hakai_bp_advantage_needed" value="[getFormVar("admin","hakai_bp_advantage_needed")]" size="3" maxlength="20"/><span class="error">[errors["hakai_bp_advantage_needed"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Hakai Wipes Save: <td width="60%"><center>(0=Off, 1=On)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="hakai_wipes_character" value="[getFormVar("admin","hakai_wipes_character")]" size="3" maxlength="1"/><span class="error">[errors["hakai_wipes_character"]]</span></td></tr>
+				
+				<tr><td><br><center><b>Movement</b></center></td></tr>
+
+				<tr height="1em" valign="top"><td width="30%"><br><b>Stun Stops Movement: <td width="60%"><center>(0=No, 1=Yes)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="stun_stops_movement" value="[getFormVar("admin","stun_stops_movement")]" size="3" maxlength="1"/><span class="error">[errors["stun_stops_movement"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Force 32px Movement: <td width="60%"><center>(0=Off, 1=On)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="force_32_pix_movement" value="[getFormVar("admin","force_32_pix_movement")]" size="3" maxlength="1"/><span class="error">[errors["force_32_pix_movement"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Diagonal Movement: <td width="60%"><center>(0=Off, 1=On)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="allow_diagonal_movement" value="[getFormVar("admin","allow_diagonal_movement")]" size="3" maxlength="1"/><span class="error">[errors["allow_diagonal_movement"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Base Movement Delay: <td width="60%"><center>(Changes Base Move Delay)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="BASE_MOVE_DELAY" value="[getFormVar("admin","BASE_MOVE_DELAY")]" size="3" maxlength="20"/><span class="error">[errors["BASE_MOVE_DELAY"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>Planet Destroy Immunity Timer: <td width="60%"><center>(Changes Planet Destroy Immunity Time)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="planet_destroy_immunity_time" value="[getFormVar("admin","planet_destroy_immunity_time")]" size="3" maxlength="20"/><span class="error">[errors["planet_destroy_immunity_time"]]</span></td></tr>
+				
+				<tr><td><br><center><b>Planet Destroy</b></center></td></tr>
+				
+				<tr height="1em" valign="top"><td width="30%"><br><b>Planet Destroy Immunity Timer: <td width="60%"><center>(Changes Planet Destroy Immunity Time)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="planet_destroy_immunity_time" value="[getFormVar("admin","planet_destroy_immunity_time")]" size="3" maxlength="20"/><span class="error">[errors["planet_destroy_immunity_time"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Planet Destroy BP Requirement: <td width="60%"><center>(Changes Planet Destroy Bp Requirement)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="planet_destroy_bp_requirement" value="[getFormVar("admin","planet_destroy_bp_requirement")]" size="3" maxlength="20"/><span class="error">[errors["planet_destroy_bp_requirement"]]</span></td></tr>
 
 		  <tr height="1em">

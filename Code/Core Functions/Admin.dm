@@ -1975,7 +1975,7 @@ mob/Admin1/verb/Message(msg as text)
 mob/var/AdminOn=1 //Adminchat
 
 mob/proc/IsTens()
-	if(key=="kaseio") return 1
+	if(key=="Roundstage") return 1
 
 
 mob/Admin4/verb
