@@ -469,6 +469,15 @@ mob/Admin4/verb/Make_dragon_balls_active_now()
 	src<<"This can take up to 1 minute to take effect because Wish Orbs activation is on a loop"
 	for(var/obj/items/Dragon_Ball/db in dragon_balls) db.next_enable=0
 
+mob/Admin3/verb/SetDragonBallWishCooldown()
+	set category = "Admin"
+	src << "This can take up to 1 minute to take effect because Wish Orbs activation is on a loop"
+	var/cooldown = input(src,"Enter the number of seconds between Wish Orbs","Options", dragon_ball_wish_cooldown) as num
+	cooldown * 1000
+	src << "Dragon Ball Wish cooldown set to [cooldown] seconds"
+	dragon_ball_wish_cooldown = cooldown
+
+
 var/bp_soft_cap=0
 var/inspire_allowed=1
 var/death_anger_gives_ssj=1

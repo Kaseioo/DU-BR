@@ -182,7 +182,7 @@ proc/check_dragonballs()
 		sleep(600)
 
 var/list/dragon_balls=new
-
+var/dragon_ball_wish_cooldown = 60 * 60 * 1000 // 60 minutes 
 obj/items/Dragon_Ball
 	can_change_icon=0
 	clonable=0
@@ -548,12 +548,11 @@ mob/var/wish_count = 0
 
 obj/items/Dragon_Ball/proc/End_Wishes()
 	player_view(15,src)<<"The Wish Orbs scatter randomly across their home world"
-	var/r = 2 * rand(80,120) * 0.01 * 60 * 600
-	if(map_restriction_on) r *= 1
+
 	for(var/obj/items/Dragon_Ball/A in dragon_balls) if(A.Creator == Creator && A.Home == Home)
 		if(prob(33)) spawn(rand(1,40)) Make_Shockwave(A,sw_icon_size=512)
 		A.Scatter()
-		A.Inert(r)
+		A.Inert(dragon_ball_wish_cooldown)
 
 mob/proc/Toggle_immortality()
 	if(Immortal)
