@@ -8,7 +8,7 @@ mob/proc
 		if(!client) return
 		if(!last_chatlog_write) last_chatlog_write=world.time //prevent writing unecessarily when someone has just logged in
 		var/log_entry="<br><font color=white>([time2text(world.realtime,"DD/MM/YY hh:mm:ss")]) [info] ([the_key])"
-		if(world.time-last_chatlog_write<5*60*10) //5 minutes
+		if(world.time-last_chatlog_write<100) // 10 seconds
 			unwritten_chatlogs+=log_entry
 		else Write_chatlogs()
 
@@ -232,11 +232,19 @@ mob/verb
 			usr.can_say=0
 			spawn(1) if(usr) usr.can_say=1
 			var/t="<span style='font-size:10pt;color:yellow;font-family:Walk The Moon'>[msg]</span>"
-			t = "<span style='font-size:12pt;color:yellow;font-family:Walk The Moon'>//======[name]======//</span><br>[t]"
+			t = "<span style='font-size:12pt;color:yellow;font-family:Walk The Moon'> ======[name]====== </span><br>[t]"
+
+			var/type = input("What type of emote is this?") as null|anything in list("Normal", "Character Development")
+			var/message = "<span style='font-size:10pt;color:yellow;font-family:Walk The Moon'>======| [name] às [time2text(world.timeofday,"YYYY-MM-DD hh:mm:ss")] |======<br><br><span style='color: white;'>[html_encode(msg)]</span></span>"
+			if(type == "Development")
+				PostDevelopmentRPWindow(message)
+			else 
+				PostEmoteRPWindow(message)
+
 			for(var/mob/M in Say_Recipients())
 				M << t
 				M.ChatLog(t,key)
-			PostEmoteRPWindow("<font color=yellow>*[name] [html_encode(msg)]*")
+			
 		usr.End_Say()
 
 mob/var/tmp
