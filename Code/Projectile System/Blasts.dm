@@ -209,7 +209,7 @@ mob/proc/Attack_Barrier(obj/Attacks/Attack_Barrier/B)
 	attacking=0
 	overlays -= BlastCharge
 
-atom/var/Fatal=1
+atom/var/Fatal=0
 
 mob/verb/Ki_Toggle()
 	//set category="Other"
