@@ -94,7 +94,7 @@ obj/items/EMP_Mine
 		for(var/mob/m in player_view(9,src))
 			if(m.Is_Cybernetic())
 				//m.Health/=2
-				m.Ki+=-25
+				m.Ki-=25
 				if(m.Health<15) m.KO("electromagnetic pulse")
 		for(var/v in 1 to 3)
 			Make_Shockwave(src,5,'Electricgroundbeam2.dmi')

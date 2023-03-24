@@ -225,7 +225,7 @@ mob/proc/Dash_Attack()
 	original_dash_dir=dir
 	lastDashAttack = world.time
 	for(var/steps in 1 to 25)
-		if(KB) return //causes a bug where the person hits the target many many times doing massive damage
+		if(KB) break; //causes a bug where the person hits the target many many times doing massive damage
 		var/turf/old_loc=loc
 		var/dash_dir=original_dash_dir
 		if(desired_dash_dir&&round(steps/3)==steps/3)
@@ -234,21 +234,19 @@ mob/proc/Dash_Attack()
 		step(src,dash_dir)
 		for(var/mob/P in mob_view(1,usr))
 			if(P != usr)
-				world<<"this variable (P) = [P]"
 				if(P && ismob(P))
-					world<<"After the mob";
 					var/Damage = damage_mult * get_melee_damage(P, allow_one_shot = 0)
 					var/Acc = get_melee_accuracy(P) * 2
 					Damage *= BP / P.BP
 					var/KB_Distance = (BP/P.BP)*(Str/P.End)*5
 					if(prob(Acc))
-						world<<"Should flick Attack";
 						flick("Attack",src)
 						if(P.ki_shield_on())
 							P.Ki -= Damage * P.ShieldDamageReduction() * (P.max_ki/100)/(P.Eff**shield_exponent)*P.Generator_reduction(is_melee=1)
 						else
 							if(P.dir == dir) Damage *= 2 //hit from behind
 							P.TakeDamage(Damage)
+							break;
 						if(P.Health <= 0 || P.Ki <= 0) P.KO(src)
 						if(P) P.DashAttackPart2(src, KB_Distance)
 					else
