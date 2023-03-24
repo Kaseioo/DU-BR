@@ -2683,8 +2683,31 @@ window "rp_devwindow"
 		is-vert = false
 		show-splitter = false
 
-window "subrp_devwindow"
-	elem "subrp_devwindow"
+
+window "player_description"
+	elem "player_description"
+		type = MAIN
+		pos = 281,0
+		size = 640x480
+		anchor1 = none
+		anchor2 = none
+		is-visible = false
+		saved-params = "pos;size;is-minimized;is-maximized"
+		title = "player_description"
+		statusbar = false
+	elem "child1"
+		type = CHILD
+		pos = 0,0
+		size = 640x480
+		anchor1 = 0,0
+		anchor2 = 100,100
+		saved-params = "splitter"
+		left = "sub_player_description"
+		is-vert = false
+		show-splitter = false
+
+window "sub_player_description"
+	elem "sub_player_description"
 		type = MAIN
 		pos = 296,25
 		size = 681x251
@@ -2692,7 +2715,7 @@ window "subrp_devwindow"
 		anchor2 = none
 		is-visible = false
 		saved-params = "pos;size;is-minimized;is-maximized"
-		title = "RP development Window"
+		title = "player_description"
 		titlebar = false
 		statusbar = false
 		can-close = false
@@ -2700,7 +2723,7 @@ window "subrp_devwindow"
 		can-resize = false
 		is-pane = true
 		can-scroll = vertical
-	elem "rp_devoutput"
+	elem "player_description_output"
 		type = OUTPUT
 		pos = 0,0
 		size = 681x251

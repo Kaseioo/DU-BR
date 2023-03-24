@@ -1272,7 +1272,9 @@ proc/Examine_List()
 	for(var/obj/O) if(O.desc&&O.examinable) L+=O
 	return L
 
-mob/verb/Examine(obj/A in Examine_List()) if(A) src<<"<br><br>[A.desc]"
+mob/verb/Examine(obj/A in Examine_List()) 
+	if(A) 
+		ViewDescription(A)
 
 proc/Strongest_Person(mob/M)
 	for(var/mob/P in players) if(!M||P.base_bp>M.base_bp) M=P
@@ -2473,7 +2475,7 @@ obj/Taiyoken
 	hotbar_type="Ability"
 	verb/Solar_Flare()
 		//set category="Skills"
-
+	
 		usr.TrySolarFlare()
 		return
 
