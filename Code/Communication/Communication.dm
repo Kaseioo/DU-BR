@@ -235,8 +235,8 @@ mob/verb
 			t = "<span style='font-size:12pt;color:yellow;font-family:Walk The Moon'> ======[name]====== </span><br>[t]"
 
 			var/type = input("What type of emote is this?") as null|anything in list("Normal", "Character Development")
-			var/message = "<span style='font-size:10pt;color:yellow;font-family:Walk The Moon'>======| [name] às [time2text(world.timeofday,"YYYY-MM-DD hh:mm:ss")] |======<br><br><span style='color: white;'>[html_encode(msg)]</span></span>"
-			if(type == "Development")
+			var/message = "<br><br><span style='font-size:10pt;color:yellow;font-family:Walk The Moon'>======| [name] às [time2text(world.timeofday,"YYYY-MM-DD hh:mm:ss")] |======<br><br><span style='color: white;'>[html_encode(msg)]</span></span>"
+			if(type == "Character Development")
 				PostDevelopmentRPWindow(message)
 			else 
 				PostEmoteRPWindow(message)
