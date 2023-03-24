@@ -156,35 +156,35 @@ proc/Initialize_Gun_Icons()
 		B.icon_state=A.icon_state
 		Bullet_Icons+=B
 
-mob/proc/Grid(list/L, obj/items/Gun/G, update_only, show_names = 0)
+mob/proc/Grid(list/L, obj/items/Gun/G, update_only, show_names = 1)
 	if(!client) return
 
-	if(show_names) winset(src,"Grid1.Main Grid","show-names=true")
-	else winset(src,"Grid1.Main Grid","show-names=false")
+	if(show_names) winset(src,"Grid2.Main Grid2","show-names=true")
+	else winset(src,"Grid2.Main Grid2","show-names=false")
 
-	winset(src,"Grid1.Main Grid","is-list=true")
-	winset(src,"Grid1.Main Grid","cells=0") //clear the grid
-	if(!L) if(winget(src,"Grid1","is-visible")=="true") return 1
+	winset(src,"Grid2.Main Grid2","is-list=true")
+	winset(src,"Grid2.Main Grid2","cells=0") //clear the grid
+	if(!L) if(winget(src,"Grid2","is-visible")=="true") return 1
 	else
 		if(G&&istype(G,/obj/items/Gun)) Gun=G
 		var/Cell=1
 		for(var/obj/O in L)
-			winset(src,"Grid1.Main Grid","current-cell=[Cell]")
-			src<<output(O,"Grid1.Main Grid")
+			winset(src,"Grid2.Main Grid2","current-cell=[Cell]")
+			src<<output(O,"Grid2.Main Grid2")
 			Cell++
-		winset(src,"Grid1.Main Grid","cells=[Cell]")
-		winset(src,"Grid1","is-visible=true")
-		if(!update_only) while(src&&client&&(winget(src,"Grid1","is-visible")=="true")) sleep(1)
+		winset(src,"Grid2.Main Grid2","cells=[Cell]")
+		winset(src,"Grid2","is-visible=true")
+		if(!update_only) while(src&&client&&(winget(src,"Grid2","is-visible")=="true")) sleep(1)
 		if(istype(G,/obj/items/Gun)) Gun=null
-		if(!update_only) winset(src,"Grid1.Main Grid","cells=0") //clear the grid
+		if(!update_only) winset(src,"Grid2.Main Grid2","cells=0") //clear the grid
 
 mob/verb/Hide_Main_Grid()
 	set hidden=1
 	set name=".Hide_Main_Grid"
-	winset(src,"Grid1.Main Grid","show-names=false")
-	winset(src,"Grid1.Main Grid","cells=0") //clear the grid
-	winset(src,"Grid1","is-visible=false")
-	winset(src,"Grid1","title=\"\"")
+	winset(src,"Grid2.Main Grid2","show-names=false")
+	winset(src,"Grid2.Main Grid2","cells=0") //clear the grid
+	winset(src,"Grid2","is-visible=false")
+	winset(src,"Grid2","title=\"\"")
 
 
 var/list/weights_icons=new

@@ -2556,6 +2556,61 @@ window "Grid1"
 		enable-http-images = true
 		is-list = true
 
+window "Grid2"
+	elem "Grid2"
+		type = MAIN
+		pos = 0,0
+		size = 640x480
+		anchor1 = none
+		anchor2 = none
+		background-color = #000000
+		is-visible = false
+		saved-params = "pos;size;is-minimized;is-maximized"
+		statusbar = false
+		can-close = true
+		can-minimize = false
+	elem "label7"
+		type = LABEL
+		pos = 0,272
+		size = 240x32
+		anchor1 = 0,89
+		anchor2 = 76,100
+		font-family = "serif"
+		font-size = 1
+		background-color = #0080c0
+		saved-params = ""
+		text = ""
+		align = left
+	elem "Creation Done"
+		type = BUTTON
+		pos = 240,272
+		size = 79x32
+		anchor1 = 76,89
+		anchor2 = 100,100
+		font-size = 10
+		font-style = "bold"
+		text-color = #ff00ff
+		background-color = #cccccc
+		border = line
+		saved-params = "is-checked"
+		text = "Done"
+		command = ".Hide_Main_Grid"
+	elem "Main Grid2"
+		type = GRID
+		pos = 0,0
+		size = 640x480
+		anchor1 = 0,0
+		anchor2 = 100,89
+		text-color = #ffffff
+		background-color = #0080c0
+		saved-params = ""
+		cells = 1x0
+		current-cell = 1,1
+		show-lines = none
+		show-names = false
+		enable-http-images = true
+		is-list = true
+
 window "rpwindow"
 	elem "rpwindow"
 		type = MAIN
