@@ -174,11 +174,12 @@ turf/proc/Roof_Enter(mob/A)
 	if(istype(A,/obj/Blast)) return 1
 	if(ismob(A) && !FlyOverAble)
 		var/obj/items/Door_Hacker/dh
-		if(A.Flying) for(dh in A.item_list) if(dh.BP >= Health) break
-		if(dh)
-			player_view(15,A)<<"[A] uses a door hacker to break in"
-			A.SafeTeleport(src, allowSameTick = 1)
-			return 1
+		if(istype(A, /obj/Turfs/Door))
+			if(A.Flying) for(dh in A.item_list) if(dh.BP >= Health) break
+			if(dh)
+				player_view(15,A)<<"[A] uses a door hacker to break in"
+				A.SafeTeleport(src, allowSameTick = 1)
+				return 1
 	else if(FlyOverAble) return 1
 
 turf/var/Pod_Enter=1
