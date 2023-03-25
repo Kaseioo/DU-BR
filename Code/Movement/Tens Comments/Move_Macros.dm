@@ -283,8 +283,13 @@ client
 mob/verb
 	SetCtrlStatus(status as text)
 		set hidden = 1
-		if(status == "0") client.ctrl_button = 0
-		else client.ctrl_button = 1
+		if(status == "0") 
+			client.ctrl_button = 0
+			is_ctrl_down = 0		// Adds to global escope because fuck adding whatever needs it to the  proc above
+			
+		else 
+			client.ctrl_button = 1
+			is_ctrl_down = 1
 
 	ShiftDown()
 		set hidden = 1

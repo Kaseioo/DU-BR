@@ -181,4 +181,7 @@ mob/var
 	stun_resistance_mod=1
 	ascension_bp=1000000
 	Limit_Breaker_Mastery = 50
-	can_break_things = 1
+	can_break_things 	= 1
+	is_ctrl_down 		= 0
+	is_alt_down 		= 0
+	is_shift_down 		= 0
