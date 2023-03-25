@@ -128,6 +128,25 @@ var
 	should_show_char_name_on_who 	= 0
 	can_break_things 				= 1
 
+// Deadzone pressure settings
+var
+	deadzone_pressure 								= 1     // True
+	deadzone_pressure_resistant_race_bploss 		= 0.85
+	deadzone_pressure_living_bploss 				= 0.75
+	deadzone_pressure_keepbody_bploss 				= 0.7
+	deadzone_pressure_dead_bploss 					= 0.3
+
+	deadzone_pressure_immune_races					= list("Demon", "Android")
+	deadzone_pressure_resistant_races				= list("Kai", "Demigod")
+
+// Limit break mastery settings
+
+var
+	can_limit_breaker_be_mastered 				= 1		// true
+	limit_breaker_maximum_mastery 				= 600	// 60 seconds
+	limit_breaker_minimum_duration_multiplier 	= 1		// starts at 5 seconds, goes up to 60 seconds
+	limit_breaker_maximum_duration_multiplier 	= 2		// starts at 10 seconds, goes up to 120 seconds
+
 mob/var
 	stamina = 100
 	max_stamina = 100

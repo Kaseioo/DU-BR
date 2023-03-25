@@ -219,17 +219,6 @@ mob/proc/get_bp(factor_powerup=1)
 		if(bp<1) bp=1
 		return bp
 
-// this could probably be made a Datum or somemething
-var
-	deadzone_pressure 								= 1     // True
-	deadzone_pressure_resistant_race_bploss 		= 0.85
-	deadzone_pressure_living_bploss 				= 0.75
-	deadzone_pressure_keepbody_bploss 				= 0.7
-	deadzone_pressure_dead_bploss 					= 0.3
-
-	deadzone_pressure_immune_races					= list("Demon", "Android")
-	deadzone_pressure_resistant_races				= list("Kai", "Demigod")
-
 mob/proc/ApplyDeadzonePressure(bp)
 	if(z == 6 && !Hell_Immune() && deadzone_pressure)
 		if(!(Race in deadzone_pressure_immune_races))
@@ -242,6 +231,7 @@ mob/proc/ApplyDeadzonePressure(bp)
 			else 
 				bp *= deadzone_pressure_resistant_race_bploss
 	return bp
+	
 mob/proc/Player_Loops(start_delay)
 	set waitfor=0
 	if(start_delay) sleep(start_delay)
@@ -1500,12 +1490,6 @@ mob/proc/Swordless_strength()
 	var/obj/items/Sword/s = using_sword()
 	if(s) n /= s.Damage
 	return n
-
-var
-	can_limit_breaker_be_mastered 				= 1		// true
-	limit_breaker_maximum_mastery 				= 600	// 60 seconds
-	limit_breaker_minimum_duration_multiplier 	= 1		// starts at 5 seconds, goes up to 60 seconds
-	limit_breaker_maximum_duration_multiplier 	= 2		// starts at 10 seconds, goes up to 120 seconds
 
 mob/proc/MasterLimitBreak()
 	if(isSparring)

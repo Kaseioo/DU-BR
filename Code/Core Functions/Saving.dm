@@ -245,7 +245,7 @@ mob/proc/RemoveOverlaysThatDontSaveCorrectly()
 	TakeOffShurikenOverlaysOnSave()
 	Remove_evil_overlay()
 	Aura_Overlays(remove_only=1)
-	overlays-=BlastCharge
+	overlays-=BlastCharge 	
 	overlays-=block_shield
 	overlays-='SBombGivePower.dmi'
 	overlays -= ssj_blue_idle_aura
@@ -525,6 +525,26 @@ proc/Save_Misc()
 	S["hostAllowsPacksOnRP"] << hostAllowsPacksOnRP
 	S["God_FistMod"] << God_FistMod
 
+	S["should_show_char_name_on_who"] << should_show_char_name_on_who
+
+	S["deadzone_pressure"] 							<< deadzone_pressure
+	S["deadzone_pressure_resistant_race_bploss"] 	<< deadzone_pressure_resistant_race_bploss
+	S["deadzone_pressure_living_bploss"] 			<< deadzone_pressure_living_bploss
+	S["deadzone_pressure_keepbody_bploss"] 			<< deadzone_pressure_keepbody_bploss
+	S["deadzone_pressure_dead_bploss"] 				<< deadzone_pressure_dead_bploss
+
+	S["deadzone_pressure_immune_races"] 			<< deadzone_pressure_immune_races
+	S["deadzone_pressure_resistant_races"] 			<< deadzone_pressure_resistant_races
+
+	S["can_limit_breaker_be_mastered"] 				<< can_limit_breaker_be_mastered
+	S["limit_breaker_maximum_mastery"] 				<< limit_breaker_maximum_mastery
+	S["limit_breaker_minimum_duration_multiplier"] 	<< limit_breaker_minimum_duration_multiplier
+	S["limit_breaker_maximum_duration_multiplier"] 	<< limit_breaker_maximum_duration_multiplier
+
+
+
+
+
 proc/Load_Misc()
 	LoadCustomDecors()
 	if(!fexists("Misc")) return
@@ -635,6 +655,24 @@ proc/Load_Misc()
 	S["inspire_allowed"]>>inspire_allowed
 	S["death_anger_gives_ssj"]>>death_anger_gives_ssj
 	S["bp_soft_cap"]>>bp_soft_cap
+
+	S["should_show_char_name_on_who"]>>should_show_char_name_on_who
+
+	S["deadzone_pressure"] >> deadzone_pressure
+	S["deadzone_pressure_resistant_race_bploss"] >> deadzone_pressure_resistant_race_bploss
+	S["deadzone_pressure_living_bploss"] >> deadzone_pressure_living_bploss
+	S["deadzone_pressure_keepbody_bploss"] >> deadzone_pressure_keepbody_bploss
+	S["deadzone_pressure_dead_bploss"] >> deadzone_pressure_dead_bploss
+	S["deadzone_pressure_immune_races"] >> deadzone_pressure_immune_races
+	S["deadzone_pressure_resistant_races"] >> deadzone_pressure_resistant_races
+
+	S["can_limit_breaker_be_mastered"] >> can_limit_breaker_be_mastered
+	S["limit_breaker_maximum_mastery"] >> limit_breaker_maximum_mastery
+	S["limit_breaker_minimum_duration_multiplier"] >> limit_breaker_minimum_duration_multiplier
+	S["limit_breaker_maximum_duration_multiplier"] >> limit_breaker_maximum_duration_multiplier
+
+
+
 	if("can_admin_vote" in S) S["can_admin_vote"]>>can_admin_vote
 	if("allow_guests" in S) S["allow_guests"]>>allow_guests
 	if("can_ignore_SI" in S) S["can_ignore_SI"]>>can_ignore_SI
