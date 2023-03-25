@@ -57,13 +57,14 @@ proc/List_2_Text(list/L,sep)
 		if(sep) newtext+=sep;newtext+="[L[count]]"
 	return newtext
 
-mob/verb/Countdown()
-	//set category="Other"
-	var/t="[src] is waiting 60 seconds."
+mob/verb/Countdown(Seconds as num)
+	set category="Other"
+	if(Seconds > 600) Seconds = 600
+	var/t="[src] is waiting [Seconds] seconds."
 	player_view(15,src)<<t
 	if(client) ChatLog(t,key)
-	sleep(600)
-	var/t2="[src] has waited 60 seconds."
+	sleep(Seconds * 10)
+	var/t2="[src] has waited [Seconds] seconds."
 	player_view(15,src)<<t2
 	if(client) ChatLog(t2,key)
 
