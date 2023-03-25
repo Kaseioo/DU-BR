@@ -295,8 +295,13 @@ mob/verb/Who()
 	//for(var/mob/new_troll/t) a.Insert(rand(1, a.len), t)
 	for(var/mob/A in a)
 		Amount+=1
-		Who+="<br>[A.displaykey] ( [A.name] )"
-		if(IsAdmin()) Who+=" - [A.Race]"
+		if(IsAdmin()) 
+			Who+="<br>[A.displaykey] ([A.name]) - [A.Race]"
+		else
+			if(should_show_char_name_on_who)
+				Who+="<br>[A.displaykey] ( [A.name] )"
+			else
+				Who+="<br>[A.displaykey]"
 	Who+="<br>Amount: [Amount]"
 	src<<browse(Who,"window=Who;size=600x600")
 	

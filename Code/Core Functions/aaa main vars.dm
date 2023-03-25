@@ -123,6 +123,11 @@ var
 	death_y=200
 	death_z=5
 
+// Global settings that mostly affect RP
+var
+	should_show_char_name_on_who 	= 0
+	can_break_things 				= 1
+
 mob/var
 	stamina = 100
 	max_stamina = 100
@@ -181,7 +186,6 @@ mob/var
 	stun_resistance_mod=1
 	ascension_bp=1000000
 	Limit_Breaker_Mastery = 50
-	can_break_things 	= 1
 	is_ctrl_down 		= 0
 	is_alt_down 		= 0
 	is_shift_down 		= 0
