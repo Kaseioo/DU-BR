@@ -125,8 +125,10 @@ var
 
 // Global settings that mostly affect RP
 var
-	should_show_char_name_on_who 	= 0
+	should_show_char_name_on_who 	= 0	
 	can_break_things 				= 1
+	sense_show_stats 				= 0	// Show stat build
+	sense_rp_stats					= 1	// Remove precision from Sense and show vague terms instead
 
 // Deadzone pressure settings
 var
@@ -146,6 +148,7 @@ var
 	limit_breaker_maximum_mastery 				= 600	// 60 seconds
 	limit_breaker_minimum_duration_multiplier 	= 1		// starts at 5 seconds, goes up to 60 seconds
 	limit_breaker_maximum_duration_multiplier 	= 2		// starts at 10 seconds, goes up to 120 seconds
+
 
 mob/var
 	stamina = 100

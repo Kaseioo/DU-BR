@@ -541,6 +541,9 @@ proc/Save_Misc()
 	S["limit_breaker_minimum_duration_multiplier"] 	<< limit_breaker_minimum_duration_multiplier
 	S["limit_breaker_maximum_duration_multiplier"] 	<< limit_breaker_maximum_duration_multiplier
 
+	S["sense_rp_stats"] 							<< sense_rp_stats
+	S["sense_show_stats"] 							<< sense_show_stats
+
 
 
 
@@ -666,10 +669,13 @@ proc/Load_Misc()
 	S["deadzone_pressure_immune_races"] >> deadzone_pressure_immune_races
 	S["deadzone_pressure_resistant_races"] >> deadzone_pressure_resistant_races
 
-	S["can_limit_breaker_be_mastered"] >> can_limit_breaker_be_mastered
-	S["limit_breaker_maximum_mastery"] >> limit_breaker_maximum_mastery
-	S["limit_breaker_minimum_duration_multiplier"] >> limit_breaker_minimum_duration_multiplier
-	S["limit_breaker_maximum_duration_multiplier"] >> limit_breaker_maximum_duration_multiplier
+	S["can_limit_breaker_be_mastered"] 				>> can_limit_breaker_be_mastered
+	S["limit_breaker_maximum_mastery"] 				>> limit_breaker_maximum_mastery
+	S["limit_breaker_minimum_duration_multiplier"] 	>> limit_breaker_minimum_duration_multiplier
+	S["limit_breaker_maximum_duration_multiplier"] 	>> limit_breaker_maximum_duration_multiplier
+
+	S["sense_rp_stats"] 	>> sense_rp_stats
+	S["sense_show_stats"] 	>> sense_show_stats
 
 
 

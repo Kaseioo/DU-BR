@@ -620,6 +620,10 @@ upForm
 
 			initFormVar("admin", "can_things_be_broken", can_things_be_broken)
 			initFormVar("admin", "should_show_char_name_on_who", should_show_char_name_on_who)
+			
+			initFormVar("admin", "sense_rp_stats", sense_rp_stats)
+			initFormVar("admin", "sense_show_stats", sense_rp_stats)
+
 			M << "Variables loaded. [src.type]"
 
 		ProcessVariable(fname, name, value)
@@ -670,6 +674,9 @@ upForm
 					if("can_things_be_broken") setFormVar(fname, name, text2num(value))
 					if("should_show_char_name_on_who") setFormVar(fname, name, text2num(value))
 
+					if("sense_show_stats") setFormVar(fname, name, text2num(value))
+					if("sense_rp_stats") setFormVar(fname, name, text2num(value))
+
 
 		FormSetTempVars(fname)
 			var/mob/M = src.getHost()
@@ -718,6 +725,9 @@ upForm
 
 					can_things_be_broken= getFormVar("admin", "can_things_be_broken")
 					should_show_char_name_on_who= getFormVar("admin", "should_show_char_name_on_who")
+
+					sense_show_stats = getFormVar("admin", "sense_show_stats")
+					sense_rp_stats = getFormVar("admin", "sense_rp_stats")
 
 
 		FormSubmitSuccess(fname, client/C)
@@ -789,8 +799,12 @@ upForm
 				<tr height="1em" valign="top"><td width="30%"><b>NPC Spawn Density: <td width="60%"><center>(Multiplier for NPC Spawn Density)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="npcDensity" value="[getFormVar("admin","npcDensity")]" size="3" maxlength="20"/><span class="error">[errors["npcDensity"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Default View Radius: <td width="60%"><center>(Default View Radius)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="defaultScreenSize" value="[getFormVar("admin","defaultScreenSize")]" size="3" maxlength="20"/><span class="error">[errors["defaultScreenSize"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Max View Radius: <td width="60%"><center>(Changes Max Screen Size)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="max_screen_size" value="[getFormVar("admin","max_screen_size")]" size="3" maxlength="20"/><span class="error">[errors["max_screen_size"]]</span></td></tr>
+				
 				<tr height="1em" valign="top"><td width="30%"><b>Can things (turfs, walls and objects) be broken?: <td width="60%"><center>(0 = False, 1 = True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="can_things_be_broken" value="[getFormVar("admin","can_things_be_broken")]" size="3" maxlength="20"/><span class="error">[errors["can_things_be_broken"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Show Character names on Who?: <td width="60%"><center>(0 = False, 1 = True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="should_show_char_name_on_who" value="[getFormVar("admin","should_show_char_name_on_who")]" size="3" maxlength="20"/><span class="error">[errors["should_show_char_name_on_who"]]</span></td></tr>
+				
+				<tr height="1em" valign="top"><td width="30%"><b>Show stat builds on Sense 3/Scan?: <td width="60%"><center>(0 = False, 1 = True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="sense_show_stats" value="[getFormVar("admin","sense_show_stats")]" size="3" maxlength="20"/><span class="error">[errors["sense_show_stats"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Show vague info on Sense 3? (no numbers): <td width="60%"><center>(0 = False, 1 = True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="sense_rp_stats" value="[getFormVar("admin","sense_rp_stats")]" size="3" maxlength="20"/><span class="error">[errors["sense_rp_stats"]]</span></td></tr>
 			  <tr height="1em">
 			  	<td colspan="4" align="right"> <input type="submit" value="Submit" />
 			  	<input type="reset" value="Reset" /> </td>

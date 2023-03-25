@@ -183,38 +183,84 @@ mob/proc/Stat_Sense_Tab() if(Target&&ismob(Target))
 				if(T&&isturf(T))
 					if(Target.z!=T.z) stat("[Target] is on a different map")
 					else stat("[getdir(T,Target.loc)] x[getdist(T,Target.loc)]",Target.name) //,Target) lags if i show the actual mob now
-			if(!sense3_obj&&Race!="Frost Lord")
-				if(!Scouter||(Scouter&&!Scouter.suffix)) stat("Power","[Sense_Power(Target)]% your power")
-				else stat("[Commas(Scouter_Reading(Target,Scouter))]",Target.name) //,Target)
-				stat("Health","[round(Target.Health)]%")
-				stat("Energy","[round(Target.Ki/Target.max_ki*100)]%")
-			else
-				if(!Scouter||(Scouter&&!Scouter.suffix)) stat("Power","[Sense_Power(Target)]% your power")
-				else stat("[Commas(Scouter_Reading(Target,Scouter))]",Target.name) //,Target)
+
+			// Only has sense 2
+			if(!sense3_obj && Race != "Frost Lord")
+				if(!Scouter || (Scouter && !Scouter.suffix)) 
+					stat("Power","[Sense_Power(Target)]% your power")
+				else 
+					stat("[Commas(Scouter_Reading(Target,Scouter))]",Target.name) //,Target)
+					stat("Health","[round(Target.Health)]%")
+					stat("Energy","[round(Target.Ki/Target.max_ki*100)]%")
+			// Has Sense3
+			else 
 				if(alignment_on)
 					if(Target.alignment=="Good") stat("[Target]'s energy is that of a good person")
 					else stat("[Target] has an evil energy")
-				stat("Health","[round(Target.Health)]%")
-				stat("Energy","[round(Target.Ki)] ([round(Target.Ki/Target.max_ki*100)]%)")
-				stat("Current anger","[round(Target.anger*0.01,0.01)]x")
-				stat("Gravity Mastered","[round(Target.gravity_mastered,0.01)]x")
-				stat("Race","[Target.Race] [Target.Class]")
-				stat("Age","[round(Target.Age,0.1)] ([round(Target.Body*100)]% Youth)")
 
-				stat("Scientific Knowledge:",Target.KnowledgeRating())
+				if(!Scouter || (Scouter && !Scouter.suffix)) 
+					stat("Power","[Sense_Power(Target)]% your power")
+				else 
+					stat("[Commas(Scouter_Reading(Target,Scouter))]",Target.name) //,Target)
 
-				if(Target.Race=="Android" && Target != src)
-					stat("Android stat builds are unsensable")
+				stat("Health",				"[round(Target.Health)]%")
+				stat("Energy",				"[round(Target.Ki)] ([round(Target.Ki/Target.max_ki*100)]%)")
+
+				if(sense_rp_stats)
+					var/anger_text = "Calm"
+					var/race_text = "Humanoid"
+					var/age_text = "Young"
+
+					var/lifespan = Target.Lifespan()
+					var/life_ratio = Target.Age/lifespan
+					var/has_scanner_module = 0
+					for(var/obj/Module/BP_Scanner/EA in active_modules) 
+						if(EA.suffix) 		// Having a suffix means it's equipped
+							has_scanner_module = 1
+
+					if(Target.anger > 1.5) 		anger_text = "Mad"
+					else if(Target.anger > 1) 	anger_text = "Angry"
+					else if(Target.anger == 1) 	anger_text = "Calm"
+					else if(Target.anger < 1) 	anger_text = "Irked"
+
+					if(Target.Immortal)
+						age_text = "Young"
+					else
+						if	   (life_ratio > 0.75) 	age_text = "Old"
+						else if(life_ratio > 0.5) age_text = "Middle-aged"
+						else if(life_ratio > 0.2) age_text = "Young"
+						else if(life_ratio < 0.2) age_text = "Very young"
+
+					if(has_scanner_module)
+						stat("Current anger",		"[round(Target.anger*0.01,0.01)]x")
+						stat("Race",				"[Target.Race] [Target.Class]")
+						stat("Age",					"[age_text] [round(Target.Age,5.0)] ([round(Target.Body*100)]% Youth)")
+					else
+						stat("Current anger",		"[anger_text]")
+						stat("Race",				"[race_text]")
+						stat("Age",					"[age_text]")
 				else
-					stat("Strength:","[Target.strpcnt_rate()]")
-					stat("Durability:","[Target.durpcnt_rate()]")
-					stat("Speed:","[Target.spdpcnt_rate()]")
-					stat("Force:","[Target.powpcnt_rate()]")
-					stat("Resistance:","[Target.respcnt_rate()]")
-					stat("Accuracy:","[Target.offpcnt_rate()]")
-					stat("Reflex:","[Target.defpcnt_rate()]")
-					stat("Regeneration:","[Target.regen_rating()]")
-					stat("Recovery:","[Target.recov_rating()]")
+					stat("Current anger",		"[round(Target.anger*0.01,0.01)]x")
+					stat("Race",				"[Target.Race] [Target.Class]")
+					stat("Age",					"[round(Target.Age,0.1)] ([round(Target.Body*100)]% Youth)")
+
+				if(sense_show_stats)
+					if(Target.Race=="Android" && Target != src)
+						stat("Android stat builds are unsensable")
+					else
+						stat("Gravity Mastered",	"[round(Target.gravity_mastered,0.01)]x")
+						
+						stat("Scientific Knowledge:",Target.KnowledgeRating())
+
+						stat("Strength:","[Target.strpcnt_rate()]")
+						stat("Durability:","[Target.durpcnt_rate()]")
+						stat("Speed:","[Target.spdpcnt_rate()]")
+						stat("Force:","[Target.powpcnt_rate()]")
+						stat("Resistance:","[Target.respcnt_rate()]")
+						stat("Accuracy:","[Target.offpcnt_rate()]")
+						stat("Reflex:","[Target.defpcnt_rate()]")
+						stat("Regeneration:","[Target.regen_rating()]")
+						stat("Recovery:","[Target.recov_rating()]")
 
 			SleepTab(5)
 	if(IsAdmin()) if(statpanel("Inspect"))
