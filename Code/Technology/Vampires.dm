@@ -164,7 +164,9 @@ mob/proc/Vampire_Bite(mob/P,obj/Vampire_Bite/V)
 			blood_bags=0
 			if(Health<100) Health=100
 			if(Ki<max_ki) Ki=max_ki
-		P.Become_Vampire()
+
+		if(DO_VAMPIRES_INFECT_ON_BITE)
+			P.Become_Vampire()
 
 mob/proc/Become_Vampire_Monster() if(Vampire&&!Vampire_Monster)
 	if("vampire" in hell_agreements)
@@ -208,27 +210,41 @@ mob/proc/Vampire_Revert() if(Vampire)
 		del(V)
 	src<<"You are no longer a vampire"
 
+mob/proc/burnOnDay() if (Vampire)
+	
+
 mob/proc/Vampire_Infection_Rise()
 	set waitfor=0
 	while(src)
 		if(Vampire)
 			if(Action!="Meditating")
 				var/n=1*(blood_bags+1)
-				if(base_bp<Avg_BP*1.5) n/=3
-				if(Vampire_Monster) n*=2.5
-				if(!Dead) Vampire_Infection+=n
-				if(Vampire_Infection>100) Vampire_Infection=100
-				if(Vampire_Monster&&!IsGreatApe())
+				if(base_bp < Avg_BP*1.5) 
+					n/=3
+				if(Vampire_Monster) 
+					n*=2.5
+				if(!Dead) 
+					if(DO_VAMPIRES_NEED_TO_FEED)
+						Vampire_Infection += n // actual Feeding need rise
+
+				if(Vampire_Infection>100) 
+					Vampire_Infection=100
+				if(Vampire_Monster && !IsGreatApe())
 					icon='Demon4.dmi'
-				if(Vampire_Infection>=90) src<<"<font color=red>Warning: Vampire Infection at [Vampire_Infection]%"
-				if(Vampire_Infection>=100&&!Dead)
-					if(!Vampire_Monster) Become_Vampire_Monster()
+				if(Vampire_Infection >= 90) 
+					src<<"<font color=red>Warning: Vampire Infection at [Vampire_Infection]%"
+				if(Vampire_Infection >= 100 && !Dead)
+					if(!Vampire_Monster) 
+						Become_Vampire_Monster()
 					else
 						src<<"Your vampire infection has reached its max and killed you"
 						Vampire_Infection=0
 						Death(null,1)
+
 			sleep((2*60*60*10)/100) //Reach max infection in 2 hours
 		else sleep(3000)
+
+
 mob/proc/Vampire_Power_Fall()
 	set waitfor=0
 	while(src)
@@ -239,16 +255,19 @@ mob/proc/Vampire_Power_Fall()
 			else
 				Vampire_Power-=0.00624
 				if(Vampire_Power<0.2) Vampire_Power=0.2
-		sleep(600)
+		sleep(VAMPIRE_POWER_FALL_INTERVAL)
+
 mob/proc/Cured_Vampire_Ratio(N=0) //Shows the ratio of people online that are former vampires
 	if(!Player_Count()) return 0
 	for(var/mob/P in players) if(P.Former_Vampire) N++
 	return N/Player_Count()
+
 mob/proc/Born_Vampire_Check(N=0) if(Player_Count())
 	if(Android) return
 	for(var/mob/P in players) if(P.Vampire&&!P.Dead) N++
 	N/=Living_Players()
 	if(prob(N*100)) Become_Vampire()
+
 proc/Living_Players(N=0)
 	for(var/mob/M in players) if(!M.Dead) N++
 	return N

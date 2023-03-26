@@ -963,6 +963,11 @@ upForm
 			initFormVar("admin", "majin_auto_learn", majin_auto_learn)
 			initFormVar("admin", "imitate_allowed", imitate_allowed)
 			initFormVar("admin", "max_Yasai_percent", max_Yasai_percent)
+
+			initFormVar("admin", "DO_VAMPIRES_NEED_TO_FEED", DO_VAMPIRES_NEED_TO_FEED)
+			initFormVar("admin", "DO_VAMPIRES_INFECT_ON_BITE", DO_VAMPIRES_INFECT_ON_BITE)
+			initFormVar("admin", "VAMPIRE_POWER_FALL_INTERVAL", VAMPIRE_POWER_FALL_INTERVAL)
+
 			M << "Variables loaded. [src.type]"
 
 		ProcessVariable(fname, name, value)
@@ -976,6 +981,10 @@ upForm
 					if("imitate_allowed") setFormVar(fname, name, text2num(value))
 					if("max_Yasai_percent") setFormVar(fname, name, text2num(value))
 
+					if("DO_VAMPIRES_NEED_TO_FEED") setFormVar(fname, name, text2num(value))
+					if("DO_VAMPIRES_INFECT_ON_BITE") setFormVar(fname, name, text2num(value))
+					if("VAMPIRE_POWER_FALL_INTERVAL") setFormVar(fname, name, text2num(value))
+
 
 		FormSetTempVars(fname)
 			var/mob/M = src.getHost()
@@ -987,6 +996,10 @@ upForm
 					majin_auto_learn= getFormVar("admin", "majin_auto_learn")
 					imitate_allowed= getFormVar("admin", "imitate_allowed")
 					max_Yasai_percent= getFormVar("admin", "max_Yasai_percent")
+
+					DO_VAMPIRES_NEED_TO_FEED= getFormVar("admin", "DO_VAMPIRES_NEED_TO_FEED")
+					DO_VAMPIRES_INFECT_ON_BITE= getFormVar("admin", "DO_VAMPIRES_INFECT_ON_BITE")
+					VAMPIRE_POWER_FALL_INTERVAL= getFormVar("admin", "VAMPIRE_POWER_FALL_INTERVAL")
 
 
 		FormSubmitSuccess(fname, client/C)
@@ -1023,7 +1036,11 @@ upForm
 				<tr height="1em" valign="top"><td width="30%"><b>Enable Majin Auto-Learning: <td width="60%"><center>(0=Off, 1=On)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="majin_auto_learn" value="[getFormVar("admin","majin_auto_learn")]" size="3" maxlength="1"/><span class="error">[errors["majin_auto_learn"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Enable Imitate: <td width="60%"><center>(0=Off, 1=On)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="imitate_allowed" value="[getFormVar("admin","imitate_allowed")]" size="3" maxlength="1"/><span class="error">[errors["imitate_allowed"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Max Yasai Percentage: <td width="60%"><center>(Limit on Yasai Population)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="max_Yasai_percent" value="[getFormVar("admin","max_Yasai_percent")]" size="3" maxlength="20"/><span class="error">[errors["max_Yasai_percent"]]</span></td></tr>
-
+				
+				<tr height="1em" valign="top"><td width="30%"><b>Do Vampires Need to Feed? <td width="60%"><center>(0 = False, 1 = True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="DO_VAMPIRES_NEED_TO_FEED" value="[getFormVar("admin","DO_VAMPIRES_NEED_TO_FEED")]" size="3" maxlength="1"/><span class="error">[errors["DO_VAMPIRES_NEED_TO_FEED"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Do Vampire Bites infect other players? <td width="60%"><center>(0=False, 1=True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="DO_VAMPIRES_INFECT_ON_BITE" value="[getFormVar("admin","DO_VAMPIRES_INFECT_ON_BITE")]" size="3" maxlength="1"/><span class="error">[errors["DO_VAMPIRES_INFECT_ON_BITE"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Interval for Vampire Power to fall (vampire bpmod) <td width="60%"><center>(60 = 6 seconds, 600 = 60 seconds. 15 = 1 hour until lose all Vampire Power (so 150 would be 10 hours))</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="VAMPIRE_POWER_FALL_INTERVAL" value="[getFormVar("admin","VAMPIRE_POWER_FALL_INTERVAL")]" size="3" maxlength="10"/><span class="error">[errors["VAMPIRE_POWER_FALL_INTERVAL"]]</span></td></tr>
+				
 		  <tr height="1em">
 			  	<td colspan="4" align="right"> <input type="submit" value="Submit" />
 			  	<input type="reset" value="Reset" /> </td>

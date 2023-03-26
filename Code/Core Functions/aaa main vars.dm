@@ -125,18 +125,22 @@ var
 
 // Global settings that affect RP ##############################################################################
 var
-	should_show_char_name_on_who 	= 0	
-	can_break_things 				= 1
-	sense_show_stats 				= 0	// Show stat build
-	sense_rp_stats					= 1	// Remove precision from Sense and show vague terms instead
+	should_show_char_name_on_who 	= FALSE	
+	can_break_things 				= TRUE
+	sense_show_stats 				= FALSE	// Show stat build
+	sense_rp_stats					= TRUE	// Remove precision from Sense and show vague terms instead
 	UNCONSCIOUS_LEVEL_KO			= 3				// Which KO will mark Unconsciousness
 	UNCONSCIOUS_LEVEL_KO_DURATION   = 10 * 10 * 60	// 10 minutes (600 seconds)
 	NORMAL_LEVEL_KO_DURATION		= 10 * 3  * 60	// 3 minutes  (180 seconds)
 
+	DO_VAMPIRES_NEED_TO_FEED 		= TRUE
+	DO_VAMPIRES_INFECT_ON_BITE 		= FALSE	
+	VAMPIRE_POWER_FALL_INTERVAL 	= 10 * 60		// 6 seconds
+
 mob/var
 	sparring_mode					= "Casual Spar" // Available modes: ["Casual Spar", "Fight to Death"]
 	sparring_mode_text				= "casual spar"
-	combat_ko_status 				= 0				// 0 = healthy, anything in between 0 and UNCONSCIOUS_LEVEL_KO = beaten
+	combat_ko_status 				= FALSE				// 0 = healthy, anything in between 0 and UNCONSCIOUS_LEVEL_KO = beaten
 
 //#####################################################################################################################
 
