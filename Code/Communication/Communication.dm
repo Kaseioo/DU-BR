@@ -60,7 +60,8 @@ proc/List_2_Text(list/L,sep)
 mob/verb/Countdown(Seconds as num, message as text|null, final_message as text|null)
 	set category = "Other"
 	set desc = "Countdown from a number of seconds. You can also specify a message to display at the start and end of the countdown."
-
+	if(!Seconds) 
+		Seconds = input("How many seconds should the countdown last?") as num
 	if(Seconds > 600) Seconds = 600
 
 	var/t="[src] is waiting [Seconds] seconds."

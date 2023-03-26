@@ -307,7 +307,7 @@ mob/proc/Player_Loops(start_delay)
 	//spawn if(src) Network_Delay_Loop()
 	update_area_loop()
 	Detect_good_people()
-	burnOnDay()
+	//burnOnDay()
 	Match_counterpart_loop()
 	sleep(world.tick_lag) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
 	Counterpart_died_loop()

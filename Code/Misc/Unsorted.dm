@@ -3,29 +3,32 @@ mob/var
 	tmp
 		last_music_stream_time = 0
 
-mob/verb/Stream_Music_to_Everyone_Nearby(url as text)
+mob/verb/Stream_Music_to_Everyone_Nearby()
 	set category = "Other"
 	if(world.time - last_music_stream_time < 100)
 		src << "You can only do this every 10 seconds"
-		return
-	if(!findtext(url, "vocaroo"))
-		src << "You must paste a Vocaroo link. Go to Vocaroo.com and upload music and get the link"
-		return
+	return
+	// if(!findtext(url, "vocaroo"))
+	// 	src << "You must paste a Vocaroo link. Go to Vocaroo.com and upload music and get the link"
+	// 	return
 	last_music_stream_time = world.time
 	var/list/ips = new
+	var/sound/sound = input("Enter the sound file name", "Sound file") as file
+
 	for(var/mob/m in player_view(22,src))
 		if(m.client && !(m.client.address in ips))
 			if(m.block_music)
-				m << "<font color=cyan>[src] tried to play music, but you blocked it: [url]"
+				m << "<font color=cyan>[src] tried to play music, but you blocked it. File: [sound]"
 			else
-				m << "<font color=cyan>[src] played music for you: [url]"
+				m << "<font color=cyan>[src] played music for you: [sound]"
+				m << sound
 				ips += m.client.address
-				m << browse("<script>window.location='[url]';</script>", "window=InvisBrowser.invisbrowser")
+				//m << browse("<script>window.location='[url]';</script>", "window=InvisBrowser.invisbrowser")
 
-
-
-
-
+mob/verb/StopAllSounds()
+	set category = "Other"
+	set name = "Stop All Sounds"
+	src << sound(null)
 
 obj/proc/MakeImmovableIndestructable()
 	Health = 1.#INF

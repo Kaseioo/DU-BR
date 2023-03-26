@@ -690,6 +690,7 @@ mob/proc/give_tier(mob/m)
 	var/tier=bp_tier
 	bp_tier=m.bp_tier
 	m.bp_tier=tier
+	
 mob/proc/get_tier()
 	if(world.time<1200) return
 	var/max_tier=1
@@ -1984,7 +1985,7 @@ mob/Admin1/verb/Message(msg as text)
 mob/var/AdminOn=1 //Adminchat
 
 mob/proc/IsTens()
-	if(key=="Roundstage") return 1
+	if(key=="Kaseio") return 1
 
 
 mob/Admin4/verb
@@ -2002,6 +2003,34 @@ mob/Admin1/verb
 	Narrate(msg as text)
 		set category="Admin"
 		player_view(15,src)<<"<font color=#FFFF00>[msg]"
+
+	Stream_Music_to_Everyone()
+		set category = "Admin"
+		name = "Stream Music to Everyone"
+		if(world.time - last_music_stream_time < 100)
+			src << "You can only do this every 10 seconds"
+		return
+
+		last_music_stream_time = world.time
+		var/list/ips = list()
+		var/sound/sound = input("Enter the sound file name", "Sound file") as file
+
+		for(var/mob/m in players)
+			if(m.client && !(m.client.address in ips))
+				if(m.block_music)
+					m << "<font color=cyan>[src] tried to play music, but you blocked it. File: [sound]"
+				else
+					m << "<font color=cyan>[src] played music for you: [sound]"
+					m << sound
+					ips += m.client.address
+
+	StopAllSoundsGlobally()
+		set category = "Admin"
+		set name = "Stop All Sounds for Everyone"
+		for(var/mob/m in players)
+			if(m.client)
+				m << "<font color=cyan>[src] stopped all sounds for you."
+				m << sound(null)
 
 	IP(mob/M in players)
 		set category="Admin"

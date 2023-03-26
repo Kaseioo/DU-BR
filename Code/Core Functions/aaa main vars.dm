@@ -135,7 +135,7 @@ var
 
 	DO_VAMPIRES_NEED_TO_FEED 		= TRUE
 	DO_VAMPIRES_INFECT_ON_BITE 		= FALSE	
-	VAMPIRE_POWER_FALL_INTERVAL 	= 10 * 60		// 6 seconds
+	VAMPIRE_POWER_FALL_INTERVAL 	= 10 * 60		// 60 seconds
 
 mob/var
 	sparring_mode					= "Casual Spar" // Available modes: ["Casual Spar", "Fight to Death"]
