@@ -113,12 +113,20 @@ obj/MakeAmulet
 	student_point_cost = 60
 	desc="You can make an amulet, that when used, will open a portal to the deadzone, sucking anything \
 	nearby into it. Very, very dangerous."
+	var/Next_Use		= 0
+	var/Last_usage_year = Year
+	
 	verb/Hotbar_use()
 		set hidden=1
 		Make_DeadZone_Amulet()
 	verb/Make_DeadZone_Amulet()
 		set category="Skills"
-		new/obj/items/Amulet(usr)
+
+		if(Year >= Next_Use)
+			usr.contents += new/obj/items/Amulet
+			Next_Use = Year + 5
+			Last_usage_year = Year
+		else usr << "You can only make one of these per [Next_Use] years. You last made one in [Last_usage_year]."
 
 var/amulet_cooldown=45 //seconds
 

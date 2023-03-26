@@ -425,8 +425,16 @@ mob
 		CheckSpaceDie()
 			set waitfor=0
 			sleep(5)
+			var/special_protection
+			for(var/obj/items/Amulet/deadzone_protection in item_list)
+				special_protection=1
+				break
+			for(var/obj/items/Holy_Pendant in item_list)
+				special_protection=1
+				break
+				
 			while(current_area && current_area.type == /area/Space)
-				if(air_mask || Lungs || Regenerate)
+				if(air_mask || Lungs || Regenerate || special_protection)
 				else
 					var/turf/t = loc
 					if(t && isturf(t) && t.type == /turf/Other/Stars)
