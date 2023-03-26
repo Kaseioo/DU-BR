@@ -538,7 +538,7 @@ obj/Priest
 		m.spouse_key=usr.key
 		player_view(center=src)<<"<font color=red>[usr] and [m] are now married"
 		spawn if(m) alert(m,"[usr] has married you. If you wish to file for divorce click the priest npc")
-		if(usr.gender==m.gender) usr.Kilt_by_redneck()
+		//if(usr.gender==m.gender) usr.Kilt_by_redneck()
 	verb/Bolt()
 		set src in oview(1)
 		usr.Bolt(src)
