@@ -206,7 +206,20 @@ mob/verb/Settings()
 							if("Remove existing transformation graphic") ssj4_opening=usr.Remove_Trans_Effects(ssj4_opening)
 			if("Fullscreen Toggle") Fullscreen_Toggle()
 			if("Choose Hair") Get_Hair()
-			if("Choose Clothes") Grid(Clothing, show_names = 1)
+			if("Choose Clothes") 
+				switch(alert(src,"Custom icon?","Options","Default","Custom"))
+					if("Custom")
+						var/icon/I
+						I = input(src,"Choose an icon") as icon
+
+						if(IconTooBig(I)) I=null
+
+						var/obj/items/Clothes/newclothing = new/obj/items/Clothes/CustomClothing
+						newclothing.icon = I
+
+						newclothing.Move(src)
+					else
+						Grid(Clothing, show_names = 1)
 			if("Choose Aura Icon")
 				var/list/L=new
 				for(var/obj/Aura_Choices/A in src) L+=A

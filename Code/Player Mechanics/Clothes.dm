@@ -407,3 +407,6 @@ obj/items/Clothes
 		name = "Broly"
 		icon='Broly Waistrobe.dmi'
 		Click() usr.Clothes_Proc(src)
+	CustomClothing
+		icon= 'GokuSuit.dmi'
+		Click() usr.Clothes_Proc(src)

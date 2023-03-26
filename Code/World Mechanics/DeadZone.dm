@@ -114,7 +114,7 @@ obj/MakeAmulet
 	desc="You can make an amulet, that when used, will open a portal to the deadzone, sucking anything \
 	nearby into it. Very, very dangerous."
 	var/Next_Use		= 0
-	var/Last_usage_year = Year
+	var/Last_usage_year = 0
 	
 	verb/Hotbar_use()
 		set hidden=1

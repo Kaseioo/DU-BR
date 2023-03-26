@@ -326,7 +326,6 @@ obj/Icer
 	C29 icon='Changeling Frieza BE.dmi'
 
 mob/proc/Choose_Hair(force_hair)
-
 	if(force_hair)
 		DBZ_hair(force_hair)
 		return
@@ -335,7 +334,19 @@ mob/proc/Choose_Hair(force_hair)
 		return
 
 	if((Race in list("Majin","Bio-Android","Puranto","Android","Frost Lord"))&&!icon) return
-	Grid(Hairs)
+	switch(alert(src,"Custom icon?","Options","Default","Custom"))
+		if("Custom")
+			var/icon/I
+			I = input(src,"Choose an icon") as icon
+
+			if(IconTooBig(I)) I=null
+
+			var/obj/Hairs/newhair = new/obj/Hairs/CustomHair
+			newhair.icon = I
+
+			Apply_Hair(src, newhair)
+		else
+			Grid(Hairs)
 
 mob/proc/RandomHair()
 	if(dbz_character) return
@@ -780,6 +791,15 @@ obj/Hairs
 			USSj_Hair='Hair Broly Lssj.dmi'
 			SSjFP_Hair=SSj_Hair+rgb(15,15,15)
 			SSj2_Hair=SSj_Hair
+			SSj3_Hair='Hair_SSj4.dmi'+rgb(160,150,30)
+		Click() Apply_Hair(usr,src)
+	CustomHair
+		New()
+			icon='Hair_FemaleLong.dmi'
+			SSj_Hair=icon+rgb(150,150,0)
+			USSj_Hair=SSj_Hair
+			SSjFP_Hair=icon+rgb(160,160,80)
+			SSj2_Hair=icon+rgb(160,160,20)
 			SSj3_Hair='Hair_SSj4.dmi'+rgb(160,150,30)
 		Click() Apply_Hair(usr,src)
 
