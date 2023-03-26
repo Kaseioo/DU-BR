@@ -431,7 +431,9 @@ mob/proc/KO(mob/Z,allow_anger=1)
 			return
 
 		give_tier(Z)
-		Zenkai()
+		if(Z.sparring_mode != "Casual Spar")
+			Zenkai()
+
 		KO=1
 		Stop_Shadow_Sparring()
 		if(ismob(Z)) last_knocked_out_by_mob = Z
@@ -454,12 +456,17 @@ mob/proc/KO(mob/Z,allow_anger=1)
 		icon_state="KO"
 		KB=0
 
-		if(ismob(Z)&&Z.client&&Z.client.computer_id!="1768931727")
+		if(ismob(Z) && Z.client)
 			for(var/mob/m in player_view(center=src))
-				var/t="[src] is knocked out by [Z] ([Z.displaykey])"
-				m<<t
-				m.ChatLog(t)
-		else player_view(center=src)<<"[src] is knocked out by [Z]!"
+				var/message = "[src] loses against [Z] during a [Z.sparring_mode_text]!"
+
+				if(should_show_char_name_on_who)
+					message += "([Z.displaykey])"
+
+				m << message
+				m.ChatLog(message)
+		else 
+			player_view(center=src)<<"[src] is knocked out by [Z] during a [Z.sparring_mode_text]!"
 
 		if(grabbedObject)
 			player_view(center=src)<<"[src] is forced to release [grabbedObject]!"

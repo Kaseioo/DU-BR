@@ -212,13 +212,28 @@ mob/proc/Attack_Barrier(obj/Attacks/Attack_Barrier/B)
 atom/var/Fatal=0
 
 mob/verb/Ki_Toggle()
-	//set category="Other"
+	set category	="Other"
+	set name		="Toggle Sparring Mode"
+
 	if(src in All_Entrants)
-		src<<"Your attacks can not be set to lethal in the tournament"
+		src << "Your attacks can not be set to lethal in the tournament"
+		SetSparringMode("Casual Spar")
 		return
-	Fatal=!Fatal
-	if(Fatal) src<<"Your attacks are now lethal."
-	else src<<"Your attacks are now non-lethal."
+
+	ToggleSparringMode()
+
+	if(sparring_mode == "Casual Spar")
+		src<<"Your attacks are now non-lethal."
+		Fatal=0
+	else
+		var/mode = input("Choose lethal mode", "Lethal Mode", "Non-lethal") in list("Non-lethal", "Lethal")
+
+		if(mode == "Lethal") 
+			src <<"Your attacks are now lethal."
+			Fatal=1
+		else 
+			src<<"Your attacks are now non-lethal."
+			Fatal=0
 
 obj/var/Mastery=1
 

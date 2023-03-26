@@ -28,10 +28,14 @@ mob/proc/Opponent(timeLimit = 65)
 
 //src is the person being attacked, M is the attacker
 mob/proc/setOpponent(mob/M)
-
 	M.Log_attack(src)
+
+	if(M.last_mob_attacked != src)
+		AlertSparringMode(M,src)
+		
 	Opponent = M
 	lastSetOpponent = world.time
+
 	M.last_mob_attacked = src
 	Attack_gain_loop()
 
@@ -40,8 +44,8 @@ mob/proc/setOpponent(mob/M)
 
 	Set_possible_teamer_list(M) //still needed to create attack backlogs
 	Check_if_being_teamed(M)
-
 	Good_teaming_with_evil_check()
+
 	M.Check_if_kiting()
 
 mob/proc
@@ -488,7 +492,42 @@ mob/verb/ToggleBreakingThings()
 	set name = "Toggle Breaking Walls and Objects"
 	can_break_things = !can_break_things
 	src << "You will now [can_break_things ? "be able to" : "not be able to"] break things such as Walls and Objects. This does not affect Science Items.."
+
+mob/verb/ToggleSparringMode()
+	var/mode = input("Choose sparring mode", "Sparring mode", "Casual Spar") in list("Casual Spar", "Fight to Death")
+	SetSparringMode(mode)
+
+mob/proc/SetSparringMode(mode = sparring_mode, show_message = TRUE)
+	var/sparring_mode_message = ""
+
+	sparring_mode = mode
 	
+	if(show_message)
+		if(mode == "Fight to Death")
+			sparring_mode_message = "[src] emanates <span style='color: red;'>killing intent!</span>"
+			sparring_mode_text = "<span style='color: red;'>fight to death</span>"
+		else
+			sparring_mode_message = "[src] prepares to <span style='color: cyan;'>spar casually</span>."
+			sparring_mode_text = "casual spar"
+
+		for(var/mob/M in view(22, src))
+			M << sparring_mode_message
+			M.ChatLog(sparring_mode_message, M.key)
+
+mob/proc/AlertSparringMode(var/mob/attacker, var/mob/victim)
+	for(var/mob/M in view(22, attacker))
+		if(attacker.sparring_mode == "Casual Spar")
+			if(victim.sparring_mode == "Fight to Death")
+				M << "[attacker] starts a [attacker.sparring_mode] with [victim], but [victim] bears <span style='color: red'>killing intent</span>!"
+			else
+				M << "[attacker] starts a [attacker.sparring_mode] with [victim]."
+
+		else 
+			if(attacker.sparring_mode == "Fight to Death")
+				M << "[attacker] attacks [victim] with <span style='color: red'>killing intent</span>!"
+				if(victim.sparring_mode == "Casual Spar")
+					M << "As a result, [victim] now bears <span style='color: red'>killing intent</span> as well."
+					victim.SetSparringMode("Fight to Death", FALSE)
 
 mob/proc/WallBreakPower()
 	if(is_saitama) return 1.#INF

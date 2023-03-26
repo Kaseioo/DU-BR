@@ -123,12 +123,20 @@ var
 	death_y=200
 	death_z=5
 
-// Global settings that mostly affect RP
+// Global settings that affect RP ##############################################################################
 var
 	should_show_char_name_on_who 	= 0	
 	can_break_things 				= 1
 	sense_show_stats 				= 0	// Show stat build
 	sense_rp_stats					= 1	// Remove precision from Sense and show vague terms instead
+
+mob/var
+	sparring_mode					= "Casual Spar" // Available modes: ["Casual Spar", "Fight to Death"]
+	sparring_mode_text				= "casual spar"
+
+
+
+//#####################################################################################################################
 
 // Deadzone pressure settings
 var
@@ -211,3 +219,4 @@ mob/var
 	is_ctrl_down 		= 0
 	is_alt_down 		= 0
 	is_shift_down 		= 0
+	
