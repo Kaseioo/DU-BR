@@ -57,15 +57,40 @@ proc/List_2_Text(list/L,sep)
 		if(sep) newtext+=sep;newtext+="[L[count]]"
 	return newtext
 
-mob/verb/Countdown(Seconds as num)
-	set category="Other"
+mob/verb/Countdown(Seconds as num, message as text|null, final_message as text|null)
+	set category = "Other"
+	set desc = "Countdown from a number of seconds. You can also specify a message to display at the start and end of the countdown."
+
 	if(Seconds > 600) Seconds = 600
+
 	var/t="[src] is waiting [Seconds] seconds."
-	player_view(15,src)<<t
-	if(client) ChatLog(t,key)
-	sleep(Seconds * 10)
-	var/t2="[src] has waited [Seconds] seconds."
-	player_view(15,src)<<t2
+
+	if(message)
+		t = " [message]"
+
+	player_view(22, src) << t
+
+	if(client) 
+		ChatLog(t,key)
+
+	var/elapsed = 0
+
+	while(elapsed < Seconds)
+		elapsed += 300
+		sleep(elapsed)
+		var/elapsed_message = "[src] has waited [elapsed/10] seconds out of [Seconds] seconds."
+		player_view(22, src) << "[elapsed_message]"
+
+		if(client) 
+			ChatLog(elapsed_message, key)
+
+	var/t2 = "[src] has finished waiting [Seconds] seconds."
+	
+	if(final_message)
+		t2 = "[final_message]"
+
+	player_view(22, src)<<t2
+
 	if(client) ChatLog(t2,key)
 
 //var/image/saySpark = image(icon = 'Say Spark.dmi', pixel_y = 6)
