@@ -624,6 +624,9 @@ upForm
 			initFormVar("admin", "sense_rp_stats", sense_rp_stats)
 			initFormVar("admin", "sense_show_stats", sense_rp_stats)
 
+			initFormVar("admin", "UNCONSCIOUS_LEVEL_KO", 			UNCONSCIOUS_LEVEL_KO)
+			initFormVar("admin", "UNCONSCIOUS_LEVEL_KO_DURATION", 	UNCONSCIOUS_LEVEL_KO_DURATION)
+			initFormVar("admin", "NORMAL_LEVEL_KO_DURATION", 		NORMAL_LEVEL_KO_DURATION)
 			M << "Variables loaded. [src.type]"
 
 		ProcessVariable(fname, name, value)
@@ -677,6 +680,9 @@ upForm
 					if("sense_show_stats") setFormVar(fname, name, text2num(value))
 					if("sense_rp_stats") setFormVar(fname, name, text2num(value))
 
+					if("UNCONSCIOUS_LEVEL_KO") setFormVar(fname, name, text2num(value))
+					if("UNCONSCIOUS_LEVEL_KO_DURATION") setFormVar(fname, name, text2num(value))
+					if("NORMAL_LEVEL_KO_DURATION") setFormVar(fname, name, text2num(value))
 
 		FormSetTempVars(fname)
 			var/mob/M = src.getHost()
@@ -727,7 +733,11 @@ upForm
 					should_show_char_name_on_who= getFormVar("admin", "should_show_char_name_on_who")
 
 					sense_show_stats = getFormVar("admin", "sense_show_stats")
-					sense_rp_stats = getFormVar("admin", "sense_rp_stats")
+					sense_rp_stats = getFormVar("admin", "sense_rp_stats")	
+
+					UNCONSCIOUS_LEVEL_KO = getFormVar("admin", "UNCONSCIOUS_LEVEL_KO")
+					UNCONSCIOUS_LEVEL_KO_DURATION = getFormVar("admin", "UNCONSCIOUS_LEVEL_KO_DURATION")
+					NORMAL_LEVEL_KO_DURATION = getFormVar("admin", "NORMAL_LEVEL_KO_DURATION")
 
 
 		FormSubmitSuccess(fname, client/C)
@@ -805,6 +815,10 @@ upForm
 				
 				<tr height="1em" valign="top"><td width="30%"><b>Show stat builds on Sense 3/Scan?: <td width="60%"><center>(0 = False, 1 = True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="sense_show_stats" value="[getFormVar("admin","sense_show_stats")]" size="3" maxlength="20"/><span class="error">[errors["sense_show_stats"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Show vague info on Sense 3? (no numbers): <td width="60%"><center>(0 = False, 1 = True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="sense_rp_stats" value="[getFormVar("admin","sense_rp_stats")]" size="3" maxlength="20"/><span class="error">[errors["sense_rp_stats"]]</span></td></tr>
+				
+				<tr height="1em" valign="top"><td width="30%"><b>Which KO should make someone Unconscious?: <td width="60%"><center></center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="UNCONSCIOUS_LEVEL_KO" value="[getFormVar("admin","UNCONSCIOUS_LEVEL_KO")]" size="3" maxlength="20"/><span class="error">[errors["UNCONSCIOUS_LEVEL_KO"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>How long should someone on their last KO (Unconscious KO) be out for?: <td width="60%"><center>(100 = 1 second, 60000 = 600 seconds (10 minutes))</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="UNCONSCIOUS_LEVEL_KO_DURATION" value="[getFormVar("admin","UNCONSCIOUS_LEVEL_KO_DURATION")]" size="3" maxlength="20"/><span class="error">[errors["UNCONSCIOUS_LEVEL_KO_DURATION"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>How long should someone on a normal KO (Anything before Unconscious KO) be out for?: <td width="60%"><center>(100 = 1 second, 18000 = 180 seconds (3 minutes))</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="NORMAL_LEVEL_KO_DURATION" value="[getFormVar("admin","NORMAL_LEVEL_KO_DURATION")]" size="3" maxlength="20"/><span class="error">[errors["NORMAL_LEVEL_KO_DURATION"]]</span></td></tr>
 			  <tr height="1em">
 			  	<td colspan="4" align="right"> <input type="submit" value="Submit" />
 			  	<input type="reset" value="Reset" /> </td>
@@ -1337,10 +1351,10 @@ upForm
 
 				<tr><td><br><center><b>Limit Break</b></center></td></tr>
 
-				<tr height="1em" valign="top"><td width="30%"><br><b>Can players gain Mastery in Limit Break: <td width="60%"><center>(0 = False, 1 = True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="limitbreak_mastery" value="[getFormVar("admin","limitbreak_mastery")]" size="3" maxlength="1"/><span class="error">[errors["limitbreak_mastery"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>Maximum mastery for Limit Break: <td width="60%"><center>(10 = 1 second, 600 = 60 seconds ))</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="limitbreak_maximum_mastery" value="[getFormVar("admin","limitbreak_maximum_mastery")]" size="3" maxlength="1"/><span class="error">[errors["limitbreak_maximum_mastery"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>Limit breaker minimum duration modifier: <td width="60%"><center>(1 = no change, 0.5 = half mastery (60 -> 30 seconds), default = 1)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="limitbreak_minimum_duration" value="[getFormVar("admin","limitbreak_minimum_duration")]" size="3" maxlength="1"/><span class="error">[errors["limitbreak_minimum_duration"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>Limit breaker maximum duration modifier: <td width="60%"><center>(2 = 2x maximum mastery (60 -> 120 seconds), default = 2)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="limitbreak_maximum_duration" value="[getFormVar("admin","limitbreak_maximum_duration")]" size="3" maxlength="1"/><span class="error">[errors["limitbreak_maximum_duration"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><br><b>Can players gain Mastery in Limit Break: <td width="60%"><center>(0 = False, 1 = True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="limitbreak_mastery" value="[getFormVar("admin","limitbreak_mastery")]" size="3" maxlength="20"/><span class="error">[errors["limitbreak_mastery"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Maximum mastery for Limit Break: <td width="60%"><center>(10 = 1 second, 600 = 60 seconds ))</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="limitbreak_maximum_mastery" value="[getFormVar("admin","limitbreak_maximum_mastery")]" size="3" maxlength="20"/><span class="error">[errors["limitbreak_maximum_mastery"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Limit breaker minimum duration modifier: <td width="60%"><center>(1 = no change, 0.5 = half mastery (60 -> 30 seconds), default = 1)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="limitbreak_minimum_duration" value="[getFormVar("admin","limitbreak_minimum_duration")]" size="3" maxlength="20"/><span class="error">[errors["limitbreak_minimum_duration"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Limit breaker maximum duration modifier: <td width="60%"><center>(2 = 2x maximum mastery (60 -> 120 seconds), default = 2)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="limitbreak_maximum_duration" value="[getFormVar("admin","limitbreak_maximum_duration")]" size="3" maxlength="20"/><span class="error">[errors["limitbreak_maximum_duration"]]</span></td></tr>
 
 				<tr><td><br><center><b>Hakai</b></center></td></tr>
 

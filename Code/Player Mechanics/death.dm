@@ -433,7 +433,9 @@ mob/proc/KO(mob/Z,allow_anger=1)
 		give_tier(Z)
 		if(Z.sparring_mode != "Casual Spar")
 			Zenkai()
-
+		else
+			if(Z.sparring_mode == "Fight to Death")
+				combat_ko_status++;
 		KO=1
 		Stop_Shadow_Sparring()
 		if(ismob(Z)) last_knocked_out_by_mob = Z
@@ -458,10 +460,18 @@ mob/proc/KO(mob/Z,allow_anger=1)
 
 		if(ismob(Z) && Z.client)
 			for(var/mob/m in player_view(center=src))
-				var/message = "[src] loses against [Z] during a [Z.sparring_mode_text]!"
-
+				var/attacker = Z
 				if(should_show_char_name_on_who)
-					message += "([Z.displaykey])"
+					attacker += " ([Z.displaykey])"
+
+				var/message = "[src] loses against [attacker] during a [Z.sparring_mode_text]!"
+
+
+				if(combat_ko_status > 0)
+					message += "\n[src] now has [combat_ko_status] combat KO's!"
+
+					if(combat_ko_status >= UNCONSCIOUS_LEVEL_KO)
+						message += "\n[src] has been <span style='color: red;'> defeated 3 times</span> and is now unconscious."
 
 				m << message
 				m.ChatLog(message)
@@ -480,15 +490,27 @@ mob/proc/KO(mob/Z,allow_anger=1)
 			if(has_ss_full_power && ssj == 1)
 			else Revert()
 
-		var/KO_Timer = 800 / Clamp((regen**0.4),0.5,2)
+		var/KO_Timer = 0
+		if(combat_ko_status >= UNCONSCIOUS_LEVEL_KO)
+			KO_Timer = UNCONSCIOUS_LEVEL_KO_DURATION
+		else 
+			KO_Timer = NORMAL_LEVEL_KO_DURATION // / Clamp((regen**0.4),0.5,2)
+
 		if(z==10) KO_Timer/=6
 		//if(ultra_pack) KO_Timer/=1.4
 		if(hero==key) KO_Timer*=0.7
 		koCount++
 		var/thisKOcount = koCount
-		spawn(KO_Timer * KO_Time)
-			if(koCount == thisKOcount)
-				UnKO()
+		
+		if(combat_ko_status >= UNCONSCIOUS_LEVEL_KO)
+			spawn(KO_Timer)
+				if(koCount == thisKOcount)
+					UnKO()
+		else 
+			spawn(KO_Timer * KO_Time)
+				if(koCount == thisKOcount)
+					UnKO()
+
 		if(Poisoned && prob(50)) Death("???")
 
 	else if(!Frozen)
@@ -508,7 +530,7 @@ mob/proc/KO(mob/Z,allow_anger=1)
 			//all other npcs currently just die instantly upon ko
 			del(src)
 
-mob/proc/UnKO() if(KO)
+mob/proc/UnKO(healed_from_combat_ko = 0) if(KO)
 	set waitfor=0
 	Health=1
 	KO=0
@@ -518,7 +540,16 @@ mob/proc/UnKO() if(KO)
 	Ki=1
 	move=1
 	if(!istype(src,/mob/Enemy) && Poisoned && prob(50)) Death("???")
-	player_view(center=src)<<"[src] regains consciousness."
+
+	if(combat_ko_status >= 3)
+		combat_ko_status = 0
+		player_view(center=src)<<"[src] regains consciousness."
+	else 
+		player_view(center=src)<<"[src] gets up from their defeat."
+
+	if(!healed_from_combat_ko)
+		combat_ko_status--
+
 
 	if(istype(src,/mob/Enemy))
 		Health = 100

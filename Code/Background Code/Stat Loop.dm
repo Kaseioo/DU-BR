@@ -307,6 +307,7 @@ mob/proc/Player_Loops(start_delay)
 	//spawn if(src) Network_Delay_Loop()
 	update_area_loop()
 	Detect_good_people()
+	burnOnDay()
 	Match_counterpart_loop()
 	sleep(world.tick_lag) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
 	Counterpart_died_loop()
@@ -793,9 +794,9 @@ mob/proc/Regenerator_loop(obj/items/Regenerator/r)
 	if(!r) r=locate(/obj/items/Regenerator) in loc
 	regenerator_obj=r
 
-	while(regenerator_obj&&regenerator_obj.z&&regenerator_obj.loc==loc)
-		if(Android||Giving_Power||BPpcnt>100||Using_Focus||attacking||Digging||Overdrive||counterpart_died||\
-		buffed_with_bp()||buff_transform_bp||God_Fist_level||Flying||Action=="Training")
+	while(regenerator_obj && regenerator_obj.z && regenerator_obj.loc == loc)
+		if(Android || Giving_Power || BPpcnt>100 || Using_Focus || attacking || Digging || Overdrive || counterpart_died || \
+		buffed_with_bp() || buff_transform_bp || God_Fist_level || Flying || Action=="Training")
 		else
 
 			var/area/a=get_area()
@@ -805,7 +806,7 @@ mob/proc/Regenerator_loop(obj/items/Regenerator/r)
 			else
 				Gravity_Update()
 				var/N=1
-				if(r.Double_Effectiveness) N*=2
+				if(r.Double_Effectiveness) N *= 2
 
 				if(r.cures_radiation)
 					if(radiation_level)
@@ -818,11 +819,31 @@ mob/proc/Regenerator_loop(obj/items/Regenerator/r)
 				if(Health<100)
 					Health += 4 * RegenMod() * N * Server_Regeneration
 					if(Health>100) Health=100
-				if(KO&&Health>=100) UnKO()
-				if(Ki<max_ki&&r.Recovers_Energy)
+				if(KO && Health>=100)
+					var/regenerator_modifier = 4
+					var/waiting_period = 0
+					if(r.Double_Effectiveness) 
+						regenerator_modifier = 8
+
+					if(combat_ko_status >= UNCONSCIOUS_LEVEL_KO)
+						waiting_period = UNCONSCIOUS_LEVEL_KO_DURATION 	/ regenerator_modifier
+					else 
+						waiting_period = NORMAL_LEVEL_KO_DURATION 		/ regenerator_modifier
+
+					var/initial_healing_message = "[src] is being healed by the regenerator, and will heal from combat in [round(waiting_period/10, 1)] seconds."
+					var/final_healing_message = "[src] has been healed by the regenerator, and is no longer in combat."
+
+					Countdown(waiting_period, initial_healing_message, final_healing_message)
+					for(var/ko in 1 to combat_ko_status)
+						spawn(waiting_period * 10)
+							combat_ko_status--
+							player_view(22, src) << "[src] has been healed from one of their combat defeats in the [r]. They now have [combat_ko_status] affecing them."
+							UnKO()
+					
+				if(Ki<max_ki && r.Recovers_Energy)
 					Ki+= 2 * (max_ki / 50) * recov * N * Server_Recovery
 					if(Ki>max_ki) Ki=max_ki
-				if(prob(5*N)&&r.Heals_Injuries) for(var/obj/Injuries/I in injury_list)
+				if(prob(5*N) && r.Heals_Injuries) for(var/obj/Injuries/I in injury_list)
 					src<<"Your [I] injury has healed from the regenerator"
 					del(I)
 					Add_Injury_Overlays()

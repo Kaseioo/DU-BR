@@ -544,6 +544,9 @@ proc/Save_Misc()
 	S["sense_rp_stats"] 							<< sense_rp_stats
 	S["sense_show_stats"] 							<< sense_show_stats
 
+	S["UNCONSCIOUS_LEVEL_KO"]						<< UNCONSCIOUS_LEVEL_KO
+	S["UNCONSCIOUS_LEVEL_KO_DURATION"] 				<< UNCONSCIOUS_LEVEL_KO_DURATION
+	S["NORMAL_LEVEL_KO_DURATION"] 					<< NORMAL_LEVEL_KO_DURATION
 
 
 
@@ -677,7 +680,9 @@ proc/Load_Misc()
 	S["sense_rp_stats"] 	>> sense_rp_stats
 	S["sense_show_stats"] 	>> sense_show_stats
 
-
+	S["UNCONSCIOUS_LEVEL_KO"] 			>> UNCONSCIOUS_LEVEL_KO
+	S["UNCONSCIOUS_LEVEL_KO_DURATION"] 	>> UNCONSCIOUS_LEVEL_KO_DURATION
+	S["NORMAL_LEVEL_KO_DURATION"] 		>> NORMAL_LEVEL_KO_DURATION
 
 	if("can_admin_vote" in S) S["can_admin_vote"]>>can_admin_vote
 	if("allow_guests" in S) S["allow_guests"]>>allow_guests

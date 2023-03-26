@@ -129,12 +129,14 @@ var
 	can_break_things 				= 1
 	sense_show_stats 				= 0	// Show stat build
 	sense_rp_stats					= 1	// Remove precision from Sense and show vague terms instead
+	UNCONSCIOUS_LEVEL_KO			= 3				// Which KO will mark Unconsciousness
+	UNCONSCIOUS_LEVEL_KO_DURATION   = 10 * 10 * 60	// 10 minutes (600 seconds)
+	NORMAL_LEVEL_KO_DURATION		= 10 * 3  * 60	// 3 minutes  (180 seconds)
 
 mob/var
 	sparring_mode					= "Casual Spar" // Available modes: ["Casual Spar", "Fight to Death"]
 	sparring_mode_text				= "casual spar"
-
-
+	combat_ko_status 				= 0				// 0 = healthy, anything in between 0 and UNCONSCIOUS_LEVEL_KO = beaten
 
 //#####################################################################################################################
 
