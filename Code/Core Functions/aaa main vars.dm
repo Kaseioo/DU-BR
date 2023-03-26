@@ -124,11 +124,15 @@ var
 	death_z=5
 
 // Global settings that affect RP ##############################################################################
+var/const
+	LETHAL_COMBAT 					= "Fight to Death"
+	CASUAL_COMBAT 					= "Casual Spar" 
+
 var
 	should_show_char_name_on_who 	= FALSE	
 	can_break_things 				= TRUE
-	sense_show_stats 				= FALSE	// Show stat build
-	sense_rp_stats					= TRUE	// Remove precision from Sense and show vague terms instead
+	sense_show_stats 				= FALSE			// Show stat build
+	sense_rp_stats					= TRUE			// Remove precision from Sense and show vague terms instead
 	UNCONSCIOUS_LEVEL_KO			= 3				// Which KO will mark Unconsciousness
 	UNCONSCIOUS_LEVEL_KO_DURATION   = 10 * 10 * 60	// 10 minutes (600 seconds)
 	NORMAL_LEVEL_KO_DURATION		= 10 * 3  * 60	// 3 minutes  (180 seconds)
@@ -138,9 +142,9 @@ var
 	VAMPIRE_POWER_FALL_INTERVAL 	= 10 * 60		// 60 seconds
 
 mob/var
-	sparring_mode					= "Casual Spar" // Available modes: ["Casual Spar", "Fight to Death"]
+	sparring_mode					= CASUAL_COMBAT
 	sparring_mode_text				= "casual spar"
-	combat_ko_status 				= FALSE				// 0 = healthy, anything in between 0 and UNCONSCIOUS_LEVEL_KO = beaten
+	combat_ko_status 				= 0				// used to track when UNCONSCIOUS_LEVEL_KO should enter in effect
 
 //#####################################################################################################################
 
@@ -162,6 +166,8 @@ var
 	limit_breaker_maximum_mastery 				= 600	// 60 seconds
 	limit_breaker_minimum_duration_multiplier 	= 1		// starts at 5 seconds, goes up to 60 seconds
 	limit_breaker_maximum_duration_multiplier 	= 2		// starts at 10 seconds, goes up to 120 seconds
+mob/var
+	Limit_Breaker_Mastery 						= 50
 
 
 mob/var
@@ -221,8 +227,8 @@ mob/var
 	Demonic
 	stun_resistance_mod=1
 	ascension_bp=1000000
-	Limit_Breaker_Mastery = 50
 	is_ctrl_down 		= 0
 	is_alt_down 		= 0
 	is_shift_down 		= 0
+	last_music_stream_time
 	

@@ -789,12 +789,14 @@ var/regenerator_damage_mod = 3 //you take this many times more damage from thing
 
 mob/proc/Regenerator_loop(obj/items/Regenerator/r)
 	set waitfor=0
+	var/healing_from_KO = FALSE
 	sleep(5)
 	if(regenerator_obj) return
 	if(!r) r=locate(/obj/items/Regenerator) in loc
 	regenerator_obj=r
 
 	while(regenerator_obj && regenerator_obj.z && regenerator_obj.loc == loc)
+		healing_from_KO = FALSE
 		if(Android || Giving_Power || BPpcnt>100 || Using_Focus || attacking || Digging || Overdrive || counterpart_died || \
 		buffed_with_bp() || buff_transform_bp || God_Fist_level || Flying || Action=="Training")
 		else
@@ -819,26 +821,11 @@ mob/proc/Regenerator_loop(obj/items/Regenerator/r)
 				if(Health<100)
 					Health += 4 * RegenMod() * N * Server_Regeneration
 					if(Health>100) Health=100
-				if(KO && Health>=100)
-					var/regenerator_modifier = 4
-					var/waiting_period = 0
-					if(r.Double_Effectiveness) 
-						regenerator_modifier = 8
-
-					if(combat_ko_status >= UNCONSCIOUS_LEVEL_KO)
-						waiting_period = UNCONSCIOUS_LEVEL_KO_DURATION 	/ regenerator_modifier
-					else 
-						waiting_period = NORMAL_LEVEL_KO_DURATION 		/ regenerator_modifier
-
-					var/initial_healing_message = "[src] is being healed by the regenerator, and will heal from combat in [round(waiting_period/10, 1)] seconds."
-					var/final_healing_message = "[src] has been healed by the regenerator, and is no longer in combat."
-
-					Countdown(waiting_period, initial_healing_message, final_healing_message)
-					for(var/ko in 1 to combat_ko_status)
-						spawn(waiting_period * 10)
-							combat_ko_status--
-							player_view(22, src) << "[src] has been healed from one of their combat defeats in the [r]. They now have [combat_ko_status] affecing them."
-							UnKO()
+				if(KO && Health >= 100)
+					if(!healing_from_KO)
+						healing_from_KO = TRUE
+						ApplyKoEffects(r)
+						healing_from_KO = FALSE
 					
 				if(Ki<max_ki && r.Recovers_Energy)
 					Ki+= 2 * (max_ki / 50) * recov * N * Server_Recovery
@@ -858,6 +845,40 @@ mob/proc/Regenerator_loop(obj/items/Regenerator/r)
 
 //we use this because it needs delayed or it creates an annoying bug where you try to drag someone into the regen but you drop them outside it and you
 //still enter it but they dont enter it with you so to put anyone in a regen you need to fly first then land in it
+// tu consegue ver o meu console também?
+mob/proc/ApplyKoEffects(obj/items/Regenerator/r)
+	var/regenerator_modifier = 4
+	var/waiting_period = 0
+
+	if(r.Double_Effectiveness) 
+		regenerator_modifier = 8
+
+	if(combat_ko_status > 0)
+		if(combat_ko_status >= UNCONSCIOUS_LEVEL_KO)
+			waiting_period = UNCONSCIOUS_LEVEL_KO_DURATION 	/ regenerator_modifier
+		else 
+			waiting_period = NORMAL_LEVEL_KO_DURATION 		/ regenerator_modifier
+
+		world << "This variable (waiting_period) = [waiting_period]"
+		world << "This variable (combat_ko_status) = [combat_ko_status]"
+
+		var/initial_healing_message = "[src] is being healed by the regenerator from their [combat_ko_status] KO's , and will heal from one of their combat KO's in [round(waiting_period/10, 1)] seconds."
+		//var/final_healing_message = "[src] has been healed by the regenerator, and is no longer affected by their last KO ([combat_ko_status] -> [combat_ko_status - 1])."
+
+		// da pra generalizar essa funcao pra pegar o modificador ali em cima
+		// e depois so chamar isso no resto
+		// pode ser
+		// passa o 
+		
+		Countdown(waiting_period/10, initial_healing_message)
+		// eu acho que é assim sim
+		Countdown(waiting_period, isKoStuff = 1)
+		combat_ko_status--
+		
+		player_view(22, src) << "[src] has been healed from one of their combat defeats in the [r]. They now have [combat_ko_status] Combat KO's affecing them."
+		UnKO(TRUE)
+
+
 mob/proc/RegenGrabDrop()
 	set waitfor=0
 	sleep(5)

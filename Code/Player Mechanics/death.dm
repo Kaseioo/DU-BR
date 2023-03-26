@@ -406,7 +406,8 @@ mob/proc/KO(mob/Z,allow_anger=1)
 
 		//if(key in epic_list) return
 		var/anger_wait = 3000
-
+		var/currently_healing = FALSE
+	
 		if(!Z || !ismob(Z) || !Z.is_saitama)
 			if(Z != src && can_anger() && allow_anger && (prob(anger_chance()) || hero == key))
 				var/can_anger
@@ -431,11 +432,14 @@ mob/proc/KO(mob/Z,allow_anger=1)
 			return
 
 		give_tier(Z)
-		if(Z.sparring_mode != "Casual Spar")
-			Zenkai()
-		else
-			if(Z.sparring_mode == "Fight to Death")
-				combat_ko_status++;
+		if(Z.sparring_mode == LETHAL_COMBAT)
+			combat_ko_status++
+
+			if(combat_ko_status >= UNCONSCIOUS_LEVEL_KO)
+				Zenkai()
+			if(combat_ko_status > UNCONSCIOUS_LEVEL_KO)
+				combat_ko_status = UNCONSCIOUS_LEVEL_KO
+
 		KO=1
 		Stop_Shadow_Sparring()
 		if(ismob(Z)) last_knocked_out_by_mob = Z
@@ -471,7 +475,7 @@ mob/proc/KO(mob/Z,allow_anger=1)
 					message += "\n[src] now has [combat_ko_status] combat KO's!"
 
 					if(combat_ko_status >= UNCONSCIOUS_LEVEL_KO)
-						message += "\n[src] has been <span style='color: red;'> defeated 3 times</span> and is now unconscious."
+						message += "\n[src] has been <span style='color: red;'>defeated [UNCONSCIOUS_LEVEL_KO] times</span> and is now unconscious."
 
 				m << message
 				m.ChatLog(message)
@@ -502,14 +506,28 @@ mob/proc/KO(mob/Z,allow_anger=1)
 		koCount++
 		var/thisKOcount = koCount
 		
-		if(combat_ko_status >= UNCONSCIOUS_LEVEL_KO)
-			spawn(KO_Timer)
-				if(koCount == thisKOcount)
-					UnKO()
-		else 
-			spawn(KO_Timer * KO_Time)
-				if(koCount == thisKOcount)
-					UnKO()
+		var/initial_healing_message = "[src] has been defeated and will get up in [round(KO_Timer/10, 1)] seconds. They have [combat_ko_status] KO's."
+		//var/final_healing_message = "[src] got up from their defeat. They have [combat_ko_status] KO's."
+
+		world << "This variable (KO_Timer) = [KO_Timer]"
+		world << "This variable (combat_ko_status) = [combat_ko_status]"
+
+		Countdown(KO_Timer/10, initial_healing_message)
+
+		if(!currently_healing)
+			currently_healing = TRUE
+
+			sleep(KO_Timer) 
+			currently_healing = FALSE
+			UnKO()	
+
+			//combat_ko_status--
+			
+			// loga no servidor
+			if(combat_ko_status < 0) 
+				combat_ko_status = 0
+
+
 
 		if(Poisoned && prob(50)) Death("???")
 
@@ -530,7 +548,7 @@ mob/proc/KO(mob/Z,allow_anger=1)
 			//all other npcs currently just die instantly upon ko
 			del(src)
 
-mob/proc/UnKO(healed_from_combat_ko = 0) if(KO)
+mob/proc/UnKO() if(KO)
 	set waitfor=0
 	Health=1
 	KO=0
@@ -541,17 +559,15 @@ mob/proc/UnKO(healed_from_combat_ko = 0) if(KO)
 	move=1
 	if(!istype(src,/mob/Enemy) && Poisoned && prob(50)) Death("???")
 
-	if(combat_ko_status >= 3)
-		combat_ko_status = 0
-		player_view(center=src)<<"[src] regains consciousness."
+	if(combat_ko_status >= UNCONSCIOUS_LEVEL_KO)
+		combat_ko_status = UNCONSCIOUS_LEVEL_KO
+		player_view(center=src)<<"[src] regains consciousness from their Unconsciousness KO."
 	else 
-		player_view(center=src)<<"[src] gets up from their defeat."
-
-	if(!healed_from_combat_ko)
-		combat_ko_status--
-
+		FullHeal()
+		player_view(center=src)<<"[src] gets up after being defeated"
 
 	if(istype(src,/mob/Enemy))
+
 		Health = 100
 		Ki = max_ki
 

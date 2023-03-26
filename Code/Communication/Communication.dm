@@ -56,20 +56,32 @@ proc/List_2_Text(list/L,sep)
 	for(count=2,count<=total,count++)
 		if(sep) newtext+=sep;newtext+="[L[count]]"
 	return newtext
-
-mob/verb/Countdown(Seconds as num, message as text|null, final_message as text|null)
+// compilou sem erro
+// agora se isKoStuff não for passado ele vai ser sempre FALSE
+// só que em teoria é a mesma coisa que nada porque null é false pro if
+// só que seria um false pra "defined" ao inves de "value"
+// o isKoStuff = FALSE não ia modificar porra nenhuma além de deixar explicitamente que o valor da variável é false (ou seja, diminuir o escopo de num pra bool)
+mob/verb/Countdown(Seconds as num, message as text|null, final_message as text|null, isKoStuff as num|null)
 	set category = "Other"
 	set desc = "Countdown from a number of seconds. You can also specify a message to display at the start and end of the countdown."
+	// funciona
+	// ok abriu
+	if(!isKoStuff)
+		isKoStuff = FALSE
+
 	if(!Seconds) 
 		Seconds = input("How many seconds should the countdown last?") as num
+
 	if(Seconds > 600) Seconds = 600
 
-	var/t="[src] is waiting [Seconds] seconds."
+	var/t="[src] is waiting [Seconds] seconds."	
 
+	Seconds *= 10
+	// que odio!
 	if(message)
 		t = " [message]"
-
-	player_view(22, src) << t
+	if(!isKoStuff)
+		player_view(22, src) << t
 
 	if(client) 
 		ChatLog(t,key)
@@ -77,22 +89,31 @@ mob/verb/Countdown(Seconds as num, message as text|null, final_message as text|n
 	var/elapsed = 0
 
 	while(elapsed < Seconds)
-		elapsed += 300
-		sleep(elapsed)
-		var/elapsed_message = "[src] has waited [elapsed/10] seconds out of [Seconds] seconds."
-		player_view(22, src) << "[elapsed_message]"
+		if(Seconds > 300)
+			if(elapsed + 300 > Seconds)
+				elapsed += (Seconds - elapsed) + 1	
+				sleep(Seconds - elapsed)
+			else
+				elapsed += 300
+				sleep(300)
+		else 
+			sleep(Seconds)
+			break;
+		if(!isKoStuff)
+			var/elapsed_message = "[src] has waited [elapsed/10] seconds out of [Seconds/10] seconds."
+			player_view(22, src) << "[elapsed_message]"
 
-		if(client) 
-			ChatLog(elapsed_message, key)
+			if(client) 
+				ChatLog(elapsed_message, key)
+	if(!isKoStuff)
+		var/t2 = "[src] has finished waiting [Seconds/10] seconds."
+		
+		if(final_message)
+			t2 = "[final_message]"
 
-	var/t2 = "[src] has finished waiting [Seconds] seconds."
-	
-	if(final_message)
-		t2 = "[final_message]"
+		player_view(22, src) << t2
 
-	player_view(22, src)<<t2
-
-	if(client) ChatLog(t2,key)
+		if(client) ChatLog(t2,key)
 
 //var/image/saySpark = image(icon = 'Say Spark.dmi', pixel_y = 6)
 var/image/saySpark = image(icon = 'KhunTyping.dmi', pixel_y = 8, pixel_x = 8)

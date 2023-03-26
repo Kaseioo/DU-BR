@@ -1,10 +1,9 @@
 mob/var
 	block_music
-	tmp
-		last_music_stream_time = 0
 
 mob/verb/Stream_Music_to_Everyone_Nearby()
 	set category = "Other"
+	set name = "Stream Music to Everyone Nearby"
 	if(world.time - last_music_stream_time < 100)
 		src << "You can only do this every 10 seconds"
 	return
