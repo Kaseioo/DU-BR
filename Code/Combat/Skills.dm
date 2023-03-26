@@ -1274,7 +1274,7 @@ proc/Examine_List()
 
 mob/verb/Examine(obj/A in Examine_List()) 
 	if(A) 
-		ViewDescription(A)
+		src<<"<br><br>[A.desc]"
 
 proc/Strongest_Person(mob/M)
 	for(var/mob/P in players) if(!M||P.base_bp>M.base_bp) M=P
@@ -2551,7 +2551,10 @@ obj/Imitation
 	var/imitatorname
 	var/old_text_color
 	var/old_key
+	var/imitatordesc
+
 	Skill=1
+
 	var/list/imitatoroverlays=new
 	var/imitatoricon
 	verb/Imitate_Player()
@@ -2563,12 +2566,18 @@ obj/Imitation
 				return
 
 			var/list/People=new
-			for(var/mob/A in player_view(15,usr)) People.Add(A)
+
+			for(var/mob/A in player_view(15,usr)) 
+				People.Add(A)
+
 			var/Choice=input("Imitate who?") in People
+
 			if(imitating) return
+
 			for(var/mob/A in People) if(A==Choice)
 				imitating=1
 				imitatorname=usr.name
+				imitatordesc=usr.player_desc
 				imitatoroverlays=usr.overlays
 				imitatoricon=usr.icon
 				old_key=usr.displaykey
@@ -2576,10 +2585,11 @@ obj/Imitation
 
 				usr.icon=A.icon
 				//usr.displaykey=A.displaykey
-				usr.overlays=null
-				usr.overlays+=A.overlays
-				usr.name=A.name
-				usr.TextColor=A.TextColor
+				usr.overlays			=	null
+				usr.overlays			+=	A.overlays
+				usr.name				=	A.name
+				usr.TextColor			=	A.TextColor
+				usr.player_desc 		= 	A.player_desc
 				break
 		else
 			imitating=0
@@ -2587,7 +2597,7 @@ obj/Imitation
 			//usr.displaykey=old_key
 
 			//usr.displaykey=usr.key //temp. fixes a bug with double imitates making you have the wrong key
-
+			usr.player_desc=imitatordesc
 			usr.name=imitatorname
 			usr.overlays=null
 			usr.overlays+=imitatoroverlays
@@ -2612,6 +2622,7 @@ mob/var
 	precog //for the blast avoidance...
 	precog_chance=100
 	precogs=1
+	
 mob/proc/precog_loop()
 	set waitfor=0
 	while(src)
@@ -2718,9 +2729,7 @@ obj/Materialization
 				var/obj/items/Sword/A=input("What kind of sword?") in Swords
 				A.SafeTeleport(Get_step(usr,usr.dir))
 				Swords=null
-mob/var
-	ismajin
-	ismystic
+
 obj/Mystic
 	teachable=1
 	Skill=1
@@ -2844,14 +2853,18 @@ var
 
 mob/proc/Majin_Revert() if(ismajin)
 	for(var/obj/Majin/M in src)
-		bp_mult -= majin_skill_bp_add
-		max_anger /= majin_skill_anger_mult
+		bp_mult 			-= majin_skill_bp_add
+		max_anger 			/= majin_skill_anger_mult
 		overlays-=M.icon
 		ismajin=0
 		src<<"You have stopped using majin"
 		//Revert()
 		break
 
+mob/var
+	ismajin
+	ismystic
+	
 mob/var/Restore_Youth=0 //How many times you have had youth restored
 
 obj/Restore_Youth
