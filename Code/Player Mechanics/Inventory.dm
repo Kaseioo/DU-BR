@@ -377,7 +377,9 @@ obj/items/Blood_bag
 		else
 			player_view(15,usr)<<"[usr] drinks blood from a bag of blood"
 			usr.Vampire_Infection=0
-			usr.blood_bags+=Level
+			usr.blood_bags+=1
+			if(usr.blood_bags > 2)
+				usr.blood_bags = 2
 			blood_drinks--
 			if(!blood_drinks)
 				usr<<"The [src] has emptied"

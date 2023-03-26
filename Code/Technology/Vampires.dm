@@ -224,16 +224,15 @@ mob/proc/Vampire_Infection_Rise()
 				if(Vampire_Monster) 
 					n*=2.5
 				if(!Dead) 
-					if(DO_VAMPIRES_NEED_TO_FEED)
-						Vampire_Infection += n // actual Feeding need rise
+					Vampire_Infection += n // actual Feeding need rise
 
 				if(Vampire_Infection>100) 
 					Vampire_Infection=100
 				if(Vampire_Monster && !IsGreatApe())
 					icon='Demon4.dmi'
-				if(Vampire_Infection >= 90) 
+				if(Vampire_Infection >= 90 && DO_VAMPIRES_NEED_TO_FEED)
 					src<<"<font color=red>Warning: Vampire Infection at [Vampire_Infection]%"
-				if(Vampire_Infection >= 100 && !Dead)
+				if(Vampire_Infection >= 100 && !Dead && DO_VAMPIRES_NEED_TO_FEED)
 					if(!Vampire_Monster) 
 						Become_Vampire_Monster()
 					else
