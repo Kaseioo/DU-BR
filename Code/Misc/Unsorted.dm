@@ -773,7 +773,7 @@ mob/Admin4/verb/car_test(mob/m in world)
 mob/var/tmp/obj/Drivable_Car/car
 
 obj/Drivable_Car
-	name="Car"
+	name="Drivable Car"
 	desc="A car with shit handling that busts thru every fucking thing"
 	Cost=100000000
 	Health=1
@@ -826,8 +826,8 @@ obj/Drivable_Car
 			sleep(114)
 		while(src)
 			if(locate(/mob) in src)
-				if(prob(90)) step(src,dir)
-				else step(src,pick(turn(dir,45),turn(dir,-45)))
+				
+				step(src,dir)
 			else break
 			sleep(1)
 		car_looping=0
