@@ -28,13 +28,14 @@ obj/Reincarnation
 		for(var/mob/M in Get_step(usr,usr.dir)) if(M.client) Mobs+=M
 		Mobs+=usr
 		var/mob/P=input("Who do you want to reincarnate?") in Mobs
+		var/reincarnation_age = input("How old do you want them to be? Anything above 0 will be considered as taking a weak body to reincarnate into.") as num
 		if(!P||P=="Cancel") return
 		if(P.client&&P.client.address==usr.client.address&&P!=usr)
 			usr<<"You can not reincarnate alts"
 			return
-		P.Reincarnate(usr)
+		P.Reincarnate(usr, reincarnation_age)
 mob/var/last_reincarnate=0
-mob/proc/Reincarnate(mob/m) //m = offerer
+mob/proc/Reincarnate(mob/m, reincarnation_age = 0) //m = offerer
 	if(m)
 
 		var/minutes=30
@@ -48,9 +49,14 @@ mob/proc/Reincarnate(mob/m) //m = offerer
 			wait another [round(minutes_left)] minutes and [round(minutes_left%60)] seconds to be revived \
 			again by the revive skill"
 			return
-
-		switch(alert(src,"[m] has offered to reincarnate you, if you accept you will come back to life \
-		as a 'different person' with a loss of some power.","Options","No","Yes"))
+		var/reincarnation_message = ""
+		if(reincarnation_age > 0)
+			reincarnation_message = "[m] has offered to reincarnate you. If you accept, you will come back to life \
+		by taking over a [reincarnation_age] years old body from someone who is dying. Your current power will not be kept."
+		else 
+			reincarnation_message = "[m] has offered to reincarnate you. If you accept you will come back to life \
+		as a 'different person' and will lose some power."
+		switch(alert(src, reincarnation_message,"Options","No","Yes"))
 			if("No")
 				player_view(15,src)<<"[src] denied [m]'s offer to be reincarnated"
 				return
@@ -68,7 +74,7 @@ mob/proc/Reincarnate(mob/m) //m = offerer
 	for(var/obj/items/I in item_list) if(!istype(I,/obj/items/Clothes)) del(I)
 	//for(var/obj/Curse/O in src) del(O)
 	available_potential=reincarnation_loss
-	Age = 1
+	Age = reincarnation_age
 	/*base_bp*=0.9
 	Str*=0.9
 	End*=0.9
