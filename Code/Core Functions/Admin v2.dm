@@ -631,7 +631,7 @@ upForm
 
 		ProcessVariable(fname, name, value)
 			if(fname == "admin")
-				var/mob/M=src.getHost()
+				// var/mob/M=src.getHost()
 				Debug("Form: [fname] || Variable: [name] || Value: [value]")
 				switch(name)
 					if("hostAllowsPacksOnRP") setFormVar(fname, name, text2num(value))
@@ -1039,7 +1039,7 @@ upForm
 				
 				<tr height="1em" valign="top"><td width="30%"><b>Do Vampires Need to Feed? <td width="60%"><center>(0 = False, 1 = True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="DO_VAMPIRES_NEED_TO_FEED" value="[getFormVar("admin","DO_VAMPIRES_NEED_TO_FEED")]" size="3" maxlength="1"/><span class="error">[errors["DO_VAMPIRES_NEED_TO_FEED"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Do Vampire Bites infect other players? <td width="60%"><center>(0=False, 1=True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="DO_VAMPIRES_INFECT_ON_BITE" value="[getFormVar("admin","DO_VAMPIRES_INFECT_ON_BITE")]" size="3" maxlength="1"/><span class="error">[errors["DO_VAMPIRES_INFECT_ON_BITE"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>Interval for Vampire Power to fall (vampire bpmod) <td width="60%"><center>(60 = 6 seconds, 600 = 60 seconds. 15 = 1 hour until lose all Vampire Power (so 150 would be 10 hours))</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="VAMPIRE_POWER_FALL_INTERVAL" value="[getFormVar("admin","VAMPIRE_POWER_FALL_INTERVAL")]" size="3" maxlength="10"/><span class="error">[errors["VAMPIRE_POWER_FALL_INTERVAL"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Interval for Vampire Power to fall (vampire bpmod) <td width="60%"><center>(150 = 15 seconds, 600 = 60 seconds. 150 = 1 hour until lose all Vampire Power (so 1500 would be 10 hours). Minimum is 150)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="VAMPIRE_POWER_FALL_INTERVAL" value="[getFormVar("admin","VAMPIRE_POWER_FALL_INTERVAL")]" size="3" maxlength="10"/><span class="error">[errors["VAMPIRE_POWER_FALL_INTERVAL"]]</span></td></tr>
 				
 		  <tr height="1em">
 			  	<td colspan="4" align="right"> <input type="submit" value="Submit" />

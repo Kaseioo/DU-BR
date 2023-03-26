@@ -255,7 +255,9 @@ mob/proc/Vampire_Power_Fall()
 			else
 				Vampire_Power-=0.00624
 				if(Vampire_Power<0.2) Vampire_Power=0.2
-		sleep(VAMPIRE_POWER_FALL_INTERVAL)
+		if(VAMPIRE_POWER_FALL_INTERVAL > 150)
+			sleep(VAMPIRE_POWER_FALL_INTERVAL)
+		else sleep(150)
 
 mob/proc/Cured_Vampire_Ratio(N=0) //Shows the ratio of people online that are former vampires
 	if(!Player_Count()) return 0
