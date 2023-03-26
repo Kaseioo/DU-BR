@@ -259,6 +259,6 @@ mob/Click()
 			var/regex/regex = new("<a href=\"byond://(.*?)\">(.*?)</a>", "g")
 			var/desc = regex.Replace(player_desc, "$2")
 
-			usr << output(text,"player_description_output")
+			usr << output(desc,"player_description_output")
 
 			usr << desc
