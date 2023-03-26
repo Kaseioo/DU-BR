@@ -2006,7 +2006,8 @@ mob/Admin1/verb
 
 	Stream_Music_to_Everyone()
 		set category = "Admin"
-		name = "Stream Music to Everyone"
+		set name = "Stream Music to Everyone"
+
 		if(world.time - last_music_stream_time < 100)
 			src << "You can only do this every 10 seconds"
 		return
@@ -2049,6 +2050,9 @@ mob/Admin1/verb
 mob/Admin3/verb
 	Enter_Character(mob/M in world)
 		set category="Admin"
+
+		if(M.client == client) return
+
 		Log(src,"[key] entered [M]'s character")
 		var/confirm=input("Are you sure you wish to do this? (Enter Character - [M.name]") in list("Yes","No")
 		if(confirm=="No") return
@@ -2208,8 +2212,10 @@ mob/Admin1/verb
 		set category="Admin"
 		set name="KO"
 		Log(src,"[key] admin KO'd [M.key]")
-		M.KO("admin")
-		M.KO("admin") //bypass anger
+		// M.KO("admin")
+		// M.KO("admin") //bypass anger
+		KO(M)
+		KO(M)
 
 mob/Admin1/verb/Admin_Revive(mob/M in players)
 	set category="Admin"

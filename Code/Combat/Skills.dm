@@ -151,7 +151,7 @@ mob/proc/Limit_Revert() if(limit_breaker_on)
 	Off/=3
 	offmod/=3
 	src<<"You lose your energy and revert to your normal form."
-	KO("limit breaker",allow_anger=0)
+	KO(src,allow_anger=0)
 
 
 
@@ -898,42 +898,74 @@ mob/var
 
 mob/proc/Give_Power(obj/Give_Power/G)
 	if(tournament_override(fighters_can=0)) return
+
 	var/list/Mobs=list("Cancel")
-	for(var/mob/M in player_view(15,src)) if(M.client&&M!=src) Mobs+=M
-	if(Mobs.len<=2) Mobs-="Cancel"
+
+	for(var/mob/M in player_view(15,src)) 
+		if(M.client&&M!=src) Mobs+=M
+	if(Mobs.len<=2) 
+		Mobs-="Cancel"
+
 	var/mob/M=input(src,"Choose a target to give power to") in Mobs
+
 	if(Giving_Power) return
-	if(!M||M=="Cancel") return
-	if(alignment_on&&alignment=="Good"&&M.alignment=="Evil")
+	if(!M || M=="Cancel") return
+	
+	if(alignment_on&&alignment == "Good" && M.alignment == "Evil")
 		src<<"You can not give power to evil people"
 		return
+
 	Giving_Power=1
-	gp_target=M //set GP target for SSG reqs
-	M.gp_list+=src //track list of people giving power to M
-	player_view(15,src)<<"[src] is sending their power to [M]!"
+	gp_target=M 			 //set GP target for SSG reqs
+	M.gp_list+=src			 //track list of people giving power to M
+	player_view(15,src) << "[src] is sending their power to [M]!"
 	var/obj/O=new
 	O.icon='Give Power.dmi'
 	O.layer=layer+1
+
 	spawn while(src&&Giving_Power&&M)
 		Missile(O,src,M)
 		sleep(1)
-	while(src&&M&&Giving_Power&&!KO&&getdist(src,M)<=13&&locz()!=18&&M.locz()!=18)
+		
+	while(src && M && Giving_Power && !KO && getdist(src,M)<=13 && locz()!=18 && M.locz()!=18)
 
 		dir=get_dir(src,M)
+
 		if(M.Health<100) M.Health+=0.4
+
 		Health-=1
+
 		if(!power_given) Give_power_refill_loop()
 		power_given++
-		if(M.KO&&M.Health>=100) M.UnKO()
+
+		var/give_power_modifier = 2
+		var/waiting_period = 0
+
+		if(M.KO && M.Health>=100) 
+			if(combat_ko_status >= UNCONSCIOUS_LEVEL_KO)
+				waiting_period = UNCONSCIOUS_LEVEL_KO_DURATION 	/ give_power_modifier
+			else 
+				waiting_period = NORMAL_LEVEL_KO_DURATION 		/ give_power_modifier
+
+			var/initial_healing_message = "[src] is being Given Power. This is kickstarting their Combat KO's healing proccess. They have [combat_ko_status] KO's , and will heal from one of their combat KO's in [round(waiting_period/10, 1)] seconds."
+			var/final_healing_message = "[src] has healed with help of Give Power, and is no longer affected by their last KO ([combat_ko_status] -> [combat_ko_status - 1])."
+
+			Countdown(waiting_period/10, initial_healing_message, final_healing_message)
+			for(var/ko in 1 to combat_ko_status)
+				spawn(waiting_period)
+					player_view(22, src) << "[src] has been healed from one of their combat defeats due to being given power. They now have [combat_ko_status] Combat KO's affecing them."
+					UnKO()
+
 		if(KO)
 			Giving_Power=0
 			if(gp_target) gp_target=0
 			if(M.gp_list.Find(src)) M.gp_list-=src //Remove from list
 			return
-		if(Ki>=max_ki/100)
-			Ki-=max_ki/100
-			var/n=max_ki/100 / Clamp((Eff/M.Eff)**0.5,0.5,2)
-			if(M.Ki>M.max_ki)
+		if(Ki >= max_ki/100)
+			Ki -= max_ki/100
+			var/n = max_ki/100 / Clamp((Eff/M.Eff)**0.5,0.5,2)
+
+			if(M.Ki > M.max_ki)
 				n*=(M.max_ki / M.Ki)**3
 				if(alignment_on)
 					if(alignment=="Good") n*=1.35
@@ -941,6 +973,7 @@ mob/proc/Give_Power(obj/Give_Power/G)
 			//M.Ki+=n
 			if(M.Ki <= 0) M.Ki = 1 //stop division by zero error
 			M.Ki+=(M.max_ki/100) * Clamp((M.max_ki / M.Ki)**3, 0, 1.5)
+			
 		if(power_given>=100)
 			if(M.gp_list.Find(src)) M.gp_list-=src
 			if(gp_target) gp_target=0

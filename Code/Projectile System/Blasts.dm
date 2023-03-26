@@ -217,12 +217,12 @@ mob/verb/Ki_Toggle()
 
 	if(src in All_Entrants)
 		src << "Your attacks can not be set to lethal in the tournament"
-		SetSparringMode("Casual Spar")
+		SetSparringMode(CASUAL_COMBAT)
 		return
 
 	ToggleSparringMode()
 
-	if(sparring_mode == "Casual Spar")
+	if(sparring_mode == CASUAL_COMBAT)
 		src<<"Your attacks are now non-lethal."
 		Fatal=0
 	else
