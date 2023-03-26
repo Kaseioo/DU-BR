@@ -2098,8 +2098,9 @@ mob/Admin2/verb/Delete(Search as text)
 
 mob/Admin2/verb/DeleteAtom(atom/Target in Delete_List(src))
 	set category="Admin"
+	set name = "Destroy"
 	if(ismob(Target)) world<<"<font color=#FFFF00>[Target] has been kicked from the server"
-	else Log(src,"[key] deleted Atom [Target]")
+	else Log(src,"[key] destroyed Atom [Target]")
 	del(Target)
 
 mob/Admin1/verb/Kick(mob/m in world)
