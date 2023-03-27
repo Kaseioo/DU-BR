@@ -1159,6 +1159,133 @@ proc/Log(mob/P,var/T)
 	//if(P.client&&P.key=="EXGenesis") return
 	Admin_Logs["[T] ([time2text(world.realtime,"Day DD hh:mm")])"]=world.realtime
 
+
+mob/Admin3/verb/AllowScienceItem(mob/M in world)
+	set category="Admin"
+	set name="Manage Player Science Tab"
+
+	if(!M) return
+	if(!M.client) return
+
+	switch(alert(src, "Add or remove an item from this player's science tab?", "Manage Science Tab", "Add", "Remove", "Clear All"))
+		if("Add")
+			var/list/current_tech_list = list()
+			for(var/obj/item in tech_list)
+				if(!(item in M.individual_science_items))
+					current_tech_list += item
+			while(TRUE)
+				var/obj/item = input(src, "Select an item to add to [M]'s science tab.", "Add Item") in current_tech_list
+
+				if(!item) return
+
+				M.individual_science_items += item
+				
+				M << "You have been given access to [item] in the science tab."
+				Admin_Msg("[key] has added [item] to [M]'s science tab.")
+				Log(src, "[key] has added [item] to [M]'s science tab.")
+
+				var/add_another = alert(src, "Add another item?", "Continue", "Yes", "No")
+				if(add_another == "No")
+					break
+		if("Remove")
+			while(TRUE)
+				var/obj/item = input(src, "Select an item to remove from [M]'s science tab.", "Remove Item") in  M.individual_science_items
+
+				M.individual_science_items -= item
+
+				M << "You have had access to [item] removed from the science tab."
+				Admin_Msg("[key] has removed [item] from [M]'s science tab.")
+				Log(src, "[key] has removed [item] from [M]'s science tab.")
+
+				var/add_another = alert(src, "Remove another item?", "Continue", "Yes", "No")
+				if(add_another == "No")
+					break
+		if("Clear All")
+			M.individual_science_items = list()
+			M << "You have had all items removed from your science tab."
+			Admin_Msg("[key] has cleared all items from [M]'s science tab.")
+			Log(src, "[key] has cleared all items from [M]'s science tab.")
+
+	for(var/obj/item in M.individual_science_items)
+		if(!(item in M.global_science_items))
+			M.global_science_items += item
+
+	for(var/obj/item in M.global_science_items)
+		if(!(item in GLOBAL_SCIENCE_TAB_ITEMS))
+			if(!(item in M.individual_science_items))
+				M.global_science_items -= item
+
+			
+mob/Admin3/verb/SetGlobalScienceTabItems()
+	set category="Admin"
+	set name="Set Global Science Tab Items"
+
+	// Add or remove an item from the global science tab list
+	var/option = alert(src, "Add or remove an item from the global science tab list?", "Global Science Tab Items", "Add", "Remove", "Clear All")
+	if(option == "Clear All")
+		var/confirmation = alert(src, "Are you sure you want to [option] items from the global science tab list?", "Confirm", "Yes", "No")
+		if(confirmation == "No") return
+
+	switch(option)
+		if("Add")
+			while(TRUE)
+				var/list/available_tech_list = list()
+				for(var/obj/item in tech_list)
+					if(!(item in GLOBAL_SCIENCE_TAB_ITEMS))
+						available_tech_list += item
+				var/obj/item = input(src, "Select an item to add to the global science tab list.", "Add Item") in available_tech_list
+				if(!item) return
+
+				if(item in GLOBAL_SCIENCE_TAB_ITEMS)
+					src << "That item is already in the global science tab list."
+					return
+
+				GLOBAL_SCIENCE_TAB_ITEMS += item
+
+				world << "The admins have added [item] to the global science tab list"
+				Admin_Msg("[key] has added [item] to the global science tab list.")
+				Log(src, "[key] has added [item] to the global science tab list.")
+
+				var/add_another = alert(src, "Add another item?", "Continue", "Yes", "No")
+				if(add_another == "No")
+					break
+		if("Remove")
+			while(TRUE)
+				var/obj/item = input(src, "Select an item to remove from the global science tab list.", "Remove Item") in GLOBAL_SCIENCE_TAB_ITEMS
+				if(!item) return
+
+				GLOBAL_SCIENCE_TAB_ITEMS -= item
+
+				world << "The admins have removed [item] from the global science tab list"
+				Admin_Msg("[key] has removed [item] from the global science tab list.")
+				Log(src, "[key] has removed [item] from the global science tab list.")
+
+				var/add_another = alert(src, "Remove another item?", "Continue", "Yes", "No")
+				if(add_another == "No")
+					break
+
+		if("Clear All")
+			GLOBAL_SCIENCE_TAB_ITEMS = list()
+
+			world << "The admins have cleared all items from the global science tab list"
+			Admin_Msg("[key] has cleared all items from the global science tab list.")
+			Log(src, "[key] has cleared all items from the global science tab list.")
+
+
+
+	for(var/mob/player in players)				
+		for(var/obj/item in GLOBAL_SCIENCE_TAB_ITEMS)	
+			if(!(item in player.global_science_items))
+				global_science_items += item
+
+		for(var/obj/item in player.global_science_items)
+			if(!(item in GLOBAL_SCIENCE_TAB_ITEMS))
+				if(!(item in player.individual_science_items))
+					player.global_science_items -= item
+
+	
+
+
 mob/verb/View_Admin_Logs()
 	//set category="Other"
 	Update_Admin_Logs()
@@ -1176,6 +1303,8 @@ mob/verb/View_Admin_Logs()
 proc/Update_Admin_Logs() for(var/V in Admin_Logs) if(Admin_Logs[V]+(4*24*60*60*10)<world.realtime) Admin_Logs-=V
 
 var/list/Illegal_Science = new //list(/obj/items/Scrapper)
+
+
 
 mob/proc/Illegal_Science()
 	if(Admins[src.key]>=4)

@@ -44,10 +44,21 @@ mob/proc
 		winset(src, "[win].grid1", "cells=0") //clears grid
 		var/added = 0
 		if(win == "TabScience")
-			for(var/obj/o in tech_list) if(!(o.type in Illegal_Science))
-				added++
-				winset(src, "[win].grid1", "current-cell=[added]")
-				src << output(o, "[win].grid1")
+			var/list/added_items = global_science_items
+			global_science_items = list()
+			
+			for(var/obj/item in added_items)
+				if(!(item.type in added_items))
+					global_science_items += item
+
+			for(var/obj/o in global_science_items) 
+				if(!(o.type in Illegal_Science))
+					added++
+					added_items += o
+
+					winset(src, "[win].grid1", "current-cell=[added]")
+					src << output(o, "[win].grid1")
+
 		else if(win == "TabBuildCustom")
 			var/isAdmin = IsAdmin()
 			CheckAddNewButtonForCustomDecors()

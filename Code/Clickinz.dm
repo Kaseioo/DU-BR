@@ -17,10 +17,13 @@ mob/var/tmp
 
 client/DblClick(obj/A)
 	mob.last_double_click = world.time
-	mob.TryCreateScienceItem(A)
+	var/mob/player = usr
+	player.TryCreateScienceItem(A)
 
 client/Click(obj/A, location, control, params)
-	if(A in tech_list) mob.DisplayItemCost(A)
+	var/mob/player = usr
+	if(A in player.individual_science_items) 
+		mob.DisplayItemCost(A)
 	else if(mob.Lootables&&mob&&isobj(A)&&(A in mob.Lootables)&&!istype(A,/obj/Cancel_Loot)) for(var/mob/B in view(1,mob)) if(A.loc==B)
 		if(!B.KO)
 			usr<<"They are no longer knocked out"
@@ -256,9 +259,8 @@ mob/Click()
 		usr.Target=src
 		if(player_desc && player_desc != "")
 			// remove a tags from the description
-			var/regex/regex = new("<a href=\"byond://(.*?)\">(.*?)</a>", "g")
-			var/desc = regex.Replace(player_desc, "$2")
+			//var/regex/regex = new("<a href=\"byond://(.*?)\">(.*?)</a>", "g")
+			//var/desc = regex.Replace(player_desc, "$2")
 
-			usr << output(desc,"player_description_output")
-
-			usr << desc
+			usr << output(player_desc,"player_description_output")
+			usr << player_desc

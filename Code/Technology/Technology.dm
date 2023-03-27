@@ -1,7 +1,7 @@
 var/item_tile_limit = 6 //how many science items you can lay on 1 tile to prevent the crashing bug
 
 mob/proc/TryCreateScienceItem(obj/A)
-	if(A in tech_list)
+	if(A in global_science_items)
 		if(KO) return
 
 		var/turf/base_loc = base_loc()
@@ -363,6 +363,7 @@ proc/Add_Technology()
 			//else del(o)
 
 	tech_list = SortListOfObjectsAlphabetically(tech_list)
+
 
 proc/Can_Make_Technology(mob/P,obj/O)
 	if(istype(P.get_area(),/area/Braal_Core))
