@@ -20,14 +20,14 @@ mob/proc/manage_deadzone_pressure_immune_races()
 			if("Cancel") return
 			if("Add")
 				var/list/L=list("Cancel")
-				for(var/V in Race_List()) if(!(V in deadzone_pressure_immune_races)) L+=V
+				for(var/V in Race_List()) if(!(V in DEADZONE_PRESSURE_BPLOSS_IMMUNE_RACES)) L+=V
 				var/N=input(src,"Which race do you want to make Immune to Deadzone pressure bploss?") in L
-				deadzone_pressure_immune_races+=N
+				DEADZONE_PRESSURE_BPLOSS_IMMUNE_RACES+=N
 				world<<"[N] has been made immune to Deadzone Pressure bploss by admins"
 			if("Remove")
-				var/N=input(src,"Which race do you want to make suffer from Deadzone pressure bploss again?") in deadzone_pressure_immune_races
+				var/N=input(src,"Which race do you want to make suffer from Deadzone pressure bploss again?") in DEADZONE_PRESSURE_BPLOSS_IMMUNE_RACES
 				if(N=="Cancel") return
-				deadzone_pressure_immune_races-=N
+				DEADZONE_PRESSURE_BPLOSS_IMMUNE_RACES-=N
 				world<<"[N] has been made to suffer from Deadzone Pressure bploss by admins"
 
 mob/proc/manage_deadzone_pressure_resistant_races()
@@ -36,14 +36,14 @@ mob/proc/manage_deadzone_pressure_resistant_races()
 			if("Cancel") return
 			if("Add")
 				var/list/L=list("Cancel")
-				for(var/V in Race_List()) if(!(V in deadzone_pressure_resistant_races)) L+=V
+				for(var/V in Race_List()) if(!(V in DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACES)) L+=V
 				var/N=input(src,"Which race do you want to make resistant to Deadzone pressure bploss?") in L
-				deadzone_pressure_resistant_races+=N
+				DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACES+=N
 				world<<"[N] has been made resistant to Deadzone Pressure bploss by admins"
 			if("Remove")
-				var/N=input(src,"Which race do you want to make suffer from Deadzone pressure bploss again?") in deadzone_pressure_resistant_races
+				var/N=input(src,"Which race do you want to make suffer from Deadzone pressure bploss again?") in DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACES
 				if(N=="Cancel") return
-				deadzone_pressure_resistant_races-=N
+				DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACES-=N
 				world<<"[N] has been made to suffer from Deadzone Pressure bploss by admins"
 				
 mob/proc
@@ -1122,20 +1122,20 @@ upForm
 			initFormVar("admin", "dead_power_loss", dead_power_loss)
 			initFormVar("admin", "keep_body_loss", keep_body_loss)
 
-			initFormVar("admin", "deadzone_pressure_reduces_bp", 				deadzone_pressure)
+			initFormVar("admin", "deadzone_pressure_reduces_bp", 				DEADZONE_PRESSURE_ON)
 			
-			initFormVar("admin", "deadzone_pressure_resistant_race_bploss",   	deadzone_pressure_resistant_race_bploss)
-			initFormVar("admin", "deadzone_pressure_living_bploss", 			deadzone_pressure_living_bploss)
-			initFormVar("admin", "deadzone_pressure_keepbody_bploss", 			deadzone_pressure_keepbody_bploss)
-			initFormVar("admin", "deadzone_pressure_dead_bploss", 				deadzone_pressure_dead_bploss)
+			initFormVar("admin", "DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACE",   	DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACE)
+			initFormVar("admin", "DEADZONE_PRESSURE_BPLOSS_LIVING", 			DEADZONE_PRESSURE_BPLOSS_LIVING)
+			initFormVar("admin", "DEADZONE_PRESSURE_BPLOSS_KEEPBODY", 			DEADZONE_PRESSURE_BPLOSS_KEEPBODY)
+			initFormVar("admin", "DEADZONE_PRESSURE_BPLOSS_DEAD", 				DEADZONE_PRESSURE_BPLOSS_DEAD)
 
-			initFormVar("admin", "deadzone_pressure_immune_races", 				deadzone_pressure_immune_races)
-			initFormVar("admin", "deadzone_pressure_resistant_races", 			deadzone_pressure_resistant_races)
+			initFormVar("admin", "DEADZONE_PRESSURE_BPLOSS_IMMUNE_RACES", 				DEADZONE_PRESSURE_BPLOSS_IMMUNE_RACES)
+			initFormVar("admin", "DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACES", 			DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACES)
 
-			initFormVar("admin", "limitbreak_mastery",   						can_limit_breaker_be_mastered)
-			initFormVar("admin", "limitbreak_maximum_mastery", 					limit_breaker_maximum_mastery)
-			initFormVar("admin", "limitbreak_minimum_duration", 				limit_breaker_minimum_duration_multiplier)
-			initFormVar("admin", "limitbreak_maximum_duration", 				limit_breaker_maximum_duration_multiplier)
+			initFormVar("admin", "limitbreak_mastery",   						CAN_MASTER_LIMIT_BREAK)
+			initFormVar("admin", "limitbreak_maximum_mastery", 					LIMIT_BREAK_MAX_MASTERY)
+			initFormVar("admin", "limitbreak_minimum_duration", 				LIMIT_BREAK_MIN_DURATION)
+			initFormVar("admin", "limitbreak_maximum_duration", 				LIMIT_BREAK_MAX_DURATION)
 
 
 			initFormVar("admin", "hakai_cooldown", hakai_cooldown)
@@ -1187,13 +1187,13 @@ upForm
 					if("keep_body_loss") setFormVar(fname, name, text2num(value))
 
 					if("deadzone_pressure_reduces_bp") 				setFormVar(fname, name, text2num(value))
-					if("deadzone_pressure_resistant_race_bploss") 	setFormVar(fname, name, text2num(value))
-					if("deadzone_pressure_living_bploss") 			setFormVar(fname, name, text2num(value))
-					if("deadzone_pressure_keepbody_bploss") 		setFormVar(fname, name, text2num(value))
-					if("deadzone_pressure_dead_bploss") 			setFormVar(fname, name, text2num(value))
+					if("DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACE") 	setFormVar(fname, name, text2num(value))
+					if("DEADZONE_PRESSURE_BPLOSS_LIVING") 			setFormVar(fname, name, text2num(value))
+					if("DEADZONE_PRESSURE_BPLOSS_KEEPBODY") 		setFormVar(fname, name, text2num(value))
+					if("DEADZONE_PRESSURE_BPLOSS_DEAD") 			setFormVar(fname, name, text2num(value))
 
-					if("deadzone_pressure_resistant_races") 		setFormVar(fname, name, value)
-					if("deadzone_pressure_immune_races") 			setFormVar(fname, name, value)
+					if("DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACES") 		setFormVar(fname, name, value)
+					if("DEADZONE_PRESSURE_BPLOSS_IMMUNE_RACES") 			setFormVar(fname, name, value)
 
 					// limit break
 					if("limitbreak_mastery") 						setFormVar(fname, name, text2num(value))
@@ -1250,20 +1250,20 @@ upForm
 					dead_power_loss= getFormVar("admin", "dead_power_loss")
 					keep_body_loss= getFormVar("admin", "keep_body_loss")
 
-					deadzone_pressure 								= getFormVar("admin", "deadzone_pressure_reduces_bp")
+					DEADZONE_PRESSURE_ON 								= getFormVar("admin", "deadzone_pressure_reduces_bp")
 
-					deadzone_pressure_resistant_race_bploss			= getFormVar("admin", "deadzone_pressure_resistant_race_bploss")
-					deadzone_pressure_living_bploss					= getFormVar("admin", "deadzone_pressure_living_bploss")
-					deadzone_pressure_keepbody_bploss				= getFormVar("admin", "deadzone_pressure_keepbody_bploss")
-					deadzone_pressure_dead_bploss					= getFormVar("admin", "deadzone_pressure_dead_bploss")
+					DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACE			= getFormVar("admin", "DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACE")
+					DEADZONE_PRESSURE_BPLOSS_LIVING					= getFormVar("admin", "DEADZONE_PRESSURE_BPLOSS_LIVING")
+					DEADZONE_PRESSURE_BPLOSS_KEEPBODY				= getFormVar("admin", "DEADZONE_PRESSURE_BPLOSS_KEEPBODY")
+					DEADZONE_PRESSURE_BPLOSS_DEAD					= getFormVar("admin", "DEADZONE_PRESSURE_BPLOSS_DEAD")
 
-					deadzone_pressure_immune_races 					= getFormVar("admin", "deadzone_pressure_immune_races")
-					deadzone_pressure_resistant_races 				= getFormVar("admin", "deadzone_pressure_resistant_races")
+					DEADZONE_PRESSURE_BPLOSS_IMMUNE_RACES 					= getFormVar("admin", "DEADZONE_PRESSURE_BPLOSS_IMMUNE_RACES")
+					DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACES 				= getFormVar("admin", "DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACES")
 
-					can_limit_breaker_be_mastered					= getFormVar("admin", "limitbreak_mastery")
-					limit_breaker_maximum_mastery					= getFormVar("admin", "limitbreak_maximum_mastery")
-					limit_breaker_minimum_duration_multiplier		= getFormVar("admin", "limitbreak_minimum_duration")
-					limit_breaker_maximum_duration_multiplier		= getFormVar("admin", "limitbreak_maximum_duration")
+					CAN_MASTER_LIMIT_BREAK					= getFormVar("admin", "limitbreak_mastery")
+					LIMIT_BREAK_MAX_MASTERY					= getFormVar("admin", "limitbreak_maximum_mastery")
+					LIMIT_BREAK_MIN_DURATION		= getFormVar("admin", "limitbreak_minimum_duration")
+					LIMIT_BREAK_MAX_DURATION		= getFormVar("admin", "limitbreak_maximum_duration")
 
 					hakai_cooldown= getFormVar("admin", "hakai_cooldown")
 					hakai_bp_advantage_needed= getFormVar("admin", "hakai_bp_advantage_needed")
@@ -1357,13 +1357,13 @@ upForm
 
 				<tr height="1em" valign="top"><td width="30%"><br><b>Does Deadzone reduce the BP of races in it: <td width="60%"><center>(0 = False, 1 = True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="deadzone_pressure_reduces_bp" value="[getFormVar("admin","deadzone_pressure_reduces_bp")]" size="3" maxlength="20"/><span class="error">[errors["deadzone_pressure_reduces_bp"]]</span></td></tr>
 				
-				<tr height="1em" valign="top"><td width="30%"><b>BP loss for resistance races in the Deadzone: <td width="60%"><center>(0.5 = 0.5x their normal BP, 1 = no bploss)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="deadzone_pressure_resistant_race_bploss" value="[getFormVar("admin","deadzone_pressure_resistant_race_bploss")]" size="3" maxlength="20"/><span class="error">[errors["deadzone_pressure_resistant_race_bploss"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>BP loss for living players in the Deadzone: <td width="60%"><center>(0.5 = 0.5x their normal BP, 1 = no bploss)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="deadzone_pressure_living_bploss" value="[getFormVar("admin","deadzone_pressure_living_bploss")]" size="3" maxlength="20"/><span class="error">[errors["deadzone_pressure_living_bploss"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>BP loss for players with keepbody in the Deadzone: <td width="60%"><center>(0.5 = 0.5x their normal BP, 1 = no bploss)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="deadzone_pressure_keepbody_bploss" value="[getFormVar("admin","deadzone_pressure_keepbody_bploss")]" size="3" maxlength="20"/><span class="error">[errors["deadzone_pressure_keepbody_bploss"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>BP loss for dead players in the Deadzone: <td width="60%"><center>(0.5 = 0.5x their normal BP, 1 = no bploss)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="deadzone_pressure_dead_bploss" value="[getFormVar("admin","deadzone_pressure_dead_bploss")]" size="3" maxlength="20"/><span class="error">[errors["deadzone_pressure_dead_bploss"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>BP loss for resistance races in the Deadzone: <td width="60%"><center>(0.5 = 0.5x their normal BP, 1 = no bploss)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACE" value="[getFormVar("admin","DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACE")]" size="3" maxlength="20"/><span class="error">[errors["DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACE"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>BP loss for living players in the Deadzone: <td width="60%"><center>(0.5 = 0.5x their normal BP, 1 = no bploss)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="DEADZONE_PRESSURE_BPLOSS_LIVING" value="[getFormVar("admin","DEADZONE_PRESSURE_BPLOSS_LIVING")]" size="3" maxlength="20"/><span class="error">[errors["DEADZONE_PRESSURE_BPLOSS_LIVING"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>BP loss for players with keepbody in the Deadzone: <td width="60%"><center>(0.5 = 0.5x their normal BP, 1 = no bploss)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="DEADZONE_PRESSURE_BPLOSS_KEEPBODY" value="[getFormVar("admin","DEADZONE_PRESSURE_BPLOSS_KEEPBODY")]" size="3" maxlength="20"/><span class="error">[errors["DEADZONE_PRESSURE_BPLOSS_KEEPBODY"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>BP loss for dead players in the Deadzone: <td width="60%"><center>(0.5 = 0.5x their normal BP, 1 = no bploss)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="DEADZONE_PRESSURE_BPLOSS_DEAD" value="[getFormVar("admin","DEADZONE_PRESSURE_BPLOSS_DEAD")]" size="3" maxlength="20"/><span class="error">[errors["DEADZONE_PRESSURE_BPLOSS_DEAD"]]</span></td></tr>
 				
-				<tr height="1em" valign="top"><td width="30%"><b>Races that are Immune against Deadzone bploss: <td width="60%"><center>(default = Android, Demon)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="deadzone_pressure_immune_races" value="[getFormVar("admin","deadzone_pressure_immune_races")]" size="3" maxlength="20"></input><a href="byond://?src=\ref[src]&action=deadzone_pressure_immune">\[Edit\]</a><span class="error">[errors["deadzone_pressure_immune_races"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>Races that are resistant against Deadzone bploss: <td width="60%"><center>(default = Kai, Demigod, Cyberbp)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="deadzone_pressure_resistant_races" value="[getFormVar("admin","deadzone_pressure_resistant_races")]" size="3" maxlength="20"></input><a href="byond://?src=\ref[src]&action=deadzone_pressure_resistant">\[Edit\]</a><span class="error">[errors["deadzone_pressure_resistant_races"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Races that are Immune against Deadzone bploss: <td width="60%"><center>(default = Android, Demon)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="DEADZONE_PRESSURE_BPLOSS_IMMUNE_RACES" value="[getFormVar("admin","DEADZONE_PRESSURE_BPLOSS_IMMUNE_RACES")]" size="3" maxlength="20"></input><a href="byond://?src=\ref[src]&action=deadzone_pressure_immune">\[Edit\]</a><span class="error">[errors["DEADZONE_PRESSURE_BPLOSS_IMMUNE_RACES"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Races that are resistant against Deadzone bploss: <td width="60%"><center>(default = Kai, Demigod, Cyberbp)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACES" value="[getFormVar("admin","DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACES")]" size="3" maxlength="20"></input><a href="byond://?src=\ref[src]&action=deadzone_pressure_resistant">\[Edit\]</a><span class="error">[errors["DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACES"]]</span></td></tr>
 				
 
 				<tr><td><br><center><b>Limit Break</b></center></td></tr>

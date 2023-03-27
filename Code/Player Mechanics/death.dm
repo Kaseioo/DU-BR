@@ -435,10 +435,10 @@ mob/proc/KO(mob/Z,allow_anger=1)
 		if(Z.sparring_mode == LETHAL_COMBAT)
 			combat_ko_status++
 
-			if(combat_ko_status >= UNCONSCIOUS_LEVEL_KO)
+			if(combat_ko_status >= KO_SYSTEM_UNCONSCIOUS_KO)
 				Zenkai()
-			if(combat_ko_status > UNCONSCIOUS_LEVEL_KO)
-				combat_ko_status = UNCONSCIOUS_LEVEL_KO
+			if(combat_ko_status > KO_SYSTEM_UNCONSCIOUS_KO)
+				combat_ko_status = KO_SYSTEM_UNCONSCIOUS_KO
 
 		KO=1
 		Stop_Shadow_Sparring()
@@ -465,7 +465,7 @@ mob/proc/KO(mob/Z,allow_anger=1)
 		if(ismob(Z) && Z.client)
 			for(var/mob/m in player_view(center=src))
 				var/attacker = Z
-				if(should_show_char_name_on_who)
+				if(SHOW_CHAR_NAME_ON_WHO)
 					attacker += " ([Z.displaykey])"
 
 				var/message = "[src] loses against [attacker] during a [Z.sparring_mode_text]!"
@@ -474,8 +474,8 @@ mob/proc/KO(mob/Z,allow_anger=1)
 				if(combat_ko_status > 0)
 					message += "\n[src] now has [combat_ko_status] combat KO's!"
 
-					if(combat_ko_status >= UNCONSCIOUS_LEVEL_KO)
-						message += "\n[src] has been <span style='color: red;'>defeated [UNCONSCIOUS_LEVEL_KO] times</span> and is now unconscious."
+					if(combat_ko_status >= KO_SYSTEM_UNCONSCIOUS_KO)
+						message += "\n[src] has been <span style='color: red;'>defeated [KO_SYSTEM_UNCONSCIOUS_KO] times</span> and is now unconscious."
 
 				m << message
 				m.ChatLog(message)
@@ -495,10 +495,10 @@ mob/proc/KO(mob/Z,allow_anger=1)
 			else Revert()
 
 		var/KO_Timer = 0
-		if(combat_ko_status >= UNCONSCIOUS_LEVEL_KO)
-			KO_Timer = UNCONSCIOUS_LEVEL_KO_DURATION
+		if(combat_ko_status >= KO_SYSTEM_UNCONSCIOUS_KO)
+			KO_Timer = KO_SYSTEM_UNCONSCIOUS_KO_DURATION
 		else 
-			KO_Timer = NORMAL_LEVEL_KO_DURATION // / Clamp((regen**0.4),0.5,2)
+			KO_Timer = KO_SYSTEM_NORMAL_KO // / Clamp((regen**0.4),0.5,2)
 
 		if(z==10) KO_Timer/=6
 		//if(ultra_pack) KO_Timer/=1.4
@@ -559,8 +559,8 @@ mob/proc/UnKO() if(KO)
 	move=1
 	if(!istype(src,/mob/Enemy) && Poisoned && prob(50)) Death("???")
 
-	if(combat_ko_status >= UNCONSCIOUS_LEVEL_KO)
-		combat_ko_status = UNCONSCIOUS_LEVEL_KO
+	if(combat_ko_status >= KO_SYSTEM_UNCONSCIOUS_KO)
+		combat_ko_status = KO_SYSTEM_UNCONSCIOUS_KO
 		player_view(center=src)<<"[src] regains consciousness from their Unconsciousness KO."
 	else 
 		FullHeal()

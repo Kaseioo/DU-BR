@@ -220,16 +220,16 @@ mob/proc/get_bp(factor_powerup=1)
 		return bp
 
 mob/proc/ApplyDeadzonePressure(bp)
-	if(z == 6 && !Hell_Immune() && deadzone_pressure)
-		if(!(Race in deadzone_pressure_immune_races))
-			if(!(Race in deadzone_pressure_resistant_races || !cyber_bp))
+	if(z == 6 && !Hell_Immune() && DEADZONE_PRESSURE_ON)
+		if(!(Race in DEADZONE_PRESSURE_BPLOSS_IMMUNE_RACES))
+			if(!(Race in DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACES || !cyber_bp))
 				if(Dead)
-					if(KeepsBody)  bp *= deadzone_pressure_keepbody_bploss	
-					else bp *= deadzone_pressure_dead_bploss					
+					if(KeepsBody)  bp *= DEADZONE_PRESSURE_BPLOSS_KEEPBODY	
+					else bp *= DEADZONE_PRESSURE_BPLOSS_DEAD					
 				else
-					bp *= deadzone_pressure_living_bploss					
+					bp *= DEADZONE_PRESSURE_BPLOSS_LIVING					
 			else 
-				bp *= deadzone_pressure_resistant_race_bploss
+				bp *= DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACE
 	return bp
 	
 mob/proc/Player_Loops(start_delay)
@@ -1536,20 +1536,20 @@ mob/proc/Swordless_strength()
 
 mob/proc/MasterLimitBreak()
 	if(isSparring)
-		Limit_Breaker_Mastery += rand(0.5, 1.5) * mastery_mod
+		limit_break_mastery += rand(0.5, 1.5) * mastery_mod
 	else
-		Limit_Breaker_Mastery += rand(0.01, 0.05) * mastery_mod
-	if(Limit_Breaker_Mastery > limit_breaker_maximum_mastery) Limit_Breaker_Mastery = limit_breaker_maximum_mastery
+		limit_break_mastery += rand(0.01, 0.05) * mastery_mod
+	if(limit_break_mastery > LIMIT_BREAK_MAX_MASTERY) limit_break_mastery = LIMIT_BREAK_MAX_MASTERY
 
 mob/proc/Limit_Breaker_Loop()
 	set waitfor=0
 	sleep(2)
 
-	var/Minimum_duration = Limit_Breaker_Mastery * limit_breaker_minimum_duration_multiplier
-	var/Maximum_duration = Limit_Breaker_Mastery * limit_breaker_maximum_duration_multiplier
+	var/Minimum_duration = limit_break_mastery * LIMIT_BREAK_MIN_DURATION
+	var/Maximum_duration = limit_break_mastery * LIMIT_BREAK_MAX_DURATION
 
 	if(limit_breaker_on)
-		if(can_limit_breaker_be_mastered)
+		if(CAN_MASTER_LIMIT_BREAK)
 			MasterLimitBreak()
 		sleep(rand(Minimum_duration, Maximum_duration))
 		Limit_Revert()

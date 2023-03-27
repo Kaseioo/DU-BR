@@ -527,19 +527,19 @@ proc/Save_Misc()
 
 	S["SHOW_CHAR_NAME_ON_WHO"] << SHOW_CHAR_NAME_ON_WHO
 
-	S["deadzone_pressure"] 							<< deadzone_pressure
-	S["deadzone_pressure_resistant_race_bploss"] 	<< deadzone_pressure_resistant_race_bploss
-	S["deadzone_pressure_living_bploss"] 			<< deadzone_pressure_living_bploss
-	S["deadzone_pressure_keepbody_bploss"] 			<< deadzone_pressure_keepbody_bploss
-	S["deadzone_pressure_dead_bploss"] 				<< deadzone_pressure_dead_bploss
+	S["DEADZONE_PRESSURE_ON"] 							<< DEADZONE_PRESSURE_ON
+	S["DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACE"] 	<< DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACE
+	S["DEADZONE_PRESSURE_BPLOSS_LIVING"] 			<< DEADZONE_PRESSURE_BPLOSS_LIVING
+	S["DEADZONE_PRESSURE_BPLOSS_KEEPBODY"] 			<< DEADZONE_PRESSURE_BPLOSS_KEEPBODY
+	S["DEADZONE_PRESSURE_BPLOSS_DEAD"] 				<< DEADZONE_PRESSURE_BPLOSS_DEAD
 
-	S["deadzone_pressure_immune_races"] 			<< deadzone_pressure_immune_races
-	S["deadzone_pressure_resistant_races"] 			<< deadzone_pressure_resistant_races
+	S["DEADZONE_PRESSURE_BPLOSS_IMMUNE_RACES"] 			<< DEADZONE_PRESSURE_BPLOSS_IMMUNE_RACES
+	S["DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACES"] 			<< DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACES
 
-	S["can_limit_breaker_be_mastered"] 				<< can_limit_breaker_be_mastered
-	S["limit_breaker_maximum_mastery"] 				<< limit_breaker_maximum_mastery
-	S["limit_breaker_minimum_duration_multiplier"] 	<< limit_breaker_minimum_duration_multiplier
-	S["limit_breaker_maximum_duration_multiplier"] 	<< limit_breaker_maximum_duration_multiplier
+	S["CAN_MASTER_LIMIT_BREAK"] 				<< CAN_MASTER_LIMIT_BREAK
+	S["LIMIT_BREAK_MAX_MASTERY"] 				<< LIMIT_BREAK_MAX_MASTERY
+	S["LIMIT_BREAK_MIN_DURATION"] 	<< LIMIT_BREAK_MIN_DURATION
+	S["LIMIT_BREAK_MAX_DURATION"] 	<< LIMIT_BREAK_MAX_DURATION
 
 	S["SENSE_SYSTEM_SHOW_VAGUE_INFO"] 				< SENSE_SYSTEM_SHOW_VAGUE_INFO
 	S["SENSE_SYSTEM_SHOW_STAT_BUILD"] 				<< SENSE_SYSTEM_SHOW_STAT_BUILD
@@ -669,18 +669,18 @@ proc/Load_Misc()
 
 	S["SHOW_CHAR_NAME_ON_WHO"]>>SHOW_CHAR_NAME_ON_WHO
 
-	S["deadzone_pressure"] >> deadzone_pressure
-	S["deadzone_pressure_resistant_race_bploss"] >> deadzone_pressure_resistant_race_bploss
-	S["deadzone_pressure_living_bploss"] >> deadzone_pressure_living_bploss
-	S["deadzone_pressure_keepbody_bploss"] >> deadzone_pressure_keepbody_bploss
-	S["deadzone_pressure_dead_bploss"] >> deadzone_pressure_dead_bploss
-	S["deadzone_pressure_immune_races"] >> deadzone_pressure_immune_races
-	S["deadzone_pressure_resistant_races"] >> deadzone_pressure_resistant_races
+	S["DEADZONE_PRESSURE_ON"] >> DEADZONE_PRESSURE_ON
+	S["DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACE"] >> DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACE
+	S["DEADZONE_PRESSURE_BPLOSS_LIVING"] >> DEADZONE_PRESSURE_BPLOSS_LIVING
+	S["DEADZONE_PRESSURE_BPLOSS_KEEPBODY"] >> DEADZONE_PRESSURE_BPLOSS_KEEPBODY
+	S["DEADZONE_PRESSURE_BPLOSS_DEAD"] >> DEADZONE_PRESSURE_BPLOSS_DEAD
+	S["DEADZONE_PRESSURE_BPLOSS_IMMUNE_RACES"] >> DEADZONE_PRESSURE_BPLOSS_IMMUNE_RACES
+	S["DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACES"] >> DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACES
 
-	S["can_limit_breaker_be_mastered"] 				>> can_limit_breaker_be_mastered
-	S["limit_breaker_maximum_mastery"] 				>> limit_breaker_maximum_mastery
-	S["limit_breaker_minimum_duration_multiplier"] 	>> limit_breaker_minimum_duration_multiplier
-	S["limit_breaker_maximum_duration_multiplier"] 	>> limit_breaker_maximum_duration_multiplier
+	S["CAN_MASTER_LIMIT_BREAK"] 				>> CAN_MASTER_LIMIT_BREAK
+	S["LIMIT_BREAK_MAX_MASTERY"] 				>> LIMIT_BREAK_MAX_MASTERY
+	S["LIMIT_BREAK_MIN_DURATION"] 	>> LIMIT_BREAK_MIN_DURATION
+	S["LIMIT_BREAK_MAX_DURATION"] 	>> LIMIT_BREAK_MAX_DURATION
 
 	S["SENSE_SYSTEM_SHOW_VAGUE_INFO"] 	>> SENSE_SYSTEM_SHOW_VAGUE_INFO
 	S["SENSE_SYSTEM_SHOW_STAT_BUILD"] 	>> SENSE_SYSTEM_SHOW_STAT_BUILD
