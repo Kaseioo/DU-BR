@@ -206,7 +206,7 @@ mob/proc/Stat_Sense_Tab() if(Target&&ismob(Target))
 				stat("Health",				"[round(Target.Health)]%")
 				stat("Energy",				"[round(Target.Ki)] ([round(Target.Ki/Target.max_ki*100)]%)")
 
-				if(sense_rp_stats)
+				if(SENSE_SYSTEM_SHOW_VAGUE_INFO)
 					var/anger_text = "Calm"
 					var/race_text = "Humanoid"
 					var/age_text = "Young"
@@ -244,7 +244,7 @@ mob/proc/Stat_Sense_Tab() if(Target&&ismob(Target))
 					stat("Race",				"[Target.Race] [Target.Class]")
 					stat("Age",					"[round(Target.Age,0.1)] ([round(Target.Body*100)]% Youth)")
 
-				if(sense_show_stats)
+				if(SENSE_SYSTEM_SHOW_STAT_BUILD)
 					if(Target.Race=="Android" && Target != src)
 						stat("Android stat builds are unsensable")
 					else

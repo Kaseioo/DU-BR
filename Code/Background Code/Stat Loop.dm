@@ -239,6 +239,7 @@ mob/proc/Player_Loops(start_delay)
 	Status_Running=1
 	if(Regenerating&&z!=15) Regenerating=0
 	//Transform_Ascension_Limiter()
+	
 	Recov_mult_decrease()
 	Regen_mult_decrease()
 	EMP_mine_loop()
@@ -854,10 +855,10 @@ mob/proc/ApplyKoEffects(obj/items/Regenerator/r)
 		regenerator_modifier = 8
 
 	if(combat_ko_status > 0)
-		if(combat_ko_status >= UNCONSCIOUS_LEVEL_KO)
-			waiting_period = UNCONSCIOUS_LEVEL_KO_DURATION 	/ regenerator_modifier
+		if(combat_ko_status >= KO_SYSTEM_UNCONSCIOUS_KO)
+			waiting_period = KO_SYSTEM_UNCONSCIOUS_KO_DURATION 	/ regenerator_modifier
 		else 
-			waiting_period = NORMAL_LEVEL_KO_DURATION 		/ regenerator_modifier
+			waiting_period = KO_SYSTEM_NORMAL_KO 		/ regenerator_modifier
 
 		world << "This variable (waiting_period) = [waiting_period]"
 		world << "This variable (combat_ko_status) = [combat_ko_status]"

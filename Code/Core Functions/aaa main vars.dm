@@ -125,26 +125,31 @@ var
 
 // Global settings that affect RP ##############################################################################
 var/const
-	LETHAL_COMBAT 					= "Fight to Death"
-	CASUAL_COMBAT 					= "Casual Spar" 
+	LETHAL_COMBAT 						= "Fight to Death"
+	CASUAL_COMBAT 						= "Casual Spar" 
 
 var
-	should_show_char_name_on_who 	= FALSE	
-	can_break_things 				= TRUE
-	sense_show_stats 				= FALSE			// Show stat build
-	sense_rp_stats					= TRUE			// Remove precision from Sense and show vague terms instead
-	UNCONSCIOUS_LEVEL_KO			= 3				// Which KO will mark Unconsciousness
-	UNCONSCIOUS_LEVEL_KO_DURATION   = 10 * 10 * 60	// 10 minutes (600 seconds)
-	NORMAL_LEVEL_KO_DURATION		= 10 * 3  * 60	// 3 minutes  (180 seconds)
+	SHOW_CHAR_NAME_ON_WHO 				= FALSE	
+	CAN_BREAK_TURFS 					= TRUE
+	SENSE_SYSTEM_SHOW_STAT_BUILD 		= FALSE			// Show stat build
+	SENSE_SYSTEM_SHOW_VAGUE_INFO		= TRUE			// Remove precision from Sense and show vague terms instead
+	KO_SYSTEM_UNCONSCIOUS_KO			= 3				// Which KO will mark Unconsciousness
+	KO_SYSTEM_UNCONSCIOUS_KO_DURATION   = 10 * 10 * 60	// 10 minutes (600 seconds)
+	KO_SYSTEM_NORMAL_KO					= 10 * 3  * 60	// 3 minutes  (180 seconds)
+	KO_SYSTEM_OUT_OF_COMBAT				= 10 * 5  * 60	// 5 minutes  (300 seconds)
 
-	DO_VAMPIRES_NEED_TO_FEED 		= TRUE
-	DO_VAMPIRES_INFECT_ON_BITE 		= FALSE	
-	VAMPIRE_POWER_FALL_INTERVAL 	= 10 * 60		// 60 seconds
+	DO_VAMPIRES_NEED_TO_FEED 			= TRUE
+	DO_VAMPIRES_INFECT_ON_BITE 			= FALSE	
+	VAMPIRE_POWER_FALL_INTERVAL 		= 10 * 60		// 60 seconds
+
+	GLOBAL_SCIENCE_TAB_ITEMS			= null		    // null so it is set to tech_list when the game starts
 
 mob/var
-	sparring_mode					= CASUAL_COMBAT
-	sparring_mode_text				= "casual spar"
-	combat_ko_status 				= 0				// used to track when UNCONSCIOUS_LEVEL_KO should enter in effect
+	sparring_mode						= CASUAL_COMBAT
+	sparring_mode_text					= "casual spar"
+	combat_ko_status 					= 0				// used to track when KO_SYSTEM_UNCONSCIOUS_KO should enter in effect
+	individual_science_items 			= list()		// Allowed science tab items
+	global_science_items 				= list()		// Needed as otherwise items from the allowed list and global list would be added together
 
 //#####################################################################################################################
 

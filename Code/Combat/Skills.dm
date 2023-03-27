@@ -942,10 +942,10 @@ mob/proc/Give_Power(obj/Give_Power/G)
 		var/waiting_period = 0
 
 		if(M.KO && M.Health>=100) 
-			if(combat_ko_status >= UNCONSCIOUS_LEVEL_KO)
-				waiting_period = UNCONSCIOUS_LEVEL_KO_DURATION 	/ give_power_modifier
+			if(combat_ko_status >= KO_SYSTEM_UNCONSCIOUS_KO)
+				waiting_period = KO_SYSTEM_UNCONSCIOUS_KO_DURATION 	/ give_power_modifier
 			else 
-				waiting_period = NORMAL_LEVEL_KO_DURATION 		/ give_power_modifier
+				waiting_period = KO_SYSTEM_NORMAL_KO 		/ give_power_modifier
 
 			var/initial_healing_message = "[src] is being Given Power. This is kickstarting their Combat KO's healing proccess. They have [combat_ko_status] KO's , and will heal from one of their combat KO's in [round(waiting_period/10, 1)] seconds."
 			var/final_healing_message = "[src] has healed with help of Give Power, and is no longer affected by their last KO ([combat_ko_status] -> [combat_ko_status - 1])."

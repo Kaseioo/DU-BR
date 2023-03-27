@@ -32,7 +32,7 @@ mob/proc/manage_deadzone_pressure_immune_races()
 
 mob/proc/manage_deadzone_pressure_resistant_races()
 	if(Admins[src.key]>=4)
-		switch(input(src,"Add or remove from the Deadzone Pressure Resistant list") in list("Cancel","Add","Remove"))
+		switch(input(src,"Add or remove from the Deadzone Pressure Resistant Races list") in list("Cancel","Add","Remove"))
 			if("Cancel") return
 			if("Add")
 				var/list/L=list("Cancel")
@@ -619,14 +619,14 @@ upForm
 			initFormVar("admin", "max_screen_size", max_screen_size)
 
 			initFormVar("admin", "can_things_be_broken", can_things_be_broken)
-			initFormVar("admin", "should_show_char_name_on_who", should_show_char_name_on_who)
+			initFormVar("admin", "SHOW_CHAR_NAME_ON_WHO", SHOW_CHAR_NAME_ON_WHO)
 			
-			initFormVar("admin", "sense_rp_stats", sense_rp_stats)
-			initFormVar("admin", "sense_show_stats", sense_rp_stats)
+			initFormVar("admin", "SENSE_SYSTEM_SHOW_VAGUE_INFO", SENSE_SYSTEM_SHOW_VAGUE_INFO)
+			initFormVar("admin", "SENSE_SYSTEM_SHOW_STAT_BUILD", SENSE_SYSTEM_SHOW_VAGUE_INFO)
 
-			initFormVar("admin", "UNCONSCIOUS_LEVEL_KO", 			UNCONSCIOUS_LEVEL_KO)
-			initFormVar("admin", "UNCONSCIOUS_LEVEL_KO_DURATION", 	UNCONSCIOUS_LEVEL_KO_DURATION)
-			initFormVar("admin", "NORMAL_LEVEL_KO_DURATION", 		NORMAL_LEVEL_KO_DURATION)
+			initFormVar("admin", "KO_SYSTEM_UNCONSCIOUS_KO", 			KO_SYSTEM_UNCONSCIOUS_KO)
+			initFormVar("admin", "KO_SYSTEM_UNCONSCIOUS_KO_DURATION", 	KO_SYSTEM_UNCONSCIOUS_KO_DURATION)
+			initFormVar("admin", "KO_SYSTEM_NORMAL_KO", 		KO_SYSTEM_NORMAL_KO)
 			M << "Variables loaded. [src.type]"
 
 		ProcessVariable(fname, name, value)
@@ -675,14 +675,14 @@ upForm
 					if("max_screen_size") setFormVar(fname, name, text2num(value))
 
 					if("can_things_be_broken") setFormVar(fname, name, text2num(value))
-					if("should_show_char_name_on_who") setFormVar(fname, name, text2num(value))
+					if("SHOW_CHAR_NAME_ON_WHO") setFormVar(fname, name, text2num(value))
 
-					if("sense_show_stats") setFormVar(fname, name, text2num(value))
-					if("sense_rp_stats") setFormVar(fname, name, text2num(value))
+					if("SENSE_SYSTEM_SHOW_STAT_BUILD") setFormVar(fname, name, text2num(value))
+					if("SENSE_SYSTEM_SHOW_VAGUE_INFO") setFormVar(fname, name, text2num(value))
 
-					if("UNCONSCIOUS_LEVEL_KO") setFormVar(fname, name, text2num(value))
-					if("UNCONSCIOUS_LEVEL_KO_DURATION") setFormVar(fname, name, text2num(value))
-					if("NORMAL_LEVEL_KO_DURATION") setFormVar(fname, name, text2num(value))
+					if("KO_SYSTEM_UNCONSCIOUS_KO") setFormVar(fname, name, text2num(value))
+					if("KO_SYSTEM_UNCONSCIOUS_KO_DURATION") setFormVar(fname, name, text2num(value))
+					if("KO_SYSTEM_NORMAL_KO") setFormVar(fname, name, text2num(value))
 
 		FormSetTempVars(fname)
 			var/mob/M = src.getHost()
@@ -730,14 +730,14 @@ upForm
 					max_screen_size= getFormVar("admin", "max_screen_size")
 
 					can_things_be_broken= getFormVar("admin", "can_things_be_broken")
-					should_show_char_name_on_who= getFormVar("admin", "should_show_char_name_on_who")
+					SHOW_CHAR_NAME_ON_WHO= getFormVar("admin", "SHOW_CHAR_NAME_ON_WHO")
 
-					sense_show_stats = getFormVar("admin", "sense_show_stats")
-					sense_rp_stats = getFormVar("admin", "sense_rp_stats")	
+					SENSE_SYSTEM_SHOW_STAT_BUILD = getFormVar("admin", "SENSE_SYSTEM_SHOW_STAT_BUILD")
+					SENSE_SYSTEM_SHOW_VAGUE_INFO = getFormVar("admin", "SENSE_SYSTEM_SHOW_VAGUE_INFO")	
 
-					UNCONSCIOUS_LEVEL_KO = getFormVar("admin", "UNCONSCIOUS_LEVEL_KO")
-					UNCONSCIOUS_LEVEL_KO_DURATION = getFormVar("admin", "UNCONSCIOUS_LEVEL_KO_DURATION")
-					NORMAL_LEVEL_KO_DURATION = getFormVar("admin", "NORMAL_LEVEL_KO_DURATION")
+					KO_SYSTEM_UNCONSCIOUS_KO = getFormVar("admin", "KO_SYSTEM_UNCONSCIOUS_KO")
+					KO_SYSTEM_UNCONSCIOUS_KO_DURATION = getFormVar("admin", "KO_SYSTEM_UNCONSCIOUS_KO_DURATION")
+					KO_SYSTEM_NORMAL_KO = getFormVar("admin", "KO_SYSTEM_NORMAL_KO")
 
 
 		FormSubmitSuccess(fname, client/C)
@@ -811,14 +811,14 @@ upForm
 				<tr height="1em" valign="top"><td width="30%"><b>Max View Radius: <td width="60%"><center>(Changes Max Screen Size)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="max_screen_size" value="[getFormVar("admin","max_screen_size")]" size="3" maxlength="20"/><span class="error">[errors["max_screen_size"]]</span></td></tr>
 				
 				<tr height="1em" valign="top"><td width="30%"><b>Can things (turfs, walls and objects) be broken?: <td width="60%"><center>(0 = False, 1 = True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="can_things_be_broken" value="[getFormVar("admin","can_things_be_broken")]" size="3" maxlength="20"/><span class="error">[errors["can_things_be_broken"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>Show Character names on Who?: <td width="60%"><center>(0 = False, 1 = True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="should_show_char_name_on_who" value="[getFormVar("admin","should_show_char_name_on_who")]" size="3" maxlength="20"/><span class="error">[errors["should_show_char_name_on_who"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Show Character names on Who?: <td width="60%"><center>(0 = False, 1 = True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="SHOW_CHAR_NAME_ON_WHO" value="[getFormVar("admin","SHOW_CHAR_NAME_ON_WHO")]" size="3" maxlength="20"/><span class="error">[errors["SHOW_CHAR_NAME_ON_WHO"]]</span></td></tr>
 				
-				<tr height="1em" valign="top"><td width="30%"><b>Show stat builds on Sense 3/Scan?: <td width="60%"><center>(0 = False, 1 = True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="sense_show_stats" value="[getFormVar("admin","sense_show_stats")]" size="3" maxlength="20"/><span class="error">[errors["sense_show_stats"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>Show vague info on Sense 3? (no numbers): <td width="60%"><center>(0 = False, 1 = True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="sense_rp_stats" value="[getFormVar("admin","sense_rp_stats")]" size="3" maxlength="20"/><span class="error">[errors["sense_rp_stats"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Show stat builds on Sense 3/Scan?: <td width="60%"><center>(0 = False, 1 = True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="SENSE_SYSTEM_SHOW_STAT_BUILD" value="[getFormVar("admin","SENSE_SYSTEM_SHOW_STAT_BUILD")]" size="3" maxlength="20"/><span class="error">[errors["SENSE_SYSTEM_SHOW_STAT_BUILD"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Show vague info on Sense 3? (no numbers): <td width="60%"><center>(0 = False, 1 = True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="SENSE_SYSTEM_SHOW_VAGUE_INFO" value="[getFormVar("admin","SENSE_SYSTEM_SHOW_VAGUE_INFO")]" size="3" maxlength="20"/><span class="error">[errors["SENSE_SYSTEM_SHOW_VAGUE_INFO"]]</span></td></tr>
 				
-				<tr height="1em" valign="top"><td width="30%"><b>Which KO should make someone Unconscious?: <td width="60%"><center></center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="UNCONSCIOUS_LEVEL_KO" value="[getFormVar("admin","UNCONSCIOUS_LEVEL_KO")]" size="3" maxlength="20"/><span class="error">[errors["UNCONSCIOUS_LEVEL_KO"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>How long should someone on their last KO (Unconscious KO) be out for?: <td width="60%"><center>(10 = 1 second, 6000 = 600 seconds (10 minutes))</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="UNCONSCIOUS_LEVEL_KO_DURATION" value="[getFormVar("admin","UNCONSCIOUS_LEVEL_KO_DURATION")]" size="3" maxlength="20"/><span class="error">[errors["UNCONSCIOUS_LEVEL_KO_DURATION"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>How long should someone on a normal KO (Anything before Unconscious KO) be out for?: <td width="60%"><center>(10 = 1 second, 1800 = 180 seconds (3 minutes))</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="NORMAL_LEVEL_KO_DURATION" value="[getFormVar("admin","NORMAL_LEVEL_KO_DURATION")]" size="3" maxlength="20"/><span class="error">[errors["NORMAL_LEVEL_KO_DURATION"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Which KO should make someone Unconscious?: <td width="60%"><center></center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="KO_SYSTEM_UNCONSCIOUS_KO" value="[getFormVar("admin","KO_SYSTEM_UNCONSCIOUS_KO")]" size="3" maxlength="20"/><span class="error">[errors["KO_SYSTEM_UNCONSCIOUS_KO"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>How long should someone on their last KO (Unconscious KO) be out for?: <td width="60%"><center>(10 = 1 second, 6000 = 600 seconds (10 minutes))</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="KO_SYSTEM_UNCONSCIOUS_KO_DURATION" value="[getFormVar("admin","KO_SYSTEM_UNCONSCIOUS_KO_DURATION")]" size="3" maxlength="20"/><span class="error">[errors["KO_SYSTEM_UNCONSCIOUS_KO_DURATION"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>How long should someone on a normal KO (Anything before Unconscious KO) be out for?: <td width="60%"><center>(10 = 1 second, 1800 = 180 seconds (3 minutes))</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="KO_SYSTEM_NORMAL_KO" value="[getFormVar("admin","KO_SYSTEM_NORMAL_KO")]" size="3" maxlength="20"/><span class="error">[errors["KO_SYSTEM_NORMAL_KO"]]</span></td></tr>
 			  <tr height="1em">
 			  	<td colspan="4" align="right"> <input type="submit" value="Submit" />
 			  	<input type="reset" value="Reset" /> </td>

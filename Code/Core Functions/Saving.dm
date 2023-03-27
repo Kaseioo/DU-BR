@@ -525,7 +525,7 @@ proc/Save_Misc()
 	S["hostAllowsPacksOnRP"] << hostAllowsPacksOnRP
 	S["God_FistMod"] << God_FistMod
 
-	S["should_show_char_name_on_who"] << should_show_char_name_on_who
+	S["SHOW_CHAR_NAME_ON_WHO"] << SHOW_CHAR_NAME_ON_WHO
 
 	S["deadzone_pressure"] 							<< deadzone_pressure
 	S["deadzone_pressure_resistant_race_bploss"] 	<< deadzone_pressure_resistant_race_bploss
@@ -541,16 +541,18 @@ proc/Save_Misc()
 	S["limit_breaker_minimum_duration_multiplier"] 	<< limit_breaker_minimum_duration_multiplier
 	S["limit_breaker_maximum_duration_multiplier"] 	<< limit_breaker_maximum_duration_multiplier
 
-	S["sense_rp_stats"] 							<< sense_rp_stats
-	S["sense_show_stats"] 							<< sense_show_stats
+	S["SENSE_SYSTEM_SHOW_VAGUE_INFO"] 				< SENSE_SYSTEM_SHOW_VAGUE_INFO
+	S["SENSE_SYSTEM_SHOW_STAT_BUILD"] 				<< SENSE_SYSTEM_SHOW_STAT_BUILD
 
-	S["UNCONSCIOUS_LEVEL_KO"]						<< UNCONSCIOUS_LEVEL_KO
-	S["UNCONSCIOUS_LEVEL_KO_DURATION"] 				<< UNCONSCIOUS_LEVEL_KO_DURATION
-	S["NORMAL_LEVEL_KO_DURATION"] 					<< NORMAL_LEVEL_KO_DURATION
+	S["KO_SYSTEM_UNCONSCIOUS_KO"]					<< KO_SYSTEM_UNCONSCIOUS_KO
+	S["KO_SYSTEM_UNCONSCIOUS_KO_DURATION"] 			<< KO_SYSTEM_UNCONSCIOUS_KO_DURATION
+	S["KO_SYSTEM_NORMAL_KO"] 						<< KO_SYSTEM_NORMAL_KO
 
 	S["DO_VAMPIRES_NEED_TO_FEED"] 					<< DO_VAMPIRES_NEED_TO_FEED
 	S["DO_VAMPIRES_INFECT_ON_BITE"] 				<< DO_VAMPIRES_INFECT_ON_BITE
 	S["VAMPIRE_POWER_FALL_INTERVAL"] 				<< VAMPIRE_POWER_FALL_INTERVAL
+
+	S["GLOBAL_SCIENCE_TAB_ITEMS"] 					<< GLOBAL_SCIENCE_TAB_ITEMS
 
 
 
@@ -665,7 +667,7 @@ proc/Load_Misc()
 	S["death_anger_gives_ssj"]>>death_anger_gives_ssj
 	S["bp_soft_cap"]>>bp_soft_cap
 
-	S["should_show_char_name_on_who"]>>should_show_char_name_on_who
+	S["SHOW_CHAR_NAME_ON_WHO"]>>SHOW_CHAR_NAME_ON_WHO
 
 	S["deadzone_pressure"] >> deadzone_pressure
 	S["deadzone_pressure_resistant_race_bploss"] >> deadzone_pressure_resistant_race_bploss
@@ -680,16 +682,18 @@ proc/Load_Misc()
 	S["limit_breaker_minimum_duration_multiplier"] 	>> limit_breaker_minimum_duration_multiplier
 	S["limit_breaker_maximum_duration_multiplier"] 	>> limit_breaker_maximum_duration_multiplier
 
-	S["sense_rp_stats"] 	>> sense_rp_stats
-	S["sense_show_stats"] 	>> sense_show_stats
+	S["SENSE_SYSTEM_SHOW_VAGUE_INFO"] 	>> SENSE_SYSTEM_SHOW_VAGUE_INFO
+	S["SENSE_SYSTEM_SHOW_STAT_BUILD"] 	>> SENSE_SYSTEM_SHOW_STAT_BUILD
 
-	S["UNCONSCIOUS_LEVEL_KO"] 			>> UNCONSCIOUS_LEVEL_KO
-	S["UNCONSCIOUS_LEVEL_KO_DURATION"] 	>> UNCONSCIOUS_LEVEL_KO_DURATION
-	S["NORMAL_LEVEL_KO_DURATION"] 		>> NORMAL_LEVEL_KO_DURATION
+	S["KO_SYSTEM_UNCONSCIOUS_KO"] 			>> KO_SYSTEM_UNCONSCIOUS_KO
+	S["KO_SYSTEM_UNCONSCIOUS_KO_DURATION"] 	>> KO_SYSTEM_UNCONSCIOUS_KO_DURATION
+	S["KO_SYSTEM_NORMAL_KO"] 		>> KO_SYSTEM_NORMAL_KO
 
 	S["DO_VAMPIRES_NEED_TO_FEED"] 		>> DO_VAMPIRES_NEED_TO_FEED
 	S["DO_VAMPIRES_INFECT_ON_BITE"] 	>> DO_VAMPIRES_INFECT_ON_BITE
 	S["VAMPIRE_POWER_FALL_INTERVAL"] 	>> VAMPIRE_POWER_FALL_INTERVAL
+
+	S["GLOBAL_SCIENCE_TAB_ITEMS"] 		>> GLOBAL_SCIENCE_TAB_ITEMS
 
 	if("can_admin_vote" in S) S["can_admin_vote"]>>can_admin_vote
 	if("allow_guests" in S) S["allow_guests"]>>allow_guests

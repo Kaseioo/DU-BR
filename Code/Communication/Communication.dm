@@ -346,7 +346,7 @@ mob/verb/Who()
 		if(IsAdmin()) 
 			Who+="<br>[A.displaykey] ([A.name]) - [A.Race]"
 		else
-			if(should_show_char_name_on_who)
+			if(SHOW_CHAR_NAME_ON_WHO)
 				Who+="<br>[A.displaykey] ( [A.name] )"
 			else
 				Who+="<br>[A.displaykey]"

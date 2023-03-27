@@ -490,8 +490,8 @@ var/can_things_be_broken = 1
 mob/verb/ToggleBreakingThings()
 	set category = "Other"
 	set name = "Toggle Breaking Walls and Objects"
-	can_break_things = !can_break_things
-	src << "You will now [can_break_things ? "be able to" : "not be able to"] break things such as Walls and Objects. This does not affect Science Items.."
+	CAN_BREAK_TURFS = !CAN_BREAK_TURFS
+	src << "You will now [CAN_BREAK_TURFS ? "be able to" : "not be able to"] break things such as Walls and Objects. This does not affect Science Items.."
 
 mob/verb/ToggleSparringMode()
 	var/mode = input("Choose sparring mode", "Sparring mode", CASUAL_COMBAT) in list(CASUAL_COMBAT, LETHAL_COMBAT)
@@ -533,7 +533,7 @@ mob/proc/AlertSparringMode(var/mob/attacker, var/mob/victim)
 mob/proc/WallBreakPower()
 	if(is_saitama) return 1.#INF
 	if(!can_things_be_broken) return 0
-	if(!can_break_things) return 0
+	if(!CAN_BREAK_TURFS) return 0
 
 	//if(BP < Tech_BP * 0.5) return 0
 
