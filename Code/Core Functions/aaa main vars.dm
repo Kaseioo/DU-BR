@@ -133,10 +133,21 @@ var
 	CAN_BREAK_TURFS 					= TRUE
 	SENSE_SYSTEM_SHOW_STAT_BUILD 		= FALSE			// Show stat build
 	SENSE_SYSTEM_SHOW_VAGUE_INFO		= TRUE			// Remove precision from Sense and show vague terms instead
+
 	KO_SYSTEM_UNCONSCIOUS_KO			= 3				// Which KO will mark Unconsciousness
 	KO_SYSTEM_UNCONSCIOUS_KO_DURATION   = 10 * 10 * 60	// 10 minutes (600 seconds)
-	KO_SYSTEM_NORMAL_KO					= 10 * 3  * 60	// 3 minutes  (180 seconds)
+	KO_SYSTEM_NORMAL_KO_DURATION		= 10 * 3  * 60	// 3 minutes  (180 seconds)
+	KO_SYSTEM_OUT_OF_COMBAT_TIMER		= 10 * 5 * 60	// 2 minutes  (120 seconds)
 	KO_SYSTEM_OUT_OF_COMBAT				= 10 * 5  * 60	// 5 minutes  (300 seconds)
+
+	KO_SYSTEM_STATS_AFFECT_HEAL_TIME	= TRUE			// If TRUE, the higher the regen stat, the faster the healing
+	KO_SYSTEM_DEATH_REGEN_HEALS_KO		= TRUE			// If TRUE, the death regen will heal the player back to the KO before KO_SYSTEM_UNCONSCIOUS_KO
+	KO_SYSTEM_SURVIVE_IF_NONLETHAL		= TRUE			// If the attacker is not in LETHAL_COMBAT, KO_SYSTEM_UNCONSCIOUS_KO will not kill the player if not healed
+
+	KO_SYSTEM_REGENERATOR_MODIFIER		= 0.5			// Being inside a regenerator will make the Combat KO heal in 1/2 the time (100 -> 50)
+	KO_SYSTEM_GIVEPOWER_MODIFIER		= 0.75			// Using regenerate will make the Combat KO heal in 3/4 the time		   (100 -> 75)
+	KO_SYSTEM_REGENERATE_MODIFIER		= 0.8			// Using regenerate will make the Combat KO heal in 4/5 the time		   (100 -> 80)
+
 
 	DO_VAMPIRES_NEED_TO_FEED 			= TRUE
 	DO_VAMPIRES_INFECT_ON_BITE 			= FALSE	
@@ -147,7 +158,7 @@ var
 mob/var
 	sparring_mode						= CASUAL_COMBAT
 	sparring_mode_text					= "casual spar"
-	combat_ko_status 					= 0				// used to track when KO_SYSTEM_UNCONSCIOUS_KO should enter in effect
+	combat_ko_total 					= 0				// used to track when KO_SYSTEM_UNCONSCIOUS_KO should enter in effect
 	individual_science_items 			= list()		// Allowed science tab items
 	global_science_items 				= list()		// Needed as otherwise items from the allowed list and global list would be added together
 
