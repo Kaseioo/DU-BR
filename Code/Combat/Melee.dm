@@ -483,6 +483,8 @@ mob/proc/get_melee_damage(mob/m, count_sword = 1, for_strangle, allow_one_shot =
 			else if(!client)	
 				if(drone_module) dmg=Turf_Strength * BP / 750 //npcs can gradually break anything
 				else dmg=Turf_Strength * BP / 7000
+	if(isFireFist)
+		dmg*=1.2;
 	return dmg
 
 var/can_things_be_broken = 1
@@ -1157,6 +1159,10 @@ mob/proc/Melee(obj/O, from_auto_attack, force_power_attack, lunge_allowed = 0)
 	//if(ismob(target) && target.CanMeleeDodge(src)) hit_landed = 0
 
 	if(hit_landed)
+		if(isFireFist && prob(40))
+			target.BurnStack++
+			target.isBurning = 1;
+			usr << "You are now Burning due Fire Fist attack!"
 		if(ismob(target) && Is_Darius()) target.Apply_Bleed()
 		Add_Hokuto_Shinken_Energy(target)
 		zombie_melee_infection(target)
