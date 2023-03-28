@@ -3,16 +3,17 @@ proc/mainPlayerLoop()
 {
     for(var/mob/player in players){
         BurnLoop(player)
+        player.try_healing_combat_ko()
 
-        sleep(world.tick_lag)
     }
 }
 
 proc/MainGameLoop(){
-    while (1){
+    while (TRUE){
         
-        mainPlayerLoop();
+        mainPlayerLoop()
 
-        sleep(world.tick_lag);
+        //sleep(world.tick_lag)
+        if(world.tick_usage > 80) sleep(world.tick_lag)
     }
 }

@@ -384,36 +384,26 @@ mob/proc/InTournament()
 mob/var/tmp
 	last_knocked_out_by_mob
 	koCount = 0 //how many times you were ko'd this session
-
 mob/proc/KO(mob/Z,allow_anger=1)
 	set waitfor=0
-
 	//if(BigChungusOnKOCheck())
 	//	return
-
 	if(is_saitama)
 		Death(Z,Force_Death=1)
 		return
-
 	if(client || empty_player)
-
 		if(KO || Safezone) return
-
 		if(spam_killed)
 			Health=100
 			Ki=max_ki
 			return
-
 		//if(key in epic_list) return
 		var/anger_wait = 3000
-		var/currently_healing = FALSE
-	
 		if(!Z || !ismob(Z) || !Z.is_saitama)
 			if(Z != src && can_anger() && allow_anger && (prob(anger_chance()) || hero == key))
 				var/can_anger
 				if(Z && ismob(Z) && Z.client && !(Z.ckey in anger_reasons))
 					can_anger = 1
-
 				if(world.time > last_anger + anger_wait || can_anger)
 					var/ko_reason = Z
 					if(!Z) ko_reason = "unknown reason"
@@ -421,28 +411,20 @@ mob/proc/KO(mob/Z,allow_anger=1)
 						ko_reason = Z.ckey
 						if(!Z.ckey) ko_reason = "npc"
 					anger(reason = ko_reason)
-
 					recent_ko_reasons.Insert(1, ko_reason)
 					recent_ko_reasons.len = 3
-
 					return
-
 		if(client && AtBattlegrounds())
 			BattlegroundDefeat(defeater = Z)
 			return
-
 		give_tier(Z)
-		if(Z.sparring_mode == LETHAL_COMBAT)
-			combat_ko_status++
-
-			if(combat_ko_status >= KO_SYSTEM_UNCONSCIOUS_KO)
-				Zenkai()
-			if(combat_ko_status > KO_SYSTEM_UNCONSCIOUS_KO)
-				combat_ko_status = KO_SYSTEM_UNCONSCIOUS_KO
+		if(Z.sparring_mode != "Casual Spar")
+			Zenkai()
 
 		KO=1
 		Stop_Shadow_Sparring()
 		if(ismob(Z)) last_knocked_out_by_mob = Z
+
 		if(alignment_on&&!InTournament()) Drop_dragonballs()
 		Action=null
 		Auto_Attack=0
@@ -462,73 +444,40 @@ mob/proc/KO(mob/Z,allow_anger=1)
 		icon_state="KO"
 		KB=0
 
-		if(ismob(Z) && Z.client)
+		/*if(ismob(Z) && Z.client)
 			for(var/mob/m in player_view(center=src))
-				var/attacker = Z
-				if(SHOW_CHAR_NAME_ON_WHO)
-					attacker += " ([Z.displaykey])"
+				var/message = "[src] loses against [Z] during a [Z.sparring_mode_text]!"
 
-				var/message = "[src] loses against [attacker] during a [Z.sparring_mode_text]!"
-
-
-				if(combat_ko_status > 0)
-					message += "\n[src] now has [combat_ko_status] combat KO's!"
-
-					if(combat_ko_status >= KO_SYSTEM_UNCONSCIOUS_KO)
-						message += "\n[src] has been <span style='color: red;'>defeated [KO_SYSTEM_UNCONSCIOUS_KO] times</span> and is now unconscious."
+				if(should_show_char_name_on_who)
+					message += "([Z.displaykey])"
 
 				m << message
 				m.ChatLog(message)
 		else 
 			player_view(center=src)<<"[src] is knocked out by [Z] during a [Z.sparring_mode_text]!"
-
+		*/
 		if(grabbedObject)
 			player_view(center=src)<<"[src] is forced to release [grabbedObject]!"
 			ReleaseGrab()
 
+		Cause_Combat_KO(victim = src, attacker = Z)
+
 		for(var/obj/A in src) if(A.Stealable&&A.Injection&&prob(10))
 			var/obj/items/Diarea_Injection/V=A
 			V.Use(src)
-
 		if(ssj>0)
 			if(has_ss_full_power && ssj == 1)
 			else Revert()
 
-		var/KO_Timer = 0
-		if(combat_ko_status >= KO_SYSTEM_UNCONSCIOUS_KO)
-			KO_Timer = KO_SYSTEM_UNCONSCIOUS_KO_DURATION
-		else 
-			KO_Timer = KO_SYSTEM_NORMAL_KO // / Clamp((regen**0.4),0.5,2)
-
+		var/KO_Timer = 800 / Clamp((regen**0.4),0.5,2)
 		if(z==10) KO_Timer/=6
 		//if(ultra_pack) KO_Timer/=1.4
 		if(hero==key) KO_Timer*=0.7
 		koCount++
 		var/thisKOcount = koCount
+
+		try_healing_combat_ko()
 		
-		var/initial_healing_message = "[src] has been defeated and will get up in [round(KO_Timer/10, 1)] seconds. They have [combat_ko_status] KO's."
-		//var/final_healing_message = "[src] got up from their defeat. They have [combat_ko_status] KO's."
-
-		world << "This variable (KO_Timer) = [KO_Timer]"
-		world << "This variable (combat_ko_status) = [combat_ko_status]"
-
-		Countdown(KO_Timer/10, initial_healing_message)
-
-		if(!currently_healing)
-			currently_healing = TRUE
-
-			sleep(KO_Timer) 
-			currently_healing = FALSE
-			UnKO()	
-
-			//combat_ko_status--
-			
-			// loga no servidor
-			if(combat_ko_status < 0) 
-				combat_ko_status = 0
-
-
-
 		if(Poisoned && prob(50)) Death("???")
 
 	else if(!Frozen)
@@ -558,19 +507,11 @@ mob/proc/UnKO() if(KO)
 	Ki=1
 	move=1
 	if(!istype(src,/mob/Enemy) && Poisoned && prob(50)) Death("???")
-
-	if(combat_ko_status >= KO_SYSTEM_UNCONSCIOUS_KO)
-		combat_ko_status = KO_SYSTEM_UNCONSCIOUS_KO
-		player_view(center=src)<<"[src] regains consciousness from their Unconsciousness KO."
-	else 
-		FullHeal()
-		player_view(center=src)<<"[src] gets up after being defeated"
+	//player_view(center=src)<<"[src] regains consciousness."
 
 	if(istype(src,/mob/Enemy))
-
 		Health = 100
 		Ki = max_ki
-
 	if(client)
 		sleep(20)
 		if(OP_build()||(prob(anger_chance(0.4))&&!can_anger()))
