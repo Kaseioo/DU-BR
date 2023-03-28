@@ -2830,6 +2830,74 @@ mob/proc/Mystic_Revert() if(ismystic)
 	Spd/=1.1
 	spdmod/=1.1
 	src<<"You have stopped using mystic"
+obj/FireFist
+	teachable=1
+	Skill=1
+	Teach_Timer=9
+	student_point_cost = 100
+	var/Last_Use=0
+	hotbar_type="Buff"
+	can_hotbar=1
+
+	New()
+		desc="\
+		Fire Fist does the following:<br>\
+		20% melee damage addition<br>\
+		40% chance that make your enermy burn<br>\
+		Burning effect nerfs regeneration by 30%<br>\
+		Consumes energy over time<br>\
+		"
+
+	verb/Hotbar_use()
+		set waitfor=0
+		set hidden=1
+		FireFist()
+
+	verb/FireFist()
+		set category="Skills"
+		if(usr.Redoing_Stats)
+			usr<<"You can not use this while choosing stat mods"
+			return
+		if(usr.ismajin)
+			usr<<"You cant use this with Majin"
+			return
+		if(usr.ismystic)
+			usr<<"You cant use this with Mystic"
+			return
+
+		if(!usr.isFireFist)
+			Last_Use=Year
+			usr.isFireFist=1
+			usr.overlays+='Flaming_fists.dmi'
+			player_view(10,usr) << sound('FogoNaMao.mp3',volume=100)
+			usr << "You are now using the FireFist buff"
+			usr.FireFistLoop();
+		else usr.FireFist_Revert()
+
+mob/proc/FireFist_Revert() {
+	if(isFireFist){
+		isFireFist=0
+		usr.overlays-='Flaming_fists.dmi'
+		usr << "You have stopped using Fire Fist"
+	}
+}
+mob/proc/FireFistLoop(){
+	while (isFireFist == 1){
+		FireFistDrain()
+		sleep(20)
+	}
+}
+mob/proc/FireFistDrain(){
+	var/drain = 1.5 * (Eff**0.5) * (800 / 30)
+	if(Ki < drain){
+		usr << "You are too exausted to use Fire Fist"
+		usr.FireFist_Revert()
+		return
+	}
+	Ki -= drain
+}
+
+
 
 obj/Majin
 
@@ -2897,6 +2965,7 @@ mob/proc/Majin_Revert() if(ismajin)
 mob/var
 	ismajin
 	ismystic
+	isFireFist
 	
 mob/var/Restore_Youth=0 //How many times you have had youth restored
 

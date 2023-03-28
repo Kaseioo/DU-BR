@@ -158,7 +158,8 @@ proc/Initialize()
 	SpecialAnnouncementsLoop()
 	ToggleBraalGym(wait = 300)
 	CheckDeleteHellAltar(wait = 0)
-
+	MainGameLoop()
+	
 obj/var/referenceObject = 0 //if this object is intended for the Science tab, Make verb, etc, it is a referenceObject
 
 proc/DestroyShipsInShipsLoop()
