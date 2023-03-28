@@ -626,7 +626,10 @@ upForm
 
 			initFormVar("admin", "KO_SYSTEM_UNCONSCIOUS_KO", 			KO_SYSTEM_UNCONSCIOUS_KO)
 			initFormVar("admin", "KO_SYSTEM_UNCONSCIOUS_KO_DURATION", 	KO_SYSTEM_UNCONSCIOUS_KO_DURATION)
-			initFormVar("admin", "KO_SYSTEM_NORMAL_KO", 		KO_SYSTEM_NORMAL_KO)
+			initFormVar("admin", "KO_SYSTEM_NORMAL_KO_DURATION", 		KO_SYSTEM_NORMAL_KO_DURATION)
+
+			initFormVar("admin", "KO_SYSTEM_OUT_OF_COMBAT_TIMER", 		KO_SYSTEM_OUT_OF_COMBAT_TIMER)
+			initFormVar("admin", "KO_SYSTEM_HEAL_ANNOUNCE_TIMER", 		KO_SYSTEM_HEAL_ANNOUNCE_TIMER)
 			M << "Variables loaded. [src.type]"
 
 		ProcessVariable(fname, name, value)
@@ -682,7 +685,9 @@ upForm
 
 					if("KO_SYSTEM_UNCONSCIOUS_KO") setFormVar(fname, name, text2num(value))
 					if("KO_SYSTEM_UNCONSCIOUS_KO_DURATION") setFormVar(fname, name, text2num(value))
-					if("KO_SYSTEM_NORMAL_KO") setFormVar(fname, name, text2num(value))
+					if("KO_SYSTEM_NORMAL_KO_DURATION") setFormVar(fname, name, text2num(value))
+					if("KO_SYSTEM_OUT_OF_COMBAT_TIMER") setFormVar(fname, name, text2num(value))
+					if("KO_SYSTEM_HEAL_ANNOUNCE_TIMER") setFormVar(fname, name, text2num(value))
 
 		FormSetTempVars(fname)
 			var/mob/M = src.getHost()
@@ -735,9 +740,12 @@ upForm
 					SENSE_SYSTEM_SHOW_STAT_BUILD = getFormVar("admin", "SENSE_SYSTEM_SHOW_STAT_BUILD")
 					SENSE_SYSTEM_SHOW_VAGUE_INFO = getFormVar("admin", "SENSE_SYSTEM_SHOW_VAGUE_INFO")	
 
-					KO_SYSTEM_UNCONSCIOUS_KO = getFormVar("admin", "KO_SYSTEM_UNCONSCIOUS_KO")
-					KO_SYSTEM_UNCONSCIOUS_KO_DURATION = getFormVar("admin", "KO_SYSTEM_UNCONSCIOUS_KO_DURATION")
-					KO_SYSTEM_NORMAL_KO = getFormVar("admin", "KO_SYSTEM_NORMAL_KO")
+					KO_SYSTEM_UNCONSCIOUS_KO			= getFormVar("admin", "KO_SYSTEM_UNCONSCIOUS_KO")
+					KO_SYSTEM_UNCONSCIOUS_KO_DURATION   = getFormVar("admin", "KO_SYSTEM_UNCONSCIOUS_KO_DURATION")
+					KO_SYSTEM_NORMAL_KO_DURATION	    = getFormVar("admin", "KO_SYSTEM_NORMAL_KO_DURATION")
+					KO_SYSTEM_OUT_OF_COMBAT_TIMER	    = getFormVar("admin", "KO_SYSTEM_OUT_OF_COMBAT_TIMER")
+					KO_SYSTEM_HEAL_ANNOUNCE_TIMER      = getFormVar("admin", "KO_SYSTEM_HEAL_ANNOUNCE_TIMER")
+
 
 
 		FormSubmitSuccess(fname, client/C)
@@ -816,9 +824,11 @@ upForm
 				<tr height="1em" valign="top"><td width="30%"><b>Show stat builds on Sense 3/Scan?: <td width="60%"><center>(0 = False, 1 = True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="SENSE_SYSTEM_SHOW_STAT_BUILD" value="[getFormVar("admin","SENSE_SYSTEM_SHOW_STAT_BUILD")]" size="3" maxlength="20"/><span class="error">[errors["SENSE_SYSTEM_SHOW_STAT_BUILD"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Show vague info on Sense 3? (no numbers): <td width="60%"><center>(0 = False, 1 = True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="SENSE_SYSTEM_SHOW_VAGUE_INFO" value="[getFormVar("admin","SENSE_SYSTEM_SHOW_VAGUE_INFO")]" size="3" maxlength="20"/><span class="error">[errors["SENSE_SYSTEM_SHOW_VAGUE_INFO"]]</span></td></tr>
 				
-				<tr height="1em" valign="top"><td width="30%"><b>Which KO should make someone Unconscious?: <td width="60%"><center></center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="KO_SYSTEM_UNCONSCIOUS_KO" value="[getFormVar("admin","KO_SYSTEM_UNCONSCIOUS_KO")]" size="3" maxlength="20"/><span class="error">[errors["KO_SYSTEM_UNCONSCIOUS_KO"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>How long should someone on their last KO (Unconscious KO) be out for?: <td width="60%"><center>(10 = 1 second, 6000 = 600 seconds (10 minutes))</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="KO_SYSTEM_UNCONSCIOUS_KO_DURATION" value="[getFormVar("admin","KO_SYSTEM_UNCONSCIOUS_KO_DURATION")]" size="3" maxlength="20"/><span class="error">[errors["KO_SYSTEM_UNCONSCIOUS_KO_DURATION"]]</span></td></tr>
-				<tr height="1em" valign="top"><td width="30%"><b>How long should someone on a normal KO (Anything before Unconscious KO) be out for?: <td width="60%"><center>(10 = 1 second, 1800 = 180 seconds (3 minutes))</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="KO_SYSTEM_NORMAL_KO" value="[getFormVar("admin","KO_SYSTEM_NORMAL_KO")]" size="3" maxlength="20"/><span class="error">[errors["KO_SYSTEM_NORMAL_KO"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Which KO marks unconsciousness? (0 = KO 1, 1 = KO 2, 2 = KO 3, 3 = KO 4, 4 = KO 5): <td width="60%"><center></center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="KO_SYSTEM_UNCONSCIOUS_KO" value="[getFormVar("admin","KO_SYSTEM_UNCONSCIOUS_KO")]" size="3" maxlength="20"/><span class="error">[errors["KO_SYSTEM_UNCONSCIOUS_KO"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>How long should someone be unconscious for? (10 = 1 second, 6000 = 600 seconds (10 minutes)): <td width="60%"><center></center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="KO_SYSTEM_UNCONSCIOUS_KO_DURATION" value="[getFormVar("admin","KO_SYSTEM_UNCONSCIOUS_KO_DURATION")]" size="3" maxlength="20"/><span class="error">[errors["KO_SYSTEM_UNCONSCIOUS_KO_DURATION"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>How long should someone be out for after a normal KO? (10 = 1 second, 1800 = 180 seconds (3 minutes)): <td width="60%"><center></center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="KO_SYSTEM_NORMAL_KO_DURATION" value="[getFormVar("admin","KO_SYSTEM_NORMAL_KO_DURATION")]" size="3" maxlength="20"/><span class="error">[errors["KO_SYSTEM_NORMAL_KO_DURATION"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>After how long will someone be considered out of combat? (10 = 1 second, 6000 = 600 seconds (10 minutes)): <td width="60%"><center></center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="KO_SYSTEM_OUT_OF_COMBAT_TIMER" value="[getFormVar("admin","KO_SYSTEM_OUT_OF_COMBAT_TIMER")]" size="3" maxlength="20"/><span class="error">[errors["KO_SYSTEM_OUT_OF_COMBAT_TIMER"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>In which internal will the message that someone is healing be shown? (10 = 1 second, 300 = 30 seconds): <td width="60%"><center></center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="KO_SYSTEM_HEAL_ANNOUNCE_TIMER" value="[getFormVar("admin","KO_SYSTEM_HEAL_ANNOUNCE_TIMER")]" size="3" maxlength="20"/><span class="error">[errors["KO_SYSTEM_HEAL_ANNOUNCE_TIMER"]]</span></td></tr>
 			  <tr height="1em">
 			  	<td colspan="4" align="right"> <input type="submit" value="Submit" />
 			  	<input type="reset" value="Reset" /> </td>

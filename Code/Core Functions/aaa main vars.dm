@@ -135,10 +135,11 @@ var
 	SENSE_SYSTEM_SHOW_VAGUE_INFO		= TRUE			// Remove precision from Sense and show vague terms instead
 
 	KO_SYSTEM_UNCONSCIOUS_KO			= 3				// Which KO will mark Unconsciousness
-	KO_SYSTEM_UNCONSCIOUS_KO_DURATION   = 10 * 10 * 60	// 10 minutes (600 seconds)
-	KO_SYSTEM_NORMAL_KO_DURATION		= 10 * 3  * 60	// 3 minutes  (180 seconds)
-	KO_SYSTEM_OUT_OF_COMBAT_TIMER		= 10 * 5 * 60	// 2 minutes  (120 seconds)
-	KO_SYSTEM_OUT_OF_COMBAT				= 10 * 5  * 60	// 5 minutes  (300 seconds)
+	KO_SYSTEM_UNCONSCIOUS_KO_DURATION   = 10 * 10 * 6	// 10 minutes (600 seconds)
+	KO_SYSTEM_NORMAL_KO_DURATION		= 3  * 10 * 3	// 3 minutes  (180 seconds)
+	KO_SYSTEM_OUT_OF_COMBAT_TIMER		= 2  * 10 * 60	// 2 minutes  (120 seconds)
+	KO_SYSTEM_OUT_OF_COMBAT				= 5  * 10 * 60	// 5 minutes  (300 seconds)
+	KO_SYSTEM_HEAL_ANNOUNCE_TIMER		= 3  * 10 * 10	// 30 seconds 
 
 	KO_SYSTEM_STATS_AFFECT_HEAL_TIME	= TRUE			// If TRUE, the higher the regen stat, the faster the healing
 	KO_SYSTEM_DEATH_REGEN_HEALS_KO		= TRUE			// If TRUE, the death regen will heal the player back to the KO before KO_SYSTEM_UNCONSCIOUS_KO
