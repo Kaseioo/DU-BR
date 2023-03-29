@@ -717,6 +717,51 @@ mob/proc/Soul_Contract(obj/Demon_Contract/SC)
 		if(SC) SC.Offering=0
 		return
 
+
+obj/Soul_Weapon
+	name="Soul Weapon"
+	desc="Mold your Soul power into a weapon that affects the world in a variety of ways."
+	teachable=1
+	race_teach_only=1
+	Skill=1
+	Teach_Timer=24
+	student_point_cost = 1000
+	Cost_To_Learn=700
+	clonable=0
+	var/tmp/already_exists = FALSE
+
+	verb/Soul_Weapon()
+		set category="Skills"
+		usr.Soul_Weapon(src)
+
+mob/proc/Soul_Weapon(obj/Soul_Weapon/soul_weapon)
+	if(soul_weapon.already_exists)
+		var/choice = alert("Your soul is already formed into a Weapon. Do you want to destroy it?","Destroy Soul Weapon?","Yes","No")
+		if(choice == "Yes")
+			for(var/obj/items/Sword/S in src)
+				del(S)
+			soul_weapon.already_exists = FALSE
+		else
+			return
+
+	var/list/Swords = new
+
+	for(var/A in typesof(/obj/items/Sword)) 
+		Swords += new A
+
+	var/obj/items/Sword/A = input("How should your Soul Weapon look like?") in Swords
+	A.name = "Soul [A.name]"
+	A.desc = "A weapon made from the soul of [usr]."
+	A.icon = 'Sword 2.dmi' + rgb(200, 60, 60)
+
+	usr.contents += A
+
+	usr << "You have created a [A.name]!"
+
+	Swords = null	
+	soul_weapon.already_exists = TRUE
+	return
+
 obj/Meditate_Level_2
 	teachable=1
 	Skill=1
@@ -942,18 +987,18 @@ mob/proc/Give_Power(obj/Give_Power/G)
 		var/waiting_period = 0
 
 		if(M.KO && M.Health>=100) 
-			if(combat_ko_status >= KO_SYSTEM_UNCONSCIOUS_KO)
+			if(combat_ko_total >= KO_SYSTEM_UNCONSCIOUS_KO)
 				waiting_period = KO_SYSTEM_UNCONSCIOUS_KO_DURATION 	/ give_power_modifier
 			else 
-				waiting_period = KO_SYSTEM_NORMAL_KO 		/ give_power_modifier
+				waiting_period = KO_SYSTEM_NORMAL_KO_DURATION 		/ give_power_modifier
 
-			var/initial_healing_message = "[src] is being Given Power. This is kickstarting their Combat KO's healing proccess. They have [combat_ko_status] KO's , and will heal from one of their combat KO's in [round(waiting_period/10, 1)] seconds."
-			var/final_healing_message = "[src] has healed with help of Give Power, and is no longer affected by their last KO ([combat_ko_status] -> [combat_ko_status - 1])."
+			var/initial_healing_message = "[src] is being Given Power. This is kickstarting their Combat KO's healing proccess. They have [combat_ko_total] KO's , and will heal from one of their combat KO's in [round(waiting_period/10, 1)] seconds."
+			var/final_healing_message = "[src] has healed with help of Give Power, and is no longer affected by their last KO ([combat_ko_total] -> [combat_ko_total - 1])."
 
 			Countdown(waiting_period/10, initial_healing_message, final_healing_message)
-			for(var/ko in 1 to combat_ko_status)
+			for(var/ko in 1 to combat_ko_total)
 				spawn(waiting_period)
-					player_view(22, src) << "[src] has been healed from one of their combat defeats due to being given power. They now have [combat_ko_status] Combat KO's affecing them."
+					player_view(22, src) << "[src] has been healed from one of their combat defeats due to being given power. They now have [combat_ko_total] Combat KO's affecing them."
 					UnKO()
 
 		if(KO)
@@ -2868,8 +2913,8 @@ obj/FireFist
 		if(!usr.isFireFist)
 			Last_Use=Year
 			usr.isFireFist=1
-			usr.overlays+='Flaming_fists.dmi'
-			player_view(10,usr) << sound('FogoNaMao.mp3',volume=100)
+			// usr.overlays+='Flaming_fists.dmi'
+			// player_view(10,usr) << sound('FogoNaMao.mp3',volume=100)
 			usr << "You are now using the FireFist buff"
 			usr.FireFistLoop();
 		else usr.FireFist_Revert()
@@ -2877,7 +2922,7 @@ obj/FireFist
 mob/proc/FireFist_Revert() {
 	if(isFireFist){
 		isFireFist=0
-		usr.overlays-='Flaming_fists.dmi'
+		// usr.overlays-='Flaming_fists.dmi'
 		usr << "You have stopped using Fire Fist"
 	}
 }
