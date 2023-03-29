@@ -53,6 +53,7 @@ mob/proc/Go_to_spawn(First_time = 0, butNotInShipArea)
 	else spawn_name=pick(spawn_names)
 	var/obj/Spawn/s
 	for(var/obj/o in spawns) if(o.desc==spawn_name) s=o
+
 	SafeTeleport(s.loc)
 	if(!Spawn_Bind) Spawn_Bind=s.desc
 
@@ -103,7 +104,6 @@ mob/proc
 		//if(gender == "male") icon = pick('BaseHumanPale.dmi', 'BaseHumanTan.dmi', 'BaseHumanDark.dmi')
 		//if(gender == "female") icon = pick('New Pale Female.dmi', 'New Tan Female.dmi', 'New Black Female.dmi')
 		//return
-
 		if(gender=="male") switch(alert(src,"Choose your skin color","Options","Pale","Tan","Dark"))
 			if("Pale") icon='BaseHumanPale.dmi'
 			if("Tan") icon='BaseHumanTan.dmi'
@@ -114,6 +114,7 @@ mob/proc
 			if("Dark") icon='New Black Female.dmi'
 	Skin()
 		var/Colorable
+		Gender()
 		if(Race=="Alien") Grid(Alien_Icons)
 		else if(Race=="Frost Lord") icer_Icons()
 		else if(Race=="Bio-Android")
