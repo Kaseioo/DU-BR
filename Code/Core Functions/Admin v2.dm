@@ -630,6 +630,9 @@ upForm
 
 			initFormVar("admin", "KO_SYSTEM_OUT_OF_COMBAT_TIMER", 		KO_SYSTEM_OUT_OF_COMBAT_TIMER)
 			initFormVar("admin", "KO_SYSTEM_HEAL_ANNOUNCE_TIMER", 		KO_SYSTEM_HEAL_ANNOUNCE_TIMER)
+
+			initFormVar("admin", "CLONING_SYSTEM_LIFESPAN_LOSS", 		CLONING_SYSTEM_LIFESPAN_LOSS)
+			initFormVar("admin", "CLONING_SYSTEM_POTENTIAL_LOSS", 		CLONING_SYSTEM_POTENTIAL_LOSS)
 			M << "Variables loaded. [src.type]"
 
 		ProcessVariable(fname, name, value)
@@ -689,6 +692,9 @@ upForm
 					if("KO_SYSTEM_OUT_OF_COMBAT_TIMER") setFormVar(fname, name, text2num(value))
 					if("KO_SYSTEM_HEAL_ANNOUNCE_TIMER") setFormVar(fname, name, text2num(value))
 
+					if("CLONING_SYSTEM_LIFESPAN_LOSS") setFormVar(fname, name, text2num(value))
+					if("CLONING_SYSTEM_POTENTIAL_LOSS") setFormVar(fname, name, text2num(value))
+
 		FormSetTempVars(fname)
 			var/mob/M = src.getHost()
 			if(fname == "admin")
@@ -745,6 +751,9 @@ upForm
 					KO_SYSTEM_NORMAL_KO_DURATION	    = getFormVar("admin", "KO_SYSTEM_NORMAL_KO_DURATION")
 					KO_SYSTEM_OUT_OF_COMBAT_TIMER	    = getFormVar("admin", "KO_SYSTEM_OUT_OF_COMBAT_TIMER")
 					KO_SYSTEM_HEAL_ANNOUNCE_TIMER      = getFormVar("admin", "KO_SYSTEM_HEAL_ANNOUNCE_TIMER")
+
+					CLONING_SYSTEM_LIFESPAN_LOSS = getFormVar("admin", "CLONING_SYSTEM_LIFESPAN_LOSS")
+					CLONING_SYSTEM_POTENTIAL_LOSS = getFormVar("admin", "CLONING_SYSTEM_POTENTIAL_LOSS")
 
 
 
@@ -829,7 +838,10 @@ upForm
 				<tr height="1em" valign="top"><td width="30%"><b>How long should someone be out for after a normal KO? (10 = 1 second, 1800 = 180 seconds (3 minutes)): <td width="60%"><center></center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="KO_SYSTEM_NORMAL_KO_DURATION" value="[getFormVar("admin","KO_SYSTEM_NORMAL_KO_DURATION")]" size="3" maxlength="20"/><span class="error">[errors["KO_SYSTEM_NORMAL_KO_DURATION"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>After how long will someone be considered out of combat? (10 = 1 second, 6000 = 600 seconds (10 minutes)): <td width="60%"><center></center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="KO_SYSTEM_OUT_OF_COMBAT_TIMER" value="[getFormVar("admin","KO_SYSTEM_OUT_OF_COMBAT_TIMER")]" size="3" maxlength="20"/><span class="error">[errors["KO_SYSTEM_OUT_OF_COMBAT_TIMER"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>In which internal will the message that someone is healing be shown? (10 = 1 second, 300 = 30 seconds): <td width="60%"><center></center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="KO_SYSTEM_HEAL_ANNOUNCE_TIMER" value="[getFormVar("admin","KO_SYSTEM_HEAL_ANNOUNCE_TIMER")]" size="3" maxlength="20"/><span class="error">[errors["KO_SYSTEM_HEAL_ANNOUNCE_TIMER"]]</span></td></tr>
-			  <tr height="1em">
+			  
+				<tr height="1em" valign="top"><td width="30%"><b>How much lifespan should be lost when someone is cloned? (0.95 = 5%, 0.4 = 60% (100 - lifespan)%): <td width="60%"><center></center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="CLONING_SYSTEM_LIFESPAN_LOSS" value="[getFormVar("admin","CLONING_SYSTEM_LIFESPAN_LOSS")]" size="3" maxlength="20"/><span class="error">[errors["CLONING_SYSTEM_LIFESPAN_LOSS"]]</span></td></tr>  
+				<tr height="1em" valign="top"><td width="30%"><b>How much potential should be lost when someone is cloned? (0.72 = 28%, 0.4 = 60% (100 - potential)%): <td width="60%"><center></center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="CLONING_SYSTEM_POTENTIAL_LOSS" value="[getFormVar("admin","CLONING_SYSTEM_POTENTIAL_LOSS")]" size="3" maxlength="20"/><span class="error">[errors["CLONING_SYSTEM_POTENTIAL_LOSS"]]</span></td></tr>
+			<tr height="1em">
 			  	<td colspan="4" align="right"> <input type="submit" value="Submit" />
 			  	<input type="reset" value="Reset" /> </td>
 			  </tr>

@@ -1303,17 +1303,19 @@ obj/items/Door_Pass
 			usr<<"It has already been programmed and cannot be reprogrammed."
 			return
 		Password=input("Enter a password for the doors to check if it is correct") as text
+
 mob/proc/Clone_Tank() if(client) for(var/obj/items/Cloning_Tank/T in cloning_tanks) if(T.z&&T.Password==key&&Dead)
 	player_view(15,src)<<"[src] has been revived by their [T]"
 	FullHeal()
 	Revive()
 	for(var/obj/Injuries/I in injury_list) del(I)
 	SafeTeleport(T.loc)
-	Decline*=0.99
-	Original_Decline*=0.99
-	available_potential=0.72
+	Decline 				*= CLONING_SYSTEM_LIFESPAN_LOSS
+	Original_Decline 		*= CLONING_SYSTEM_LIFESPAN_LOSS
+	available_potential 	=  CLONING_SYSTEM_POTENTIAL_LOSS
 	return 1
 var/list/cloning_tanks=new
+
 obj/items/Cloning_Tank
 	Cost=2000000
 	density=1
@@ -1324,7 +1326,7 @@ obj/items/Cloning_Tank
 	pixel_y=-12
 	bound_width=64
 	desc="This will revive you each time you are killed. Each time you are cloned however, \
-	you lose 1% of your lifespan, and 28% of your power will become hidden potential."
+	you lose [100 - CLONING_SYSTEM_LIFESPAN_LOSS]% of your lifespan, and [100 - CLONING_SYSTEM_POTENTIAL_LOSS]% of your power will become hidden potential."
 	New()
 		var/image/A=image(icon='Lab.dmi',icon_state="Tube2",layer=layer-0.1,pixel_y=0,pixel_x=0)
 		var/image/B=image(icon='Lab.dmi',icon_state="Tube2Top",layer=layer+1,pixel_y=32,pixel_x=0)
