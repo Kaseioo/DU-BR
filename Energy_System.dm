@@ -59,6 +59,12 @@ Energy
             if(quantity < 0)
                 quantity = 0
 
+        cycle_energy()
+            if(seal.sealed) return
+
+            if(quantity < maximum)
+                increase()
+
 // ############################################################################################
 // Energy definitins
 

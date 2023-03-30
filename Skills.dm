@@ -751,9 +751,11 @@ mob/proc/Soul_Weapon(obj/Soul_Weapon/soul_weapon)
 	var/cost 	= soul_weapon.cost["Demonic Energy"]
 
 	if(energy >= cost)
+		player << "You have created a Soul Weapon! It cost you [cost] Demonic Energy. You had [energy] Demonic Energy before, and now you have [energy - cost] Demonic Energy."
 		energy -= cost
 	else
 		player << "You do not have enough Demonic Energy to do that."
+		player << "You need [cost] Demonic Energy, but you only have [energy] Demonic Energy."
 		return
 
 	var/list/Swords = new
