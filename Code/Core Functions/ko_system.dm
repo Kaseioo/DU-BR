@@ -68,12 +68,21 @@ mob
                 time_to_heal = KO_SYSTEM_NORMAL_KO_DURATION
 
             time_to_heal = time_to_heal * healing_modifier
+            
+            // Z level 10 is the HBTC (Hyperbolic Time Chamber),
+            // so we reduce heal to reflect that time passes faster there.
+            // TODO: this should be done as a healing modifier instead.
+            if(src.z == 10) 
+                time_to_heal /= 6
 
             return time_to_heal
         
-        set_healing_modifier(var/modifier, var/reason)
+        set_healing_modifier(var/modifier, var/reason, var/is_cummulative = FALSE)
             if(modifier == healing_modifier)
                 return
+
+            if(is_cummulative)
+                healing_modifier *= modifier
                 
             var/modifier_change_reason = "[src]'s total time to heal has been modified from [healing_modifier] to [modifier]x due to [reason]."
 
