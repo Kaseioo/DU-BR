@@ -168,7 +168,6 @@ mob/var
 	individual_science_items 			= list()		// Allowed science tab items
 	global_science_items 				= list()		// Needed as otherwise items from the allowed list and global list would be added together
 
-mob/var/Energy/Demonic_Energy = new("Demonic Energy")
 //#####################################################################################################################
 
 // Deadzone pressure settings
