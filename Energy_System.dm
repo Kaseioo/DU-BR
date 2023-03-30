@@ -29,37 +29,38 @@ Energy
     var
         name        = "Default Energy"
         description = "Default Energy Description"
-        current = 100
+        quantity = 100
         maximum = 100
 
         modifier = 1.0
         modifier_reasons = list()
 
-        Seal/energy_seal = new()
+        Seal/seal = new()
 
 
-    New(name, maximum, modifier = 1.0)
+    New(name, maximum = 100, modifier = 1.0)
         src.name        = name
-        src.current     = maximum
+        src.quantity     = maximum
         src.maximum     = maximum
         src.modifier    = modifier
     
     proc
         increase(amount = 1)
-            if(seal_status["sealed"]) return
+            if(seal.sealed) return
 
-            current += amount
+            quantity += amount
 
-            if(current > maximum)
-                current = maximum
+            if(quantity > maximum)
+                quantity = maximum
         
         decrease(amount = 1)
-            current -= amount
+            quantity -= amount
 
-            if(current < 0)
-                current = 0
+            if(quantity < 0)
+                quantity = 0
 
 // ############################################################################################
 // Energy definitins
+
     
     
