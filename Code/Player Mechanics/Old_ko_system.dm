@@ -1,4 +1,19 @@
 
+/*
+Greetings, One Who Will Suffer.
+
+I dedicate this file to me, myself, and I.
+
+Cordially,
+Kaseio.
+
+Last modified at 2023-03-29
+Description: 
+	Refactor everything to here from death.dm 
+	Split KO loop into several smaller logical pieces
+	Remove unnecessary code
+*/
+
 mob/proc/anger_chance(mod=1)
 	if(Race == "Android") return 0
 	else return 100
@@ -92,6 +107,8 @@ mob/proc/TryToRevertSSJ(mob/Victim)
 			Revert()
 
 mob/proc/TryToKoNPC(mob/Attacker, mob/Victim)
+	if(Victim.client) return
+
 	// Frozen is the NPC equivalent of being KO'd.
 	// It's a state where the NPC is unable to move or attack.
 	if(!Victim.Frozen)
@@ -141,7 +158,8 @@ mob/proc/TryToCauseAngerDueToKo(mob/Victim)
 	if(Victim.client) 
 		is_player = TRUE
 
-	if(is_player && ShouldAnger(Victim))
+	if(is_player && ShouldAnger(Victim) && prob(40))
+		Victim << "<font color=yellow>Being defeated so much angers you...</font>"
 		Victim.anger(reason = "being ko'd so much")
 		Victim.FullHeal()
 		
@@ -172,24 +190,19 @@ mob/proc/KO(mob/Attacker, allow_anger=1)
 	StopDoingActions(Victim)
 	TryToRevertSSJ(Victim)
 
-	// if(Attacker.sparring_mode != "Casual Spar")
-	// 		Zenkai()
-		
-
 	if(alignment_on&&!InTournament()) Drop_dragonballs()
 
 
 	ResetStatsToDefault(Victim)
+	world << "Causing combat KO [Victim] due to [Attacker]"
 	Cause_Combat_KO(Victim, Attacker)
-
-	try_healing_combat_ko()
-	
-	if(Poisoned && prob(50)) Death("???")
 
 mob/proc/UnKO() if(KO)
 	set waitfor=0
 	var/mob/Victim = src
 
 	TryToKillWithPoison(Victim)
-	MinimumHeal(Victim)
 	TryToCauseAngerDueToKo(Victim)
+	MinimumHeal(Victim)
+	Victim.KO = FALSE
+	Victim.icon_state = initial(icon_state)

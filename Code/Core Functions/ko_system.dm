@@ -7,21 +7,23 @@ mob
 
     proc
         Cause_Combat_KO(mob/victim, mob/attacker)
-            var/cause_of_ko = "[victim] was defeated by [attacker] during a [LETHAL_COMBAT]"
+            var/cause_of_ko_spar    = "[victim] was defeated by [attacker] during a [CASUAL_COMBAT]."
+            var/cause_of_ko_lethal  = "[victim] was defeated by [attacker] during a [LETHAL_COMBAT]."
 
             // Check for casual instead of lethal since other sources of KO's don't have a 
             // sparring mode, and they should always be lethal
             if(attacker.sparring_mode == CASUAL_COMBAT)
-                announce_combat_message(reason_of_increase = cause_of_ko, center = src)
+                announce_combat_message(cause_of_ko_spar, center = src)
                 return
            
-            victim.increase_combat_ko(reason_of_increase = cause_of_ko)
+            victim.increase_combat_ko(cause_of_ko_lethal, center = src)
 
         increase_combat_ko(var/reason_of_increase)
             src.combat_ko_total++
-            if(src.combat_ko_total >= KO_SYSTEM_UNCONSCIOUS_KO)
-                src.combat_ko_total = KO_SYSTEM_UNCONSCIOUS_KO
-                reason_of_increase = "[reason_of_increase]. [src] is now unconscious. "
+
+            if(src.combat_ko_total  >= KO_SYSTEM_UNCONSCIOUS_KO)
+                src.combat_ko_total  = KO_SYSTEM_UNCONSCIOUS_KO
+                reason_of_increase   = "[reason_of_increase]. [src] is now unconscious. "
 
             src.is_waiting_for_healing = FALSE
 
@@ -83,13 +85,24 @@ mob
 
             if(is_cummulative)
                 healing_modifier *= modifier
-                
+
             var/modifier_change_reason = "[src]'s total time to heal has been modified from [healing_modifier] to [modifier]x due to [reason]."
 
             healing_modifier                = modifier
             has_healing_modifier_changed    = TRUE
 
             announce_combat_message(modifier_change_reason, center = src)
+
+        heal_spar_ko(mob/victim, time_to_heal)
+            var/spar_ko_message = "[victim] will come up from their defeat in [round(time_to_heal/10, 1)] seconds."
+            var/healed_message  = "[victim] comes back up from their defeat in a [CASUAL_COMBAT]."
+            announce_combat_message(spar_ko_message, center = victim)
+
+            sleep(time_to_heal)
+
+            announce_combat_message(healed_message, center = victim)
+            victim.UnKO()
+            victim.FullHeal()
 
         initiate_healing(mob/victim, time_to_heal, healed_message)
             var/elapsed_time = 0
@@ -141,15 +154,17 @@ mob
 
                 sleep(1)
 
-
-            victim.decrease_combat_ko(healed_message)
-
             if(victim.combat_ko_total >= KO_SYSTEM_UNCONSCIOUS_KO)
                 // Don't heal the player since they are severely injured and the fight should already be over
                 // death regen does still heal the player though
                 victim.UnKO()
+
+                // Players only suffer Zenkai after near death
+                victim.Zenkai()
             else
                 victim.FullHeal()
+
+            victim.decrease_combat_ko(healed_message)
             victim.is_waiting_for_healing = FALSE
 
         try_healing_combat_ko()
@@ -160,10 +175,7 @@ mob
             var/healed_message          = "[victim] has healed from their last Combat KO, and is now affected by [victim.combat_ko_total - 1] Combat KO's."
 
             if(victim.combat_ko_total <= 0 && victim.KO)
-                var/no_combat_ko_message = "[victim] has no Combat KO's to heal from. They will come up from their defeat in [round(time_to_heal/10, 1)] seconds."
-                announce_combat_message(no_combat_ko_message, center = victim)
-
-                victim.FullHeal()
+                heal_spar_ko(victim, time_to_heal)
                 return
             if(victim.combat_ko_total <= 0) 
                 return

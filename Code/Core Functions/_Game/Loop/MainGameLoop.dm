@@ -13,7 +13,7 @@ proc/MainGameLoop(){
         
         mainPlayerLoop()
 
-        //sleep(world.tick_lag)
-        if(world.tick_usage > 80) sleep(world.tick_lag)
+        sleep(world.tick_lag)
+        //if(world.tick_usage > 80) sleep(world.tick_lag)
     }
 }
