@@ -2527,33 +2527,53 @@ obj/Heal
 			usr<<"Androids cannot use natural-only abilities"
 			return
 		if(usr.tournament_override(fighters_can=0)) return
+
 		var/Ki_Drain=usr.max_ki/usr.Eff
+
 		if(Ki_Drain>usr.max_ki) Ki_Drain=usr.max_ki
+
 		if(usr.KO||usr.Ki<Ki_Drain) return
+
 		for(var/mob/A in Get_step(usr,usr.dir))
 			if(!A.client || A == usr) continue
+
 			if(alignment_on && A.alignment=="Evil" && usr.alignment=="Good")
 				usr<<"Good can not heal evil"
 				return
+
 			var/Health_Drain=50
-			if(usr.Race=="Puranto") Ki_Drain/=2
-			usr.Health-=Health_Drain
-			usr.Ki-=usr.max_ki/usr.Eff
-			Skill_Increase(10,usr)
-			A.healgaintime=world.realtime+300
-			usr.healgaintime=world.realtime+300
+
+			if(usr.Race == "Puranto") Ki_Drain/=2
+
+			usr.Health	-= Health_Drain
+			usr.Ki		-= usr.max_ki/usr.Eff
+
+			Skill_Increase(10, usr)
+
+			A.healgaintime		= world.realtime + 300
+			usr.healgaintime	= world.realtime + 300
+
+			var/decrease_reason = "<font color=#FFFF00>[usr] heals [A]!"
+			var/increase_reason = "[usr]'s body gets weaker from healing [A] while they are in combat!"
+
+			A.decrease_combat_ko(decrease_reason)
+
+			if(!usr.is_out_of_combat() || !A.is_out_of_combat())
+				usr.increase_combat_ko(increase_reason)
+
 			A.FullHeal()
+
 			if(A.Diarea) A.Diarea-=30
 			//if(A.Zombie_Virus) A.Zombie_Virus-=10
-			player_view(15,usr)<<"<font color=#FFFF00>[usr] heals [A]"
-			if(Next_Injury_Heal<=Year) for(var/obj/Injuries/I in A.injury_list)
-				Next_Injury_Heal=Year+1
-				player_view(15,usr)<<"[A]'s [I] injury disappears"
+
+			if(Next_Injury_Heal <= Year) for(var/obj/Injuries/I in A.injury_list)
+				Next_Injury_Heal = Year+1
+				player_view(15,usr) << "[A]'s [I] injury disappears!"
 				del(I)
 				A.Add_Injury_Overlays()
 				break
 			return
-		alert("Use this to heal someone in front of you. Currently there is no one in front of you")
+		alert("Use this to heal someone in front of you. Currently there is no one in front of you.")
 
 mob/var/next_unlock=0
 mob/proc/potential_mod()

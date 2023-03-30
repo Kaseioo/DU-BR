@@ -179,6 +179,14 @@ var
 	KO_SYSTEM_GIVEPOWER_MODIFIER		= 0.75			// Using regenerate will make the Combat KO heal in 3/4 the time		   (100 -> 75)
 	KO_SYSTEM_REGENERATE_MODIFIER		= 0.8			// Using regenerate will make the Combat KO heal in 4/5 the time		   (100 -> 80)
 
+	KO_SYSTEM_T_HEAL_USAGE_LIMIT		= 2				// How many times t_heal can be used before causing a ko
+	KO_SYSTEM_T_HEAL_FAIL_COOLDOWN		= 10 * 10 * 6	// 10 minutes (600 seconds) - Cooldown for how many times t_heal can be used before causing a ko
+	KO_SYSTEM_SENSU_COOLDOWN			= 30 * 10 * 6	// 10 minutes (600 seconds) - Cooldown for how many times sensu can be used before causing a ko
+
+mob/var
+	times_used_t_heal 					= 0				// Used to handle repeated instances of t_heal
+	last_t_heal_use	 					= 0				// So we can reset the times_used_t_heal
+	last_sensu_use	 					= 0				
 // Vampire System
 var
 	DO_VAMPIRES_NEED_TO_FEED 			= TRUE
@@ -287,4 +295,4 @@ mob/var
 	is_alt_down 		= 0
 	is_shift_down 		= 0
 	last_music_stream_time
-	
+
