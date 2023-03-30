@@ -74,7 +74,7 @@ mob
             // Z level 10 is the HBTC (Hyperbolic Time Chamber),
             // so we reduce heal to reflect that time passes faster there.
             // TODO: this should be done as a healing modifier instead.
-            if(src.z == 10) 
+            if(src.z == Z_LEVEL_HBTC) 
                 time_to_heal /= 6
 
             return time_to_heal

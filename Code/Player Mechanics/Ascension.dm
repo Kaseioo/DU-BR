@@ -847,7 +847,7 @@ mob/proc/ssj_drain_loop()
 					ssjdrain += Mastery
 					var/should_get_mssj
 					if(world.realtime - last_ssj_revert_or_retrans > 15 * 600) should_get_mssj = 1
-					if(z == 10 && world.realtime - last_ssj_revert_or_retrans > 5 * 600) should_get_mssj = 1
+					if(z == Z_LEVEL_HBTC && world.realtime - last_ssj_revert_or_retrans > 5 * 600) should_get_mssj = 1
 					if(should_get_mssj && !has_ss_full_power)
 						has_ss_full_power = 1
 						ssjdrain = 300

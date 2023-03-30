@@ -23,7 +23,7 @@ mob/proc/Angry() if(anger>100) return 1
 mob/var/tmp/list/recent_ko_reasons=new
 
 mob/proc/InTournament()
-	if(!client || !Tournament || z != 7 || !(src in All_Entrants)) return
+	if(!client || !Tournament || z != Z_LEVEL_HEAVEN || !(src in All_Entrants)) return
 	return 1
 
 mob/var/tmp

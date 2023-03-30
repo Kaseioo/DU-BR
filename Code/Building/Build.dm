@@ -425,7 +425,7 @@ proc/Build_Lay(obj/Build/O,mob/P) if(!P.KO) //Type to build, player who is build
 		return
 
 	var/Res_Cost = P.turf_lay_cost
-	if(P.z == 16 && Res_Cost != 0) Res_Cost += 10000 * building_price_mult
+	if(P.z == Z_LEVEL_SPACE && Res_Cost != 0) Res_Cost += 10000 * building_price_mult
 
 	if(Res_Cost != 0)
 		var/obj/Spawn/s

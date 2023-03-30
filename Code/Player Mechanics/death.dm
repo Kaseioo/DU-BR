@@ -327,7 +327,7 @@ mob/proc/anger(anger_mult=1,ssj_possible=1,reason) if(can_anger())
 	if(ssj_possible) if(Race in list("Yasai","Half Yasai"))
 		//no more randomness you either can get it or you cant
 		var/ssj_chance = 10000 * anger_mult**0.5 * (max_anger/100)**0.5
-		if(z == 18) ssj_chance *= 2
+		if(z == Z_LEVEL_PRISON) ssj_chance *= 2
 
 		//just dont worry about if they are spamming the same anger reason over and over, this is pvp now
 		//if(reason in recent_ko_reasons) ssj_chance=0

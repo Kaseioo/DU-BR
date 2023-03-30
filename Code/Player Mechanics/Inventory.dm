@@ -1737,7 +1737,7 @@ obj/items/Transporter_Watch
 			if(t.Password==Password) l+=m
 		for(var/obj/items/Transporter_Pad/t in telepads) if(!t.is_on_destroyed_planet())
 			if(t.Password==Password&&t.z&&!t.Final_Realm()) l+=t
-			if(t.z == 10 && usr.z!=10) l-=t //hbtc
+			if(t.z == Z_LEVEL_HBTC && usr.z != Z_LEVEL_HBTC) l-=t //hbtc
 		var/mob/m
 		if(l.len==2) m=l[2]
 		else m=input("Select a teleport location. You can teleport to telepads or teleport to someone who \

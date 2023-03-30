@@ -21,7 +21,7 @@ mob/proc/Zenkai(n=1)
 		zenkai_reset=world.realtime+(30*60*10) //Cant zenkai the first 30 minutes of creation
 		zenkai_divider=10 //except in small amounts
 	var/zenkai=1
-	if(z == 7 && Tournament && (src in All_Entrants)) zenkai/=5
+	if(z == Z_LEVEL_HEAVEN && Tournament && (src in All_Entrants)) zenkai/=5
 	//if(cyber_bp||has_modules()) zenkai/=4
 
 	var/difficulty_mod=Clamp((1.6*BP/Opponent.BP)**1.5,0.1,1)

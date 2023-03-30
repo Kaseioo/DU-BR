@@ -83,7 +83,7 @@ obj/King_of_Braal_Throne
 		KOV_ThroneOffPlanetCheck()
 			set waitfor=0
 			while(src)
-				if(z != 4) SafeTeleport(kov_throne_spawn)
+				if(z != Z_LEVEL_BRAAL) SafeTeleport(kov_throne_spawn)
 				sleep(300)
 
 		KOV_ThroneTellPeopleWhoKingLoop()

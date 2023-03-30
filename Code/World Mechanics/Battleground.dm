@@ -34,7 +34,7 @@ mob
 
 		AtBattlegrounds()
 			if(!battlegroundSystem) return
-			if(z == 19 && current_area && current_area.type == /area/Battlegrounds) return 1
+			if(z == Z_LEVEL_BATTLEGROUNDS && current_area && current_area.type == /area/Battlegrounds) return 1
 
 		BattlegroundDefeat(mob/defeater)
 			SafeTeleport(battleground_spawn)
