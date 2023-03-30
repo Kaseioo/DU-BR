@@ -336,6 +336,10 @@ obj/Build
 		Creates
 
 	Click()
+		if(!usr.is_out_of_combat())
+			var/combat_timer = round((KO_SYSTEM_OUT_OF_COMBAT_TIMER - usr.get_time_out_of_combat()) / 10, 1)
+			usr << "You can not build while in combat. You will be able to build again in [combat_timer] seconds."
+			return
 		if(usr.Target==src)
 			usr<<"You have deselected [src]"
 			usr.Target=null
