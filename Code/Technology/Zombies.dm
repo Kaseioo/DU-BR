@@ -529,7 +529,7 @@ obj/items/T_Heal
 			var/turf/t = A.loc
 			var/elapsed_time = 0
 			var/required_time = 3.2
-			usr << "<font color=cyan>Do not move for [required_time] seconds to complete the injection"
+			usr << "<font color=cyan>Do not move for [required_time] seconds to complete the injection."
 			while(A && t == A.loc)
 				elapsed_time += 0.2
 				sleep(2)
@@ -546,9 +546,24 @@ obj/items/T_Heal
 		if(A.tournament_override(fighters_can=0))
 			usr<<"These are illegal in the tournament"
 			return
+
 		A.Alter_regen_mult(5)
 		A.UnKO()
-		player_view(15,usr)<<"[usr] injects [A] with a mysterious needle!"
+
+		A.last_t_heal_use = world.time
+		A.times_used_t_heal++
+
+		player_view(15,usr) << "[usr] injects [A] with a mysterious needle!"
+		
+		if(A.times_used_t_heal > KO_SYSTEM_T_HEAL_USAGE_LIMIT && A.last_t_heal_use < world.time - KO_SYSTEM_T_HEAL_FAIL_COOLDOWN)
+			var/increase_reason = "[A]'s body starts failing due to repeated injections of a mysterious needle!"
+			A.increase_combat_ko(increase_reason, KO_SYSTEM_T_HEAL_USAGE_LIMIT)
+		else
+			var/decrease_reason = "A mysterious needle heals [A]'s body!"
+			A.decrease_combat_ko(decrease_reason)
+
+			A.FullHeal()
+
 		del(src)
 
 obj/items/T_Fusion

@@ -18,12 +18,14 @@ mob
            
             victim.increase_combat_ko(cause_of_ko_lethal, center = src)
 
-        increase_combat_ko(var/reason_of_increase)
-            src.combat_ko_total++
+        increase_combat_ko(var/reason_of_increase, quantity = 1)
+            src.combat_ko_total += quantity
 
             if(src.combat_ko_total  >= KO_SYSTEM_UNCONSCIOUS_KO)
                 src.combat_ko_total  = KO_SYSTEM_UNCONSCIOUS_KO
                 reason_of_increase   = "[reason_of_increase]. [src] is now unconscious. "
+                
+                src.KO(src, allow_anger = FALSE, combat_ko_handled = TRUE)
 
             src.is_waiting_for_healing = FALSE
 
@@ -31,9 +33,9 @@ mob
 
             announce_combat_message(ko_message, center = src)
 
-        decrease_combat_ko(var/reason_of_decrease)
+        decrease_combat_ko(var/reason_of_decrease, quantity = 1)
             announce_combat_message(reason_of_decrease, center = src)
-            src.combat_ko_total--
+            src.combat_ko_total -= quantity
 
             if(src.combat_ko_total < 0)
                 src.combat_ko_total = 0

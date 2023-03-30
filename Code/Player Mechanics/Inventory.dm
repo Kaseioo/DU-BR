@@ -2824,21 +2824,28 @@ mob/proc/EatSensu(mob/user, obj/o)
 		return
 
 	var/sec = 10
-	user << "Stand still and do nothing for [sec] seconds to eat the sensu bean"
-	var/old_loc = loc
-	var/user_old_loc = user.loc
+	user << "Stand still and do nothing for [sec] seconds to eat the sensu bean,"
+
+	var/old_loc 		= loc
+	var/user_old_loc 	= user.loc
+
 	for(var/v in 1 to sec * 2)
 		if(loc != old_loc) return
 		if(user.loc != user_old_loc) return
 		if(attacking) return
 		sleep(5)
-	if(src == user) player_view(15,src) << "[src] eats a sensu bean"
-	else player_view(15,src) << "[user] uses a sensu bean on [src]"
+	if(src == user) 
+		player_view(15,src) << "[src] eats a sensu bean."
+	else 
+		player_view(15,src) << "[user] uses a sensu bean on [src]."
+
 	Diarea = 0
 	for(var/obj/Injuries/i in injury_list) del(i)
-	UnKO()
-	Health = 100
-	Ki = max_ki
+
+	var/decrease_reason = "A Sensu Bean heals [user] completely!"
+	user.decrease_combat_ko(decrease_reason, KO_SYSTEM_UNCONSCIOUS_KO)
+	
+	user.FullHeal()
 	Stop_Powering_Up()
 	if(o) del(o)
 	return 1

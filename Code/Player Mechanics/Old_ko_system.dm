@@ -163,7 +163,7 @@ mob/proc/TryToCauseAngerDueToKo(mob/Victim)
 		Victim.anger(reason = "being ko'd so much")
 		Victim.FullHeal()
 		
-mob/proc/KO(mob/Attacker, allow_anger=1)
+mob/proc/KO(mob/Attacker, allow_anger=1, combat_ko_handled = FALSE)
 	set waitfor=0
 	var/mob/Victim = src
 	
@@ -194,8 +194,8 @@ mob/proc/KO(mob/Attacker, allow_anger=1)
 
 
 	ResetStatsToDefault(Victim)
-	world << "Causing combat KO [Victim] due to [Attacker]"
-	Cause_Combat_KO(Victim, Attacker)
+	if(!combat_ko_handled)
+		Cause_Combat_KO(Victim, Attacker)
 
 mob/proc/UnKO() if(KO)
 	set waitfor=0
