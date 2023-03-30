@@ -323,6 +323,10 @@ obj/Telepathy
 			usr.can_telepathy=0
 			spawn(1) if(usr) usr.can_telepathy=1
 			if(M)
+				if(!(M.Mob_ID in usr.SI_List))
+					src << "You do not know their energy. To know someone's energy you must have been near them a certain \
+					amount of time."
+					return
 				var/msg="(Telepathy)<font color=[usr.TextColor]>[usr]: [html_encode(message)]"
 				msg=copytext(msg,1,1000)
 				M<<"<font size=[M.TextSize]>[msg]"

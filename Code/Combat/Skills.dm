@@ -762,6 +762,112 @@ mob/proc/Soul_Weapon(obj/Soul_Weapon/soul_weapon)
 	soul_weapon.already_exists = TRUE
 	return
 
+obj/Soul_Attack
+	name="Soul Attack"
+	desc="Encase your soul into an attack"
+	teachable=1
+	race_teach_only=1
+	Skill=1
+	Teach_Timer=24
+	student_point_cost = 1000
+	Cost_To_Learn=700
+	clonable=0
+	var/tmp/is_active = FALSE
+
+	verb/Soul_Attack()
+		set category="Skills"
+		var/range_y = input("How many tiles in front of you?") as num
+		var/range_x = input("How many tiles to the sides?") as num
+		var/effect_duration = input("How long should the effect last?") as num
+		usr.Soul_Attack(src, range_y, range_x, effect_duration)
+
+mob/proc/Soul_Attack(obj/Soul_Attack/Soul_Attack, range_y, range_x, duration)
+	if(Soul_Attack.is_active)
+		src << "You are already using Soul Attack!"
+		return
+	Soul_Attack.is_active = TRUE
+	
+	var/mob/player = usr
+	var/x = player.x
+	var/y = player.y
+	var/z = player.z
+
+	// get direction player is facing
+	var/direction = player.dir
+
+	var/list/adjascent_tiles = list()
+	// get adjascent tiles while considering direction
+	switch(player.dir)
+		if(NORTH)
+			for(var/y_offset = 1 to range_y)
+				for(var/x_offset = 1 to range_x)
+					var/central_tile 	= locate(x, y + y_offset, z)
+					var/left_tile 		= locate(x - x_offset, y + y_offset, z)
+					var/right_tile 		= locate(x + x_offset, y + y_offset, z)
+					adjascent_tiles += central_tile
+					adjascent_tiles += left_tile
+					adjascent_tiles += right_tile
+
+			for(var/tile in adjascent_tiles)
+				var/distance = get_dist(tile, player)
+				if(distance > range_y)
+					adjascent_tiles -= tile
+		if(SOUTH)
+			for(var/y_offset = 1 to range_y)
+				for(var/x_offset = 1 to range_x)
+					var/central_tile 	= locate(x, y - y_offset, z)
+					var/left_tile 		= locate(x - x_offset, y - y_offset, z)
+					var/right_tile 		= locate(x + x_offset, y - y_offset, z)
+					adjascent_tiles += central_tile
+					adjascent_tiles += left_tile
+					adjascent_tiles += right_tile
+			for(var/tile in adjascent_tiles)
+				var/distance = get_dist(tile, player)
+				if(distance > range_y)
+					adjascent_tiles -= tile
+		if(EAST)
+			var/temp_range = range_x
+			range_x = range_y
+			range_y = temp_range
+			for(var/y_offset = 1 to range_y)
+				for(var/x_offset = 1 to range_x)
+					var/central_tile 	= locate(x + x_offset, y, z)
+					var/left_tile 		= locate(x + x_offset, y - y_offset, z)
+					var/right_tile 		= locate(x + x_offset, y + y_offset, z)
+					adjascent_tiles += central_tile
+					adjascent_tiles += left_tile
+					adjascent_tiles += right_tile
+			for(var/turf/T in adjascent_tiles)
+				var/distance = get_dist(T, player)
+				if(distance > range_x)
+					adjascent_tiles -= T
+		if(WEST)
+			var/temp_range = range_x
+			range_x = range_y
+			range_y = temp_range
+			for(var/y_offset = 1 to range_y)
+				for(var/x_offset = 1 to range_x)
+					var/central_tile 	= locate(x - x_offset, y, z)
+					var/left_tile 		= locate(x - x_offset, y - y_offset, z)
+					var/right_tile 		= locate(x - x_offset, y + y_offset, z)
+					adjascent_tiles += central_tile
+					adjascent_tiles += left_tile
+					adjascent_tiles += right_tile
+			for(var/turf/T in adjascent_tiles)
+				var/distance = get_dist(T, player)
+				if(distance > range_x)
+					adjascent_tiles -= T
+
+
+	for(var/turf/T in adjascent_tiles)
+		T.overlays += 'Lightning flash.dmi' + rgb(91, 102, 226, 255)
+
+	spawn(duration * 10)
+		for(var/turf/T in adjascent_tiles)
+			T.overlays -= 'Lightning flash.dmi' + rgb(91, 102, 226, 255)
+		Soul_Attack.is_active = FALSE
+	return
+
 obj/Meditate_Level_2
 	teachable=1
 	Skill=1
@@ -1578,7 +1684,7 @@ mob/proc/Cant_SI(mob/A,show_message=1)
 
 	if(A&&!(A.Mob_ID in SI_List))
 		if(show_message) src<<"You do not know their energy. To know someone's energy you must have been near them a certain \
-		amount of time"
+		amount of time."
 		return 1
 
 	if(A&&A.Ship) A=A.Ship
@@ -2741,10 +2847,14 @@ obj/Observe
 			if(ismob(A))
 				var/mob/m=A
 				if(m.hiding_energy && m != usr)
-					usr<<"You can not observe them because they are hiding their energy"
+					usr <<"You can not observe them because they are hiding their energy."
 					return
 				if(m.Is_Cybernetic()&&m!=usr)
-					usr<<"You can not observe cyborgs/androids because their energy is unsenseable"
+					usr<<"You can not observe cyborgs/androids because their energy is unsenseable."
+					return
+				if(!(m.Mob_ID in usr.SI_List))
+					src << "You do not know their energy. To know someone's energy you must have been near them a certain \
+					amount of time."
 					return
 		usr.Get_Observe(A)
 
