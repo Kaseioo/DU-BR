@@ -316,6 +316,10 @@ obj/Contract_Soul //Appears in the Souls tab
 			usr<<"Contract deleted. You can not use your own soul contract"
 			del(src)
 			return
+		if(!observed_mob.is_out_of_combat() && usr.BP < observed_mob.BP * 10)
+			var/combat_timer = round((KO_SYSTEM_OUT_OF_COMBAT_TIMER - observed_mob.get_time_out_of_combat()) / 10, 1)
+			usr << "You can not affect [observed_mob] while they are in combat. You will be able to affect them in [combat_timer] seconds."
+			return
 		if(usr.KO || usr.BodySwapVictim())
 			usr<<"You are powerless to do this right now!"
 			return
