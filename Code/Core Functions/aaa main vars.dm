@@ -149,6 +149,14 @@ var/const
 
 // Global settings that affect RP ##############################################################################
 
+mob
+	var
+		energies = list(
+			Demonic_Energy 	= new/Energy("Demonic Energy"),
+			Heavenly_Energy = new/Energy("Heavenly Energy"),
+			Soul_Energy 	= new/Energy("Soul Energy")
+		)
+
 var
 	ANGER_SYSTEM_TIME_BETWEEN_ANGERS	= 5 * 10 * 6	// 5 minutes (300 seconds)
 
