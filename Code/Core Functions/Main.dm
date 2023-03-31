@@ -661,7 +661,7 @@ mob/proc/Human()
 	bp_mod=Get_race_starting_bp_mod()
 	Decline=20
 	Decline_Rate=1
-	Intelligence=1
+	Intelligence=0.8
 	knowledge_cap_rate=1
 	Regenerate=0
 	Lungs=0
@@ -678,7 +678,7 @@ mob/proc/Doll()
 	Human()
 	incline_age=10
 	incline_mod=0.3
-	Intelligence*=1
+	Intelligence*=0.8
 	med_mod*=2
 	mastery_mod*=thirdEyeMasteryMult //same as third eye human since they dont get third eye
 	Decline=35
@@ -721,7 +721,7 @@ mob/proc/Majin()
 	bp_mod=Get_race_starting_bp_mod()
 	Decline=20
 	Decline_Rate=5
-	Intelligence=0.1
+	Intelligence=0.3
 	knowledge_cap_rate=1
 	Regenerate=1.5
 	Lungs=1
@@ -747,7 +747,7 @@ mob/proc/Bio()
 	bp_mod=Get_race_starting_bp_mod()
 	Decline=20
 	Decline_Rate=2
-	Intelligence=0.9
+	Intelligence=0.8
 	knowledge_cap_rate=1.3
 	Regenerate=1.5
 	Lungs=1
@@ -775,7 +775,7 @@ mob/proc/Onion_Lad()
 	bp_mod=Get_race_starting_bp_mod()
 	Decline=30
 	Decline_Rate=1
-	Intelligence=0.85
+	Intelligence=0.5
 	knowledge_cap_rate=1
 	Regenerate=0
 	Lungs=0
@@ -804,7 +804,7 @@ mob/proc/Puranto()
 	bp_mod=Get_race_starting_bp_mod()
 	Decline=80
 	Decline_Rate=0.65
-	Intelligence=0.85
+	Intelligence=0.6
 	knowledge_cap_rate=1
 	Lungs=0
 	gravity_mastered=4
@@ -869,7 +869,7 @@ mob/proc/Yasai(Can_Elite=1,force_elite,force_low_class)
 	bp_mod=Get_race_starting_bp_mod()
 	Decline=30
 	Decline_Rate=1
-	Intelligence=0.3
+	Intelligence=0.6
 	knowledge_cap_rate=1
 	Regenerate=0
 	Lungs=0
@@ -927,7 +927,7 @@ mob/proc/Elite_Yasai() if(Class!="Elite")
 
 mob/proc/Legendary_Yasai()
 	Yasai(Can_Elite=0)
-	Intelligence=0.1
+	Intelligence=0.6
 	Gravity_Mod*=3
 	Class="Legendary Yasai"
 
@@ -984,7 +984,7 @@ mob/proc/Kai()
 	bp_mod=Get_race_starting_bp_mod()
 	Decline=100
 	Decline_Rate=0.5
-	Intelligence=0.55
+	Intelligence=0.3
 	Regenerate=0
 	Lungs=0
 	leech_rate=2
@@ -1007,7 +1007,7 @@ mob/proc/Demigod()
 	bp_mod=Get_race_starting_bp_mod()
 	Decline=30
 	Decline_Rate=2
-	Intelligence=0.8
+	Intelligence=0.6
 	Regenerate=0
 	Lungs=0
 	leech_rate=1
@@ -1032,7 +1032,7 @@ mob/proc/Demon()
 	bp_mod=Get_race_starting_bp_mod()
 	Decline=30
 	Decline_Rate=10 //It's 10 because they decline fast if they leave hell, hell keeps them young
-	Intelligence=0.4
+	Intelligence=0.3
 	Regenerate=0
 	Lungs=0
 	leech_rate=1
@@ -1086,7 +1086,7 @@ mob/proc/Alien()
 	bp_mod=Get_race_starting_bp_mod()
 	Decline=60
 	Decline_Rate=0.5
-	Intelligence=0.5
+	Intelligence=0.6
 	Regenerate=0
 	Lungs=0
 	leech_rate=1.2
