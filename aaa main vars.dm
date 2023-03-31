@@ -123,22 +123,50 @@ var
 	death_y=200
 	death_z=5
 
+
+// Z-Level Settings -----------------------------------
+
+var/const
+	Z_LEVEL_EARTH = 1
+	Z_LEVEL_KAMI_OUTPOST_AND_CAVES = 2
+	Z_LEVEL_PURANTO = 3
+	Z_LEVEL_BRAAL = 4
+	Z_LEVEL_CHECKPOINT = 5
+	Z_LEVEL_HELL = 6
+	Z_LEVEL_HEAVEN = 7
+	Z_LEVEL_ARCONIA = 8
+	Z_LEVEL_SSX = 9
+	Z_LEVEL_HBTC = 10
+	Z_LEVEL_ATLANTIS_SHIP_GOD_AREA = 11
+	Z_LEVEL_ICE = 12
+	Z_LEVEL_KAIOSHIN = 13
+	Z_LEVEL_DESERT_JUNGLE_ANDROID = 14
+	Z_LEVEL_SONKU = 15
+	Z_LEVEL_SPACE = 16
+	Z_LEVEL_PRISON = 17
+	Z_LEVEL_CORE = 18
+	Z_LEVEL_BATTLEGROUNDS = 19
+
 // Global settings that affect RP ##############################################################################
+
+var
+	player_energies = list()
+
+var
+	ANGER_SYSTEM_TIME_BETWEEN_ANGERS	= 5 * 10 * 6	// 5 minutes (300 seconds)
+
+var
+	SHOW_CHAR_NAME_ON_WHO 				= FALSE	
+	CAN_BREAK_TURFS 					= TRUE
+	SENSE_SYSTEM_SHOW_STAT_BUILD 		= FALSE
+	SENSE_SYSTEM_SHOW_VAGUE_INFO		= TRUE			// Remove precision from Sense and show vague terms instead
+	
+// KO System
 var/const
 	LETHAL_COMBAT 						= "Fight to Death"
 	CASUAL_COMBAT 						= "Casual Spar" 
 
-
 var
-	CLONING_SYSTEM_LIFESPAN_LOSS = 2
-	CLONING_SYSTEM_POTENTIAL_LOSS = 3
-	ANGER_SYSTEM_TIME_BETWEEN_ANGERS = 3
-var
-	SHOW_CHAR_NAME_ON_WHO 				= FALSE	
-	CAN_BREAK_TURFS 					= TRUE
-	SENSE_SYSTEM_SHOW_STAT_BUILD 		= FALSE			// Show stat build
-	SENSE_SYSTEM_SHOW_VAGUE_INFO		= TRUE			// Remove precision from Sense and show vague terms instead
-
 	KO_SYSTEM_UNCONSCIOUS_KO			= 3				// Which KO will mark Unconsciousness
 	KO_SYSTEM_UNCONSCIOUS_KO_DURATION   = 10 * 10 * 6	// 10 minutes (600 seconds)
 	KO_SYSTEM_NORMAL_KO_DURATION		= 3  * 10 * 3	// 3 minutes  (180 seconds)
@@ -154,12 +182,28 @@ var
 	KO_SYSTEM_GIVEPOWER_MODIFIER		= 0.75			// Using regenerate will make the Combat KO heal in 3/4 the time		   (100 -> 75)
 	KO_SYSTEM_REGENERATE_MODIFIER		= 0.8			// Using regenerate will make the Combat KO heal in 4/5 the time		   (100 -> 80)
 
+	KO_SYSTEM_T_HEAL_USAGE_LIMIT		= 2				// How many times t_heal can be used before causing a ko
+	KO_SYSTEM_T_HEAL_FAIL_COOLDOWN		= 10 * 10 * 6	// 10 minutes (600 seconds) - Cooldown for how many times t_heal can be used before causing a ko
+	KO_SYSTEM_SENSU_COOLDOWN			= 30 * 10 * 6	// 10 minutes (600 seconds) - Cooldown for how many times sensu can be used before causing a ko
 
+mob/var
+	times_used_t_heal 					= 0				// Used to handle repeated instances of t_heal
+	last_t_heal_use	 					= 0				// So we can reset the times_used_t_heal
+	last_sensu_use	 					= 0				
+// Vampire System
+var
 	DO_VAMPIRES_NEED_TO_FEED 			= TRUE
 	DO_VAMPIRES_INFECT_ON_BITE 			= FALSE	
 	VAMPIRE_POWER_FALL_INTERVAL 		= 10 * 60		// 60 seconds
 
+// Science System
+var
 	GLOBAL_SCIENCE_TAB_ITEMS			= null		    // null so it is set to tech_list when the game starts
+
+// Cloning System
+var
+	CLONING_SYSTEM_LIFESPAN_LOSS		= 0.95			// 95% of original lifespan. This DOES multiply the original lifespan, so its exponential
+	CLONING_SYSTEM_POTENTIAL_LOSS		= 0.72			// 72% of original. This does NOT multiply the original potential, it is a flat loss
 
 mob/var
 	sparring_mode						= CASUAL_COMBAT
@@ -167,6 +211,7 @@ mob/var
 	combat_ko_total 					= 0				// used to track when KO_SYSTEM_UNCONSCIOUS_KO should enter in effect
 	individual_science_items 			= list()		// Allowed science tab items
 	global_science_items 				= list()		// Needed as otherwise items from the allowed list and global list would be added together
+	time_of_press = 0
 
 //#####################################################################################################################
 
@@ -253,4 +298,4 @@ mob/var
 	is_alt_down 		= 0
 	is_shift_down 		= 0
 	last_music_stream_time
-	
+
