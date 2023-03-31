@@ -633,6 +633,10 @@ upForm
 
 			initFormVar("admin", "CLONING_SYSTEM_LIFESPAN_LOSS", 		CLONING_SYSTEM_LIFESPAN_LOSS)
 			initFormVar("admin", "CLONING_SYSTEM_POTENTIAL_LOSS", 		CLONING_SYSTEM_POTENTIAL_LOSS)
+
+			initFormVar("admin", "KO_SYSTEM_T_HEAL_USAGE_LIMIT", 		KO_SYSTEM_T_HEAL_USAGE_LIMIT)
+			initFormVar("admin", "KO_SYSTEM_T_HEAL_FAIL_COOLDOWN", 		KO_SYSTEM_T_HEAL_FAIL_COOLDOWN)
+			initFormVar("admin", "KO_SYSTEM_SENSU_COOLDOWN", 			KO_SYSTEM_SENSU_COOLDOWN)
 			M << "Variables loaded. [src.type]"
 
 		ProcessVariable(fname, name, value)
@@ -695,6 +699,10 @@ upForm
 					if("CLONING_SYSTEM_LIFESPAN_LOSS") setFormVar(fname, name, text2num(value))
 					if("CLONING_SYSTEM_POTENTIAL_LOSS") setFormVar(fname, name, text2num(value))
 
+					if("KO_SYSTEM_T_HEAL_USAGE_LIMIT") setFormVar(fname, name, text2num(value))
+					if("KO_SYSTEM_T_HEAL_FAIL_COOLDOWN") setFormVar(fname, name, text2num(value))
+					if("KO_SYSTEM_SENSU_COOLDOWN") setFormVar(fname, name, text2num(value))
+
 		FormSetTempVars(fname)
 			var/mob/M = src.getHost()
 			if(fname == "admin")
@@ -754,6 +762,10 @@ upForm
 
 					CLONING_SYSTEM_LIFESPAN_LOSS = getFormVar("admin", "CLONING_SYSTEM_LIFESPAN_LOSS")
 					CLONING_SYSTEM_POTENTIAL_LOSS = getFormVar("admin", "CLONING_SYSTEM_POTENTIAL_LOSS")
+
+					KO_SYSTEM_T_HEAL_USAGE_LIMIT = getFormVar("admin", "KO_SYSTEM_T_HEAL_USAGE_LIMIT")
+					KO_SYSTEM_T_HEAL_FAIL_COOLDOWN = getFormVar("admin", "KO_SYSTEM_T_HEAL_FAIL_COOLDOWN")
+					KO_SYSTEM_SENSU_COOLDOWN = getFormVar("admin", "KO_SYSTEM_SENSU_COOLDOWN")
 
 
 
@@ -841,6 +853,10 @@ upForm
 			  
 				<tr height="1em" valign="top"><td width="30%"><b>How much lifespan should be lost when someone is cloned? (0.95 = 5%, 0.4 = 60% (100 - lifespan)%): <td width="60%"><center></center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="CLONING_SYSTEM_LIFESPAN_LOSS" value="[getFormVar("admin","CLONING_SYSTEM_LIFESPAN_LOSS")]" size="3" maxlength="20"/><span class="error">[errors["CLONING_SYSTEM_LIFESPAN_LOSS"]]</span></td></tr>  
 				<tr height="1em" valign="top"><td width="30%"><b>How much potential should be lost when someone is cloned? (0.72 = 28%, 0.4 = 60% (100 - potential)%): <td width="60%"><center></center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="CLONING_SYSTEM_POTENTIAL_LOSS" value="[getFormVar("admin","CLONING_SYSTEM_POTENTIAL_LOSS")]" size="3" maxlength="20"/><span class="error">[errors["CLONING_SYSTEM_POTENTIAL_LOSS"]]</span></td></tr>
+
+				<tr height="1em" valign="top"><td width="30%"><b>How long should the window of repeated usage for T-Heal be? (10 = 1 second, 6000 = 600 seconds (10 minutes)): <td width="60%"><center></center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="KO_SYSTEM_T_HEAL_FAIL_COOLDOWN" value="[getFormVar("admin","KO_SYSTEM_T_HEAL_FAIL_COOLDOWN")]" size="3" maxlength="20"/><span class="error">[errors["KO_SYSTEM_T_HEAL_FAIL_COOLDOWN"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>How many times can someone use the T-Heal inside the repeated usage period before having side effects? (0 = never, 2 = 2 times): <td width="60%"><center></center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="KO_SYSTEM_T_HEAL_USAGE_LIMIT" value="[getFormVar("admin","KO_SYSTEM_T_HEAL_USAGE_LIMIT")]" size="3" maxlength="20"/><span class="error">[errors["KO_SYSTEM_T_HEAL_USAGE_LIMIT"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>How long should the cooldown be between Sensu Bean usages? (10 = 1 second, 6000 = 600 seconds (10 minutes)): <td width="60%"><center></center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="KO_SYSTEM_SENSU_COOLDOWN" value="[getFormVar("admin","KO_SYSTEM_SENSU_COOLDOWN")]" size="3" maxlength="20"/><span class="error">[errors["KO_SYSTEM_SENSU_COOLDOWN"]]</span></td></tr>
 			<tr height="1em">
 			  	<td colspan="4" align="right"> <input type="submit" value="Submit" />
 			  	<input type="reset" value="Reset" /> </td>
