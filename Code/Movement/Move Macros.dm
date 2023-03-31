@@ -87,11 +87,16 @@ mob/verb/KeyDown(d as text)
 			Regeneration_Skill = 0
 			src << "You stop regenerating"
 
+		//if its the classic ui then the only way to do a double tap dash is to double tap, instead of ctrl + direction like the new way
+		//var/double_tapped
+		//if(classic_ui)
+		//	if(d == last_directional_key_down && world.time - last_directional_keydown_time <= 1.2) double_tapped=1 //1.875 is exactly 3 ticks at 16 fps
 		last_directional_keydown_time = world.time
 		last_directional_key_down = d
 
 		var/warped
-		
+		//instead of double tapping we have switched to Ctrl + Direction
+		//if(classic_ui && double_tapped) warped = DoubleTapWarp(d)
 		if(client && client.ctrl_button) warped = DoubleTapWarp(d)
 		//Dash_Evade(Macro_direction(), from_double_tap=double_tapped)
 
@@ -255,13 +260,21 @@ client
 mob/verb
 	SetCtrlStatus(status as text)
 		set hidden = 1
-		if(status == "0") client.ctrl_button = 0
-		else client.ctrl_button = 1
+		if(status == "0") 
+			client.ctrl_button = 0
+			is_ctrl_down = 0		// Adds to global escope because fuck adding whatever needs it to the  proc above
+			
+		else 
+			client.ctrl_button = 1
+			is_ctrl_down = 1
+		
 
 	ShiftDown()
-		set hidden = 1
-		client.shift = 1
+		set hidden 		= 1
+		client.shift 	= 1
+		is_shift_down 	= 1
 
 	ShiftUp()
-		set hidden = 1
-		client.shift = 0
+		set hidden 		= 1
+		client.shift 	= 0
+		is_shift_down 	= 0

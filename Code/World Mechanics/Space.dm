@@ -816,7 +816,7 @@ obj/SpaceDebris
 			M.TakeDamage(dmg)
 			var/kb_dist=meteor_damage * 3 * (Avg_BP/M.BP) * (Avg_Str()/M.End)
 			M.Shockwave_Knockback(kb_dist,loc)
-			if(M.Health<=0) M.KnockOut("meteor impact!")
+			if(M.Health<=0) M.KO("meteor impact!")
 		del(src)
 
 	proc/Meteor_fly(move_delay = 1)
