@@ -211,6 +211,7 @@ mob/proc/get_bp(factor_powerup=1)
 			bp *= zero_ki_bp_mult
 
 		// try to locate() for a obj/Soul_Weapon in the user's inventory
+		/*
 		var/obj/Soul_Weapon/soul_weapon = locate(/obj/Soul_Weapon) in src
 		var/soul_weapon_bp_mult = 1
 		if(soul_weapon.weapon)
@@ -220,7 +221,7 @@ mob/proc/get_bp(factor_powerup=1)
 				player.energies["Soul Energy"].schedule_decrease(amount = 2, duration = 10, reason = "Using a Soul Weapon")
 
 		bp *= soul_weapon_bp_mult
-
+		*/
 		//no real reason. just ss blue and god in general seemed too weak, and adding it to the God_BP() proc seemed more difficult than adding it here
 		if(IsGod()) bp *= 1.3
 		if(world.realtime - lastGreatApeRevert < 600)
@@ -837,12 +838,6 @@ mob/proc/Regenerator_loop(obj/items/Regenerator/r)
 					src.set_healing_modifier(KO_SYSTEM_REGENERATOR_MODIFIER * 2, reason = "entering double effectiveness regenerator")
 				else
 					src.set_healing_modifier(KO_SYSTEM_REGENERATOR_MODIFIER, reason = "entering regenerator")
-
-				if(KO && Health >= 100)
-					if(!healing_from_KO)
-						healing_from_KO = TRUE
-						ApplyKoEffects(r)
-						healing_from_KO = FALSE
 					
 				if(Ki<max_ki && r.Recovers_Energy)
 					Ki+= 2 * (max_ki / 50) * recov * N * Server_Recovery
@@ -860,42 +855,6 @@ mob/proc/Regenerator_loop(obj/items/Regenerator/r)
 		else sleep(10)
 	regenerator_obj = null
 	src.set_healing_modifier(1, reason = "exited regenerator")
-
-//we use this because it needs delayed or it creates an annoying bug where you try to drag someone into the regen but you drop them outside it and you
-//still enter it but they dont enter it with you so to put anyone in a regen you need to fly first then land in it
-// tu consegue ver o meu console também?
-mob/proc/ApplyKoEffects(obj/items/Regenerator/r)
-	var/regenerator_modifier = 4
-	var/waiting_period = 0
-
-	if(r.Double_Effectiveness) 
-		regenerator_modifier = 8
-
-	if(combat_ko_total > 0)
-		if(combat_ko_total >= KO_SYSTEM_UNCONSCIOUS_KO)
-			waiting_period = KO_SYSTEM_UNCONSCIOUS_KO_DURATION 	/ regenerator_modifier
-		else 
-			waiting_period = KO_SYSTEM_NORMAL_KO_DURATION 		/ regenerator_modifier
-
-		world << "This variable (waiting_period) = [waiting_period]"
-		world << "This variable (combat_ko_total) = [combat_ko_total]"
-
-		var/initial_healing_message = "[src] is being healed by the regenerator from their [combat_ko_total] KO's , and will heal from one of their combat KO's in [round(waiting_period/10, 1)] seconds."
-		//var/final_healing_message = "[src] has been healed by the regenerator, and is no longer affected by their last KO ([combat_ko_total] -> [combat_ko_total - 1])."
-
-		// da pra generalizar essa funcao pra pegar o modificador ali em cima
-		// e depois so chamar isso no resto
-		// pode ser
-		// passa o 
-		
-		Countdown(waiting_period/10, initial_healing_message)
-		// eu acho que é assim sim
-		Countdown(waiting_period, isKoStuff = 1)
-		combat_ko_total--
-		
-		player_view(22, src) << "[src] has been healed from one of their combat defeats in the [r]. They now have [combat_ko_total] Combat KO's affecing them."
-		UnKO(TRUE)
-
 
 mob/proc/RegenGrabDrop()
 	set waitfor=0
