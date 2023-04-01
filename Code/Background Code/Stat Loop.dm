@@ -190,10 +190,9 @@ mob/proc/get_bp(factor_powerup=1)
 		//if(spam_killed) bp*=0.01 //causes 1 bp in tournament bug
 		bp/=time_freeze_divider
 		if(Race == "Demon")
-			//if(z == 6 || (z == 7 && map_restriction_on))
-			//	bp *= demon_hell_boost
-			if(z == 6) bp *= demon_hell_boost
-		if(Race=="Kai" && (z==7 || z==13) && (!Tournament || !(src in All_Entrants))) bp*=kai_heaven_boost
+			if(z == Z_LEVEL_HELL) 
+				bp *= demon_hell_boost
+		if(Race == "Kai" && ( z== Z_LEVEL_HEAVEN || z == Z_LEVEL_KAIOSHIN) && (!Tournament || !(src in All_Entrants))) bp*=kai_heaven_boost
 				
 		bp *= Dead_power()
 		bp *= feat_bp_multiplier
@@ -220,7 +219,7 @@ mob/proc/get_bp(factor_powerup=1)
 		return bp
 
 mob/proc/ApplyDeadzonePressure(bp)
-	if(z == 6 && !Hell_Immune() && DEADZONE_PRESSURE_ON)
+	if(z == Z_LEVEL_HELL && !Hell_Immune() && DEADZONE_PRESSURE_ON)
 		if(!(Race in DEADZONE_PRESSURE_BPLOSS_IMMUNE_RACES))
 			if(!(Race in DEADZONE_PRESSURE_BPLOSS_RESISTANT_RACES || !cyber_bp))
 				if(Dead)
@@ -827,6 +826,7 @@ mob/proc/Regenerator_loop(obj/items/Regenerator/r)
 					src.set_healing_modifier(KO_SYSTEM_REGENERATOR_MODIFIER * 2, reason = "entering double effectiveness regenerator")
 				else
 					src.set_healing_modifier(KO_SYSTEM_REGENERATOR_MODIFIER, reason = "entering regenerator")
+
 				if(KO && Health >= 100)
 					if(!healing_from_KO)
 						healing_from_KO = TRUE
@@ -1005,7 +1005,7 @@ proc/Recover_energy_loop()
 				if(m.is_teamer) n*=0.6
 				if(m.Action=="Meditating"&&world.time-m.last_shield_use>=200) n*=5
 				if(m.Dead) n*=1.2
-				if(m.z == 10) n *= 2 //hbtc
+				if(m.z == Z_LEVEL_HBTC) n *= 2 //hbtc
 				if(m.OP_build()) n*=1.25
 				if(m.Internally_Injured()) n*=0.25
 				if(m.ki_shield_on()) n*=0.15
@@ -1081,7 +1081,7 @@ proc/Recover_health_loop()
 				if(m.current_area&&m.current_area.type==/area/Braal_Core) n/=100
 				if(m.Action!="Meditating") n/=3
 				if(m.Dead) n*=1.2
-				if(m.z == 10) n *= 2 //hbtc
+				if(m.z == Z_LEVEL_HBTC) n *= 2 //hbtc
 				n*=1 * m.RegenMod()
 				if(m.OP_build()) n*=1.25
 				n *= 2 * Server_Regeneration*m.Regen_Mult/m.Gravity_Health_Ratio()
@@ -1223,7 +1223,7 @@ proc/Bind_loop()
 		for(var/obj/Curse/c in bind_objects)
 			if(ismob(c.loc))
 				var/mob/m = c.loc
-				if(m.z != 6 && !m.Teleport_nulled() && !m.Prisoner() && !m.Final_Realm())
+				if(m.z != Z_LEVEL_HELL && !m.Teleport_nulled() && !m.Prisoner() && !m.Final_Realm())
 					if(!Tournament || !(src in All_Entrants))
 						var/mob/m2 = m.loc
 						if(m2 && ismob(m2))
@@ -1248,7 +1248,7 @@ mob/proc
 		var/n = 3 * amount
 
 		//if(key && (key in epic_list)) n *= 100
-		if(Total_HBTC_Time < 2 && z == 10) n *= 5
+		if(Total_HBTC_Time < 2 && z == Z_LEVEL_HBTC) n *= 5
 		if(alignment_on && alignment == "Evil") n *= 1.25
 		n *= decline_gains()
 		if(Dead) n *= 1.5
@@ -1698,7 +1698,7 @@ mob/proc/Raise_SP(Amount)
 	//if(key in epic_list) Amount*=100
 
 	//if(ultra_pack) Amount*=3
-	if(Total_HBTC_Time < 2&&z == 10) Amount *= 5
+	if(Total_HBTC_Time < 2&&z == Z_LEVEL_HBTC) Amount *= 5
 	Amount *= 25
 	Amount *= SP_Multiplier
 	Amount *= decline_gains()
