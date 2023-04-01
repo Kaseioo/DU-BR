@@ -516,20 +516,31 @@ mob/proc/SetSparringMode(mode = sparring_mode, show_message = TRUE)
 			M << sparring_mode_message
 			M.ChatLog(sparring_mode_message, M.key)
 
+mob/var/tmp/last_spar_alert = null
 mob/proc/AlertSparringMode(var/mob/attacker, var/mob/victim)
 	if(!attacker.client || !victim.client) return
+	var/should_show_alert = FALSE
+
+	if(attacker.last_spar_alert < world.time - 300)
+		should_show_alert = TRUE
+	attacker.last_spar_alert = world.time
+
 	for(var/mob/M in view(22, attacker))
 		if(attacker.sparring_mode == CASUAL_COMBAT)
 			if(victim.sparring_mode == LETHAL_COMBAT)
-				M << "[attacker] starts a [attacker.sparring_mode] with [victim], but [victim] bears <span style='color: red'>killing intent</span>!"
+				if(should_show_alert)
+					M << "[attacker] starts a [attacker.sparring_mode] with [victim], but [victim] bears <span style='color: red'>killing intent</span>!"
 			else
-				M << "[attacker] starts a [attacker.sparring_mode] with [victim]."
+				if(should_show_alert)
+					M << "[attacker] starts a [attacker.sparring_mode] with [victim]."
 
 		else 
 			if(attacker.sparring_mode == LETHAL_COMBAT)
-				M << "[attacker] attacks [victim] with <span style='color: red'>killing intent</span>!"
+				if(should_show_alert)
+					M << "[attacker] attacks [victim] with <span style='color: red'>killing intent</span>!"
 				if(victim.sparring_mode == CASUAL_COMBAT)
-					M << "As a result, [victim] now bears <span style='color: red'>killing intent</span> as well."
+					if(should_show_alert)
+						M << "As a result, [victim] now bears <span style='color: red'>killing intent</span> as well."
 					victim.SetSparringMode(LETHAL_COMBAT, FALSE)
 
 mob/proc/WallBreakPower()
@@ -1161,8 +1172,12 @@ mob/proc/Melee(obj/O, from_auto_attack, force_power_attack, lunge_allowed = 0)
 	if(hit_landed)
 		if(isFireFist && prob(40))
 			target.BurnStack++
-			target.isBurning = 1;
-			usr << "You are now Burning due Fire Fist attack!"
+
+			if(!target.isBurning) 
+				target << "You are now Burning due to being hit by someone using Fire Fist!"
+
+			target.isBurning = TRUE;
+
 		if(ismob(target) && Is_Darius()) target.Apply_Bleed()
 		Add_Hokuto_Shinken_Energy(target)
 		zombie_melee_infection(target)
