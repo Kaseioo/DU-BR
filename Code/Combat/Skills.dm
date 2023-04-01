@@ -3054,7 +3054,7 @@ obj/FireFist
 mob/proc/FireFist_Revert() {
 	if(isFireFist){
 		isFireFist=0
-		// usr.overlays-='Flaming_fists.dmi'
+		usr.overlays-='Flaming_fists.dmi'
 		usr << "You have stopped using Fire Fist"
 	}
 }
