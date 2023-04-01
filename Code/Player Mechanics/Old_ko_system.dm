@@ -32,16 +32,16 @@ mob/var/tmp
 
 mob/proc/ShouldAnger(mob/target)
 	var/is_able_to_anger 	= target.can_anger()
-	var/is_going_to_anger 	= prob(target.anger_chance())
+	var/is_going_to_anger 	= 100//prob(target.anger_chance())
 
 	var/anger_result = is_able_to_anger && is_going_to_anger
 	return anger_result
 
 mob/proc/TryToCauseAnger(mob/Attacker, mob/Victim)
-	if(!Attacker || !ismob(Attacker) || hero == Victim.key)
+	if(Attacker || !ismob(Attacker) || hero == Victim.key)
 		if(ShouldAnger(Victim) && Attacker != Victim )
 			var/can_trigger_anger
-			var/is_attacker_a_player 			= Attacker && ismob(Attacker) && Attacker.client
+			var/is_attacker_a_player 			= Attacker.client
 			var/attacker_caused_anger_recently 	= (Attacker.ckey in anger_reasons)
 			var/has_calmed_from_anger 			= world.time > Victim.last_anger + ANGER_SYSTEM_TIME_BETWEEN_ANGERS
 			var/ko_reason 						= "Unknown reason for KO"
@@ -57,7 +57,8 @@ mob/proc/TryToCauseAnger(mob/Attacker, mob/Victim)
 				Victim.anger(reason = ko_reason)
 				Victim.recent_ko_reasons.Insert(1, ko_reason)
 				Victim.recent_ko_reasons.len = 3
-				return
+				return TRUE
+	return FALSE
 
 mob/proc/TryToAnnounceBattlegroundsDefeat(mob/Attacker, mob/Victim)
 	if(Victim.client && Victim.AtBattlegrounds())
@@ -163,7 +164,7 @@ mob/proc/TryToCauseAngerDueToKo(mob/Victim)
 		Victim.anger(reason = "being ko'd so much")
 		Victim.FullHeal()
 		
-mob/proc/KO(mob/Attacker, allow_anger=1, combat_ko_handled = FALSE)
+mob/proc/KO(mob/Attacker, allow_anger=TRUE, combat_ko_handled = FALSE)
 	set waitfor=0
 	var/mob/Victim = src
 	
@@ -177,7 +178,8 @@ mob/proc/KO(mob/Attacker, allow_anger=1, combat_ko_handled = FALSE)
 		return
 
 	if(allow_anger) 
-		TryToCauseAnger(Attacker, Victim)
+		if(TryToCauseAnger(Attacker, Victim))
+			return
 
 	TryToAnnounceBattlegroundsDefeat(Attacker, Victim)
 	give_tier(Attacker)
