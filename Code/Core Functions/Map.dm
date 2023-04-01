@@ -2074,6 +2074,8 @@ turf
 			DecideTurfStateForSpecialIcons(8,8)
 			..()*/
 
+
+
 	Wall21
 		icon='Turfs Temple.dmi'
 		icon_state="wall2"
@@ -2081,6 +2083,11 @@ turf
 		build_category = BUILD_WALL
 	Wall12
 		icon='Turfs 3.dmi'
+		icon_state="cliff"
+		density=1
+		build_category = BUILD_WALL
+	Wall500
+		icon='Turfs_3.dmi'
 		icon_state="cliff"
 		density=1
 		build_category = BUILD_WALL
@@ -2319,6 +2326,16 @@ turf
 	Roof8
 		icon='Tiles 1.21.2011.dmi'
 		icon_state="Roof-5"
+		density=1
+		opacity=1
+		build_category = BUILD_ROOF
+		Enter(atom/A) if(Roof_Enter(A)) return . = ..()
+		Click() if(getdist(usr,src)<=1)
+			Make_Dense_All(usr)
+			Upgrade_All(usr,display_message=0)
+	Roof800
+		icon='Turfs_3.dmi'
+		icon_state="ParedeMusgo"
 		density=1
 		opacity=1
 		build_category = BUILD_ROOF

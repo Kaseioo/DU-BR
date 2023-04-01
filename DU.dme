@@ -93,6 +93,7 @@
 #define FILE_DIR "Icons/Unsorted/Other/DBZ"
 #define FILE_DIR "Icons/VFX"
 #define FILE_DIR "Images"
+#define FILE_DIR "Maps"
 #define FILE_DIR "Sound"
 #define FILE_DIR "Sound/Lobby"
 #define FILE_DIR "Sound/Music"
