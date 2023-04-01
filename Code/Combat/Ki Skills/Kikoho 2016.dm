@@ -31,7 +31,9 @@ obj/Attacks/Kikoho
 		Kikoho()
 
 	verb/Kikoho()
-		//set category="Skills"
+		set category="Skills"
+		if(usr.Stunned()) 
+			return
 		usr.FireKikoho(src)
 
 mob/var
