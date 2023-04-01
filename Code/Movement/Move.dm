@@ -13,8 +13,6 @@ mob/proc/Moving_auto_attack()
 	set waitfor=0
 	if(Auto_Attack) Melee(from_auto_attack=1)
 
-proc/ceil(x) return -round(-x)
-
 mob/var/tmp/last_sz_move_check = -999
 
 mob/proc/PlayerPreMove()
@@ -426,6 +424,7 @@ mob
 			set waitfor=0
 			sleep(5)
 			var/special_protection
+			
 			for(var/obj/items/Amulet/deadzone_protection in item_list)
 				special_protection=1
 				break
