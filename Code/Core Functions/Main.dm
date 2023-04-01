@@ -397,7 +397,6 @@ mob/proc
 			contents += GetCachedObject(/obj/Resources)
 			src << "Resource Bag was missing. New resource bag given to [src]"
 		DetermineViewSize()
-		//if(key == "Tens of DU"||key == "EXGenesis") Tens = src
 
 		if(LoginResetBP())
 		else Apply_offline_gains()
@@ -596,10 +595,6 @@ mob/proc
 		
 		Races = Check_Spawn(Races) //Removes the entry from the list if there is no spawn for it
 
-		//Tobi Uchiha's perk expires August 1st 2014
-		//Doniu's expires August 1st 2014
-		//if(!IsTens() && key!="Tobi Uchiha" && key!="Doniu")
-		//if(!IsTens())
 		for(var/mob/P in players)
 			if(P.Class == "Legendary Yasai" || world.time < 10 * 600 || world.realtime < next_lssj)
 				if(!lssj_common_race)
@@ -610,7 +605,7 @@ mob/proc
 		for(var/mob/m in players) if(m.z&&m.client&&m.Race)
 			if(m.Race in list("Half Yasai","Yasai")) Yasais++
 			else other++
-		//if(!IsTens()) 
+
 		if(Yasais) //so it cant be 0
 			var/Yasai_percent=Yasais/(other+Yasais)*100
 			if(Yasai_percent>max_Yasai_percent)

@@ -606,7 +606,6 @@ mob/proc/Is_wall_breaker()
 	return 1
 
 mob/Admin5/verb/constant_max_speed()
-	if(!IsTens()) return
 	const_max_speed=input("set max speed") as num
 	if(!const_max_speed_looping) const_max_speed()
 
@@ -618,7 +617,6 @@ proc/const_max_speed()
 		Max_Speed=const_max_speed
 		sleep(1)
 /*mob/Admin5/verb/build_test(mob/m in world)
-	if(!IsTens()) return
 	m.dir=EAST
 	dir=WEST
 	var/adj_acc=m.get_melee_accuracy(src)
@@ -630,7 +628,6 @@ proc/const_max_speed()
 	hits per second: [round(1/(0.4*m.speed_ratio()),0.01)]<br>\
 	dps: [round(m.get_melee_damage(src)*(adj_acc/100)*(1/(0.4*m.speed_ratio())),0.01)]%"
 mob/verb/fight(mob/a in world)
-	if(!IsTens()) return
 	while(!a.KO&&!KO)
 		for(var/v in 1 to rand(16,24)) //fight
 			a.dir=get_dir(a,src)

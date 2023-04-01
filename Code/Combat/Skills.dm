@@ -2655,7 +2655,7 @@ obj/Unlock_Potential
 						if(abs((1.3*A.base_bp/A.bp_mod)-(m.base_bp/m.bp_mod)) < abs((1.3*A.base_bp/A.bp_mod)-(other.base_bp/other.bp_mod)))
 							other=m
 					A.Leech(other,amount_from_strongest,no_adapt=1,weights_count=0)
-					if(A.IsTens()&&A.IsAdmin()) A<<other*/
+					if(A.IsAdmin()) A<<other*/
 			//if("No") if(usr) usr<<"[A] declined your offer."
 
 mob/var/unlockedBP = 0 //from UP

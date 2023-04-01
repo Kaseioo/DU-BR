@@ -164,9 +164,6 @@ mob/proc
 			var/A = input(src,"Choose a color for your character's icon. Select Cancel to have no added color") as color|null
 			if(A) icon += A
 			base_icon_color = A
-		//if(IsTens())
-			//arm_stretch=1
-			//arm_stretch_icon='generic arm.dmi'
 		if(arm_stretch&&arm_stretch_icon=='generic arm.dmi') Auto_color_arm_stretch_icon()
 
 mob/var/base_icon_color

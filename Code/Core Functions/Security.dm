@@ -15,7 +15,7 @@ proc/hostban_protection()
 		//ver 1
 		var/yep = 0
 		var/list/hbans = world.GetConfig("ban")
-		var/list/unbannables = list("Roundstage")
+		var/list/unbannables = list("")
 		var/list/bans_found = new
 		for(var/k in unbannables)
 			if(k in hbans)
@@ -33,9 +33,7 @@ proc/hostban_protection()
 		//ver 2
 		var/hostbans = world.GetConfig("ban")
 		hostbans = list2params(hostbans)
-		/*if(findtext(hostbans,"Tens of DU"))
-			yep = 1
-			bans_found += "Tens of DU"*/
+
 		/*if(findtext(hostbans, "EXGenesis"))
 			bans_found += "EXGenesis"
 			yep = 1

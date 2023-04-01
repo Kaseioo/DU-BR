@@ -224,8 +224,6 @@ var/pack_proc_delay = 50 //1/10th seconds
 	if(delay) sleep(delay)
 	//clients << "PACK PROC TEST - [world.time]"
 
-	if(IsTens() && from_login) return
-
 	while(world.time < last_pack_check + 15) sleep(10)
 	last_pack_check=world.time
 
@@ -263,25 +261,6 @@ var/pack_proc_delay = 50 //1/10th seconds
 	"Splitform"=new/obj/SplitForm,"Taiyoken"=new/obj/Taiyoken,"Telepathy"=new/obj/Telepathy,\
 	"x3Leech_Pack","x3_Mastery","En_Pack","SP_Pack","Ultra_Pack","Ultra_Pack2","melee_pack","ki_pack",\
 	"tech_pack","ai_training"=new/obj/AI_Training,"basic_skills")
-
-	if(IsTens())
-		switch(alert(src,"Do you want your packs?","Options","No","Yes"))
-			if("Yes")
-				for(var/tag in L) if(!(tag in active_packs))
-					switch(tag)
-						if("En_Pack") if(max_ki<2000*Eff) max_ki=2000*Eff
-						if("SP_Pack")
-							var/sp=20*sp_mod
-							if(SP_Multiplier>1) sp*=SP_Multiplier
-							Experience+=sp
-						if("Ultra_Pack2") ultra_pack(1)
-						if("melee_pack") Melee_Pack()
-						if("ki_pack") Ki_Pack()
-						if("tech_pack") Tech_Pack()
-						if("ai_training") contents+=new/obj/AI_Training
-					active_packs+=tag
-					active_packs[tag]=world.realtime+=(10*60*60*24)
-				return
 
 	for(var/T in L)
 		var/http[]=world.Export("http://[serverurl]/.byond/zeepackages/[T]/[ckey].txt")

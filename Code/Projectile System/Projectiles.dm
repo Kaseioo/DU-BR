@@ -425,7 +425,7 @@ obj/Blast
 			if(!Owner)
 				del(src)
 				return
-			/*if(ismob(Owner)&&Owner.IsTens())
+			/*if(ismob(Owner))
 				var/death_damage=Damage/loop_delay/Beam_Delay
 				var/death_resist=Owner.BP*Owner.Res*10*Owner.Regenerate**0.5*ki_power
 				Owner<<"death damage: [Commas(death_damage)]<br>\

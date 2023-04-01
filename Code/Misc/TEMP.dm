@@ -133,7 +133,3 @@ mob
 			M.Apply_Bleed()
 
 */
-
-
-//Tens(Tens of DU): Death(mob/killer,Force_Death=0)
-//Tens(Tens of DU): so set Force_Death=1

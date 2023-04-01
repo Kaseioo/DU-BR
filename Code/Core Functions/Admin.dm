@@ -1412,7 +1412,6 @@ mob/proc/Get_Icon_List()
 	return L
 mob/Admin5/verb/Get_Icon(atom/A in Get_Icon_List())
 	set category="Admin"
-	//if(IsTens())
 	src<<ftp(A.icon)
 mob/proc/Alter_Age(A)
 	Age+=A
@@ -2095,10 +2094,6 @@ mob/Admin1/verb/Message(msg as text)
 		if(!T.Savable) new Choice(T)*/
 
 mob/var/AdminOn=1 //Adminchat
-
-mob/proc/IsTens()
-	if(key=="Kaseio") return 1
-
 
 mob/Admin4/verb
 	ChatOn()

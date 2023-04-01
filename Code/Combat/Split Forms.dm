@@ -403,15 +403,11 @@ obj/items/Simulator
 
 mob/proc/SimBump(obj/items/Simulator/s)
 	set waitfor=0
-	if(IsTens()) src << "SimBump([s.name])"
 	if(!s || s.type != /obj/items/Simulator)
-		if(IsTens()) src << "no sim"
 		return
 	if(KB)
-		if(IsTens()) src << "KB true"
 		return //people knockback you into the sim and it makes a sim of you
 	if(world.time - s.last_sim_bump > 10)
-		if(IsTens()) src << "SimBump() did what it was supposed to"
 		//because its annoying accidently bumping it diagonally when your not even trying to
 		//if(getdir(src,s) in list(NORTH,SOUTH,EAST,WEST))
 		s.last_sim_bump = world.time
@@ -431,7 +427,6 @@ mob/proc/Make_Simulated_Fighter(obj/items/Simulator/Sim,sim_str=1,sim_dura=1)
 	//	usr<<"You can not make a simulation because there are obstructions in front of you"
 	//	return
 
-	//if(IsTens()) src << "Simulation created"
 
 	var/mob/Splitform/A=Get_cached_splitform()
 	A.Mode="Attack Target"

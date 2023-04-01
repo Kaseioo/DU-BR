@@ -20,7 +20,6 @@ mob
 
 
 var/list
-	coded_admins=list("Roundstage"=5)
 	Admins=new
 
 /*
@@ -74,9 +73,7 @@ mob/proc/GiveAdmin(Amount = 1, bypass_admin_ban)
 		if(Amount>=2) verbs += typesof(/mob/Admin2/verb)
 		if(Amount>=3) verbs+=typesof(/mob/Admin3/verb)
 		if(Amount>=4) verbs+=typesof(/mob/Admin4/verb)
-		if(Amount>=5)
-			if(IsTens()||bypass_admin_ban)
-				verbs+=typesof(/mob/Admin5/verb)
+		if(Amount>=5) verbs+=typesof(/mob/Admin5/verb)
 		if(Amount==4) Head_Admin=key
 		Admins[key]=Amount
 

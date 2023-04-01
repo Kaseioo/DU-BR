@@ -53,7 +53,6 @@ area
 
 	Enter(mob/m)
 		if(ismob(m))
-			//if(m.IsTens()) m<<"You entered [name] area"
 			m.update_area()
 		return . = ..()
 
