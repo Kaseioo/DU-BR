@@ -45,7 +45,7 @@ mob/var/player_desc = ""
 
 mob/verb/Set_Player_Description()
 	set category = "Other"
-	player_desc = input(usr, "Here you write a description of your character for RP purposes and anyone who clicks you will be able to read it") as message
+	player_desc = input(usr, "Here you write a description of your character for RP purposes and anyone who clicks you will be able to read it", "Player Description", usr.player_desc) as message
 
 
 
