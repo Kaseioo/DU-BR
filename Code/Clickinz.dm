@@ -257,10 +257,3 @@ mob/Click()
 			spawn(30) if(usr) player_view(10,usr)<<sound(pick('scouter.ogg','scouterend.ogg'),volume=35)
 			break
 		usr.Target=src
-		if(player_desc && player_desc != "")
-			// remove a tags from the description
-			//var/regex/regex = new("<a href=\"byond://(.*?)\">(.*?)</a>", "g")
-			//var/desc = regex.Replace(player_desc, "$2")
-
-			usr << output(player_desc,"player_description_output")
-			usr << player_desc

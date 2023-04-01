@@ -3,6 +3,7 @@ mob/Admin1
 		ViewRPWindow()
 			set category="Admin"
 			winset(src,"rpwindow","is-visible=true")
+			
 		ViewDevelopmentRPWindow()
 			set category="Admin"
 			winset(src,"rp_devwindow","is-visible=true")
@@ -12,6 +13,7 @@ mob
 			for(var/mob/M in world)
 				if(M.client)
 					M << output(text,"rpoutput")
+
 		PostDevelopmentRPWindow(text as text)
 			for(var/mob/M in world)
 				if(M.client)
@@ -21,9 +23,12 @@ mob
 mob/verb/ViewDescription(mob/A)
 	set name="View Description"
 	set category="Other"
+	
 	if(!A)
 		return
 	if(!A.player_desc)
 		return
 
-	winset(src,"player_description","is-visible=true")
+	var/html = "[A.player_desc]"
+
+	usr << browse(html, "window=[A];size=800x600;name=[A]")
