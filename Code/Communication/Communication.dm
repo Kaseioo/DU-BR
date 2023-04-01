@@ -56,16 +56,12 @@ proc/List_2_Text(list/L,sep)
 	for(count=2,count<=total,count++)
 		if(sep) newtext+=sep;newtext+="[L[count]]"
 	return newtext
-// compilou sem erro
-// agora se isKoStuff não for passado ele vai ser sempre FALSE
-// só que em teoria é a mesma coisa que nada porque null é false pro if
-// só que seria um false pra "defined" ao inves de "value"
+
 // o isKoStuff = FALSE não ia modificar porra nenhuma além de deixar explicitamente que o valor da variável é false (ou seja, diminuir o escopo de num pra bool)
 mob/verb/Countdown(Seconds as num, message as text|null, final_message as text|null, isKoStuff as num|null)
 	set category = "Other"
 	set desc = "Countdown from a number of seconds. You can also specify a message to display at the start and end of the countdown."
-	// funciona
-	// ok abriu
+
 	if(!isKoStuff)
 		isKoStuff = FALSE
 
@@ -77,7 +73,7 @@ mob/verb/Countdown(Seconds as num, message as text|null, final_message as text|n
 	var/t="[src] is waiting [Seconds] seconds."	
 
 	Seconds *= 10
-	// que odio!
+
 	if(message)
 		t = " [message]"
 	if(!isKoStuff)
