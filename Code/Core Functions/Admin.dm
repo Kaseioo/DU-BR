@@ -1011,23 +1011,6 @@ var/Ki_Disabled=0
 
 var/BP_Cap=0
 
-var/Derp
-var/Derp_Loop
-mob/Admin4/verb/Derp()
-	set category="Admin"
-	Derp=!Derp
-	if(Derp&&!Derp_Loop) Derp_Loop()
-proc/Derp_Loop()
-	Derp_Loop=1
-	while(1)
-		if(Derp)
-			var/mob/P=pick(players)
-			if(P) P.OOC(Herp_Derp())
-		sleep(rand(0,10))
-proc/Herp_Derp() return pick(list("derp","DERP","DERP DERP","DERP DERP DERP","DERP!","DERP!!","DERP!!!",\
-"HERP DERP","HERP DERP!","HEEEERP DEEERP","HERPITY DERP","derp derp","herp derp","herp herp a derp","derp?",\
-"DERP??"))
-
 var/can_era_vote=1
 var/Can_Pwipe_Vote=1
 var/Resource_Multiplier=1
@@ -2011,7 +1994,7 @@ mob/Admin2/verb/GiveItem(mob/A in world, Search as text)
 
 var/list/Make_List
 obj/var/Makeable=1
-mob/Admin2/verb/Make(atom/A in world, Search as text)
+mob/Admin2/verb/Make(mob/A in world, Search as text)
 	set category="Admin"
 	Make_List = null
 	if(!Make_List)
@@ -2560,15 +2543,19 @@ var/list/editFilter = list()
 mob/Admin3/verb/Edit(atom/a in world)
 	set category = "Admin"
 	var/html = "<Edit><body bgcolor=#000000 text=#339999 link=#99FFFF>"
+
 	html += "[a]<br>[a.type]"
 	html += "<table width=10%>"
+
 	for(var/v in a.vars)
 		if("[v]" in editFilter)
 			continue
 		html += "<td><a href=byond://?src=\ref[a];action=edit;var=[v]>"
 		html += v
 		html += "<td>[Value(a.vars[v])]</td></tr>"
+
 	usr << browse(html, "window=[a];size=400x700")
+	
 	Log(src, "[key] opened the edit sheet for [a]")
 
 atom/Topic(href, hrefs[])
