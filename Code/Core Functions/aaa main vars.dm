@@ -152,7 +152,7 @@ var/const
 mob/var/energies
 
 var
-	ANGER_SYSTEM_TIME_BETWEEN_ANGERS	= 5 * 10 * 6	// 5 minutes (300 seconds)
+	ANGER_SYSTEM_TIME_BETWEEN_ANGERS	= 10 * 10 * 1	// 10 seconds //5 minutes (300 seconds)
 
 var
 	SHOW_CHAR_NAME_ON_WHO 				= FALSE	
