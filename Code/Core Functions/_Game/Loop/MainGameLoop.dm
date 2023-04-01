@@ -1,8 +1,9 @@
 mob/proc/cycle_energies()
     var/mob/player = src
     
-    for(var/Energy/energy in player.energies)
-        energy.cycle_energy()
+    for(var/name in player.energies)
+        var/Energy/energy = player.energies[name]
+            energy.cycle_energy()
 
 /*
     NOTHING that goes here must have an internal loop for ticking itself.

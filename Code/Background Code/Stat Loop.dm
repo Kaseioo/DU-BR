@@ -210,6 +210,17 @@ mob/proc/get_bp(factor_powerup=1)
 		if(world.time - last_ki_hit_zero < zero_ki_bp_debuff_duration * 10)
 			bp *= zero_ki_bp_mult
 
+		// try to locate() for a obj/Soul_Weapon in the user's inventory
+		var/obj/Soul_Weapon/soul_weapon = locate(/obj/Soul_Weapon) in src
+		var/soul_weapon_bp_mult = 1
+		if(soul_weapon.weapon)
+			if(soul_weapon.weapon.suffix)
+				soul_weapon_bp_mult = 1.1
+				var/mob/player = usr
+				player.energies["Soul Energy"].schedule_decrease(amount = 2, duration = 10, reason = "Using a Soul Weapon")
+
+		bp *= soul_weapon_bp_mult
+
 		//no real reason. just ss blue and god in general seemed too weak, and adding it to the God_BP() proc seemed more difficult than adding it here
 		if(IsGod()) bp *= 1.3
 		if(world.realtime - lastGreatApeRevert < 600)

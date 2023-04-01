@@ -489,11 +489,14 @@ mob/proc
 				result."
 				Former_Vampire=1
 
+		switch(src.Race)
+			if("Demon")
+				src.energies = list(
+					"Soul Energy"   	= new /Energy("Soul Energy"),
+				)
+				
 		src.energies = list(
-			new /Energy("Demonic Energy"),
-			new /Energy("Heavenly Energy"),
-			new /Energy("Soul Energy"),
-			new /Energy("Mental Energy")
+			"Mental Energy" 	= new /Energy("Mental Energy")
 		)
 
 		Player_Loops()

@@ -732,37 +732,47 @@ obj/Soul_Weapon
 	student_point_cost = 1000
 	Cost_To_Learn=700
 	clonable=0
-	var/tmp/already_exists = FALSE
+	var/already_exists = FALSE
+	var/obj/items/Sword/weapon = null
 
 	verb/Soul_Weapon()
 		set category="Skills"
 		usr.Soul_Weapon(src)
 
 mob/proc/Soul_Weapon(obj/Soul_Weapon/soul_weapon)
+	var/mob/player = usr
+
 	if(soul_weapon.already_exists)
 		var/choice = alert("Your soul is already formed into a Weapon. Do you want to destroy it?","Destroy Soul Weapon?","Yes","No")
 		if(choice == "Yes")
-			for(var/obj/items/Sword/S in src)
-				del(S)
+			player.contents 	-= soul_weapon.weapon
+			del(soul_weapon.weapon)
+
 			soul_weapon.already_exists = FALSE
+			return
 		else
 			return
 
-	var/list/Swords = new
+	if(!player.energies["Soul Energy"])
+		player << "You need Soul Energy to be able to create a Soul Weapon."
+		return
 
-	for(var/A in typesof(/obj/items/Sword)) 
-		Swords += new A
+	if(player.energies["Soul Energy"].quantity <= 30)
+		player << "You need 30 Soul Energy to be able to create a Soul Weapon."
+		return
 
-	var/obj/items/Sword/A = input("How should your Soul Weapon look like?") in Swords
+	var/obj/items/Sword/A = new/obj/items/Sword
+
 	A.name = "Soul [A.name]"
-	A.desc = "A weapon made from the soul of [usr]."
+	A.desc = "A weapon made from the soul of [player]."
 	A.icon = 'Sword 2.dmi' + rgb(200, 60, 60)
 
-	usr.contents += A
+	soul_weapon.weapon 		= A
+	player.contents 		+= soul_weapon.weapon
 
-	usr << "You have created a [A.name]!"
+	player << "You have created a [A.name]!"
 
-	Swords = null	
+	player.energies["Soul Energy"].schedule_decrease(30, reason = "Soul Weapon Creation")
 	soul_weapon.already_exists = TRUE
 	return
 
