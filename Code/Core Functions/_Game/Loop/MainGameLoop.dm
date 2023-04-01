@@ -1,18 +1,17 @@
 mob/proc/Cycle_Energies()
     var/mob/Player = src
-    //world << "Cycling Energies for [Player]"
+    
     for(var/Energy/energy in Player.energies)
-        world << "Cycling [Player] - [energy]"
+        world << "Cycling [energy]"
+        world << "Energy: [energy.quantity]"
         energy.cycle_energy()
-        
+    sleep(30)
+
 proc/mainPlayerLoop()
     for(var/mob/player in players)
         BurnLoop(player)
         player.try_healing_combat_ko()
         player.Cycle_Energies()
-
-    
-
 
 proc/MainGameLoop()
     while (TRUE)

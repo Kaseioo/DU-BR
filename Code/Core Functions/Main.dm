@@ -488,6 +488,14 @@ mob/proc
 				src<<"One of your parents was cured of the vampire virus and is now immune, you were born immune as a \
 				result."
 				Former_Vampire=1
+
+		src.energies = list(
+			new /Energy("Demonic Energy"),
+			new /Energy("Heavenly Energy"),
+			new /Energy("Soul Energy"),
+			new /Energy("Mental Energy")
+		)
+
 		Player_Loops()
 
 		New_player_message()
@@ -560,11 +568,12 @@ mob/proc
 		if(world.maxz<5) return L
 		for(var/A in L)
 			var/Spawn
-			for(var/obj/Spawn/S in Spawn_List) if(S.name==A&&!S.is_on_destroyed_planet())
-				var/turf/t=S.loc
-				if(t&&isturf(t)&&!t.density)
-					Spawn=1
-					break
+			for(var/obj/Spawn/S in Spawn_List) 
+				if(S.name == A && !S.is_on_destroyed_planet())
+					var/turf/t=S.loc
+					if(t&&isturf(t)&&!t.density)
+						Spawn=1
+						break
 			for(var/mob/m in players) if(m.z) for(var/obj/Mate/m2 in m) if(m2.Waiting&&m2.Race==A)
 				Spawn=1
 				break
