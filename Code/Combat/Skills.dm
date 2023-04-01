@@ -781,7 +781,7 @@ obj/Soul_Attack
 	desc="Encase your soul into an attack"
 	teachable=1
 	race_teach_only=1
-	Skill=1
+	Skill=0
 	Teach_Timer=24
 	student_point_cost = 1000
 	Cost_To_Learn=700
@@ -793,6 +793,7 @@ obj/Soul_Attack
 		var/range_y = input("How many tiles in front of you?") as num
 		var/range_x = input("How many tiles to the sides?") as num
 		var/effect_duration = input("How long should the effect last?") as num
+		return
 		usr.Soul_Attack(src, range_y, range_x, effect_duration)
 
 mob/proc/Soul_Attack(obj/Soul_Attack/Soul_Attack, range_y, range_x, duration)
@@ -1107,20 +1108,7 @@ mob/proc/Give_Power(obj/Give_Power/G)
 		var/waiting_period = 0
 
 		if(M.KO && M.Health>=100) 
-			if(combat_ko_total >= KO_SYSTEM_UNCONSCIOUS_KO)
-				waiting_period = KO_SYSTEM_UNCONSCIOUS_KO_DURATION 	/ give_power_modifier
-			else 
-				waiting_period = KO_SYSTEM_NORMAL_KO_DURATION 		/ give_power_modifier
-
-			var/initial_healing_message = "[src] is being Given Power. This is kickstarting their Combat KO's healing proccess. They have [combat_ko_total] KO's , and will heal from one of their combat KO's in [round(waiting_period/10, 1)] seconds."
-			var/final_healing_message = "[src] has healed with help of Give Power, and is no longer affected by their last KO ([combat_ko_total] -> [combat_ko_total - 1])."
-
-			Countdown(waiting_period/10, initial_healing_message, final_healing_message)
-			for(var/ko in 1 to combat_ko_total)
-				spawn(waiting_period)
-					player_view(22, src) << "[src] has been healed from one of their combat defeats due to being given power. They now have [combat_ko_total] Combat KO's affecing them."
-					UnKO()
-
+			M.set_healing_modifier(0.5, "being given power")
 		if(KO)
 			Giving_Power=0
 			if(gp_target) gp_target=0
@@ -3057,8 +3045,8 @@ obj/FireFist
 		if(!usr.isFireFist)
 			Last_Use=Year
 			usr.isFireFist=1
-			// usr.overlays+='Flaming_fists.dmi'
-			// player_view(10,usr) << sound('FogoNaMao.mp3',volume=100)
+			usr.overlays+='Flaming_fists.dmi'
+			player_view(10,usr) << sound('FogoNaMao.mp3',volume=100)
 			usr << "You are now using the FireFist buff"
 			usr.FireFistLoop();
 		else usr.FireFist_Revert()
