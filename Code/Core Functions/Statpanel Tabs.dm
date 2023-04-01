@@ -452,6 +452,10 @@ mob/proc/Stat_Stat() if(statpanel("Stats"))
 		stat("Health",round(Health))
 		stat("Energy","[round(Ki)] ([round((Ki / max_ki) * 100)]%) ([Eff]x gains)")
 
+		for(var/name in usr.energies)
+			var/Energy/energy = usr.energies[name]
+			stat("[energy.name]","[round(energy.quantity)] ([round((energy.quantity / energy.maximum) * 100)]%)")
+
 		stat("Strength",StatViewThing(Swordless_strength(), "Str"))
 		stat("Durability",StatViewThing(End, "End"))
 		stat("Force",StatViewThing(Pow, "Pow"))
@@ -469,7 +473,7 @@ mob/proc/Stat_Stat() if(statpanel("Stats"))
 	stat("Move Speed (pixels):", round(stepSizeLabel,0.1))
 	stat("Melee Speed:", round(1 / (Speed_delay_mult(severity = melee_delay_severity)/speedDelayMultMod), 0.01))
 
-	SleepTab(8)
+	SleepTab(10)
 
 mob/proc
 	StatViewThing(n = 1, statName)
