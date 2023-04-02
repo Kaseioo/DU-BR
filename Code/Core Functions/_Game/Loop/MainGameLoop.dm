@@ -29,7 +29,7 @@ mob/proc/execute_player_actions()
     // it is a prime candidate to be moved to a different proc, and we probably
     // should do so. We should only alter a flag there, and the healing itself
     // should be done in another proc that gets ticked here.
-    player.try_healing_combat_ko()
+    try_healing_combat_ko(victim = player)
 
     player.cycle_energies()
 

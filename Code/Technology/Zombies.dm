@@ -557,10 +557,10 @@ obj/items/T_Heal
 		
 		if(A.times_used_t_heal > KO_SYSTEM_T_HEAL_USAGE_LIMIT && A.last_t_heal_use < world.time - KO_SYSTEM_T_HEAL_FAIL_COOLDOWN)
 			var/increase_reason = "[A]'s body starts failing due to repeated injections of a mysterious needle!"
-			A.increase_combat_ko(increase_reason, KO_SYSTEM_T_HEAL_USAGE_LIMIT)
+			A.increase_combat_ko(increase_reason, KO_SYSTEM_T_HEAL_USAGE_LIMIT, victim = A)
 		else
 			var/decrease_reason = "A mysterious needle heals [A]'s body!"
-			A.decrease_combat_ko(decrease_reason)
+			A.decrease_combat_ko(decrease_reason, victim = A)
 
 			A.FullHeal()
 

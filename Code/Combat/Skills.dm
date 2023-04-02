@@ -316,8 +316,8 @@ obj/Contract_Soul //Appears in the Souls tab
 			usr<<"Contract deleted. You can not use your own soul contract"
 			del(src)
 			return
-		if(!observed_mob.is_out_of_combat() && usr.BP < observed_mob.BP * 10)
-			var/combat_timer = round((KO_SYSTEM_OUT_OF_COMBAT_TIMER - observed_mob.get_time_out_of_combat()) / 10, 1)
+		if(!observed_mob.is_out_of_combat(victim = observed_mob) && usr.BP < observed_mob.BP * 10)
+			var/combat_timer = round((KO_SYSTEM_OUT_OF_COMBAT_TIMER - observed_mob.get_time_out_of_combat(victim = observed_mob)) / 10, 1)
 			usr << "You can not affect [observed_mob] while they are in combat. You will be able to affect them in [combat_timer] seconds."
 			return
 		if(usr.KO || usr.BodySwapVictim())
@@ -1108,7 +1108,7 @@ mob/proc/Give_Power(obj/Give_Power/G)
 		var/waiting_period = 0
 
 		if(M.KO && M.Health>=100) 
-			M.set_healing_modifier(0.5, "being given power")
+			M.set_healing_modifier(0.5, "being given power", victim = M)
 		if(KO)
 			Giving_Power=0
 			if(gp_target) gp_target=0
@@ -2556,8 +2556,8 @@ obj/Heal
 
 			A.decrease_combat_ko(decrease_reason)
 
-			if(!usr.is_out_of_combat() || !A.is_out_of_combat())
-				usr.increase_combat_ko(increase_reason)
+			if(!usr.is_out_of_combat(victim = usr) || !A.is_out_of_combat(victim = A))
+				usr.increase_combat_ko(increase_reason, victim = usr)
 
 			A.FullHeal()
 

@@ -835,9 +835,9 @@ mob/proc/Regenerator_loop(obj/items/Regenerator/r)
 					if(Health>100) Health=100
 
 				if(r.Double_Effectiveness)
-					src.set_healing_modifier(KO_SYSTEM_REGENERATOR_MODIFIER * 2, reason = "entering double effectiveness regenerator")
+					src.set_healing_modifier(KO_SYSTEM_REGENERATOR_MODIFIER * 2, reason = "entering double effectiveness regenerator", victim = src)
 				else
-					src.set_healing_modifier(KO_SYSTEM_REGENERATOR_MODIFIER, reason = "entering regenerator")
+					src.set_healing_modifier(KO_SYSTEM_REGENERATOR_MODIFIER, reason = "entering regenerator", victim = src)
 					
 				if(Ki<max_ki && r.Recovers_Energy)
 					Ki+= 2 * (max_ki / 50) * recov * N * Server_Recovery
@@ -854,7 +854,8 @@ mob/proc/Regenerator_loop(obj/items/Regenerator/r)
 		if(!client) sleep(100) //empty clones sitting in regenerators lag if there is many of them
 		else sleep(10)
 	regenerator_obj = null
-	src.set_healing_modifier(1, reason = "exited regenerator")
+	
+	src.set_healing_modifier(1, reason = "exited regenerator", victim = src)
 
 mob/proc/RegenGrabDrop()
 	set waitfor=0

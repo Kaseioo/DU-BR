@@ -53,10 +53,11 @@ mob/proc/TryToCauseAnger(mob/Attacker, mob/Victim)
 			if(is_attacker_a_player && !attacker_caused_anger_recently)
 				can_trigger_anger = TRUE
 
-			if(has_calmed_from_anger || can_trigger_anger)
+			if(has_calmed_from_anger || can_trigger_anger || !Victim.has_angered_before_ko)
 				Victim.anger(reason = ko_reason)
 				Victim.recent_ko_reasons.Insert(1, ko_reason)
 				Victim.recent_ko_reasons.len = 3
+				Victim.has_angered_before_ko = TRUE
 				return TRUE
 	return FALSE
 
@@ -159,7 +160,7 @@ mob/proc/TryToCauseAngerDueToKo(mob/Victim)
 	if(Victim.client) 
 		is_player = TRUE
 
-	if(is_player && ShouldAnger(Victim) && prob(40))
+	if(is_player && ShouldAnger(Victim) && prob(10))
 		Victim << "<font color=yellow>Being defeated so much angers you...</font>"
 		Victim.anger(reason = "being ko'd so much")
 		Victim.FullHeal()

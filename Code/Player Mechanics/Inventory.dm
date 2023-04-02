@@ -2845,10 +2845,10 @@ mob/proc/EatSensu(mob/user, obj/o)
 	usr.last_sensu_use = world.time
 	if(usr.last_sensu_use < world.time - KO_SYSTEM_SENSU_COOLDOWN)
 		var/increase_reason = "[user]'s body can't endure the healing power of the sensu bean!"
-		user.increase_combat_ko(increase_reason)
+		user.increase_combat_ko(increase_reason, victim = user)
 	else
 		var/decrease_reason = "A Sensu Bean heals [user] completely!"
-		user.decrease_combat_ko(decrease_reason, KO_SYSTEM_UNCONSCIOUS_KO)
+		user.decrease_combat_ko(decrease_reason, KO_SYSTEM_UNCONSCIOUS_KO, victim = user)
 
 	user.FullHeal()
 	Stop_Powering_Up()

@@ -4,69 +4,78 @@ mob
         has_healing_modifier_changed    = FALSE
         is_waiting_for_healing          = FALSE
         last_combat_timeout_message     = 0
+        has_angered_before_ko           = FALSE
 
     proc
-        Cause_Combat_KO(mob/victim, mob/attacker)
+        Cause_Combat_KO(var/mob/victim, var/mob/attacker)
+            world << "Cause_Combat_KO() called"
+            world << "victim: [victim]"
+            world << "attacker: [attacker]"
+            world << "spar mode: [attacker.sparring_mode]"
             var/cause_of_ko_spar    = "[victim] was defeated by [attacker] during a [CASUAL_COMBAT]."
             var/cause_of_ko_lethal  = "[victim] was defeated by [attacker] during a [LETHAL_COMBAT]."
 
             // Check for casual instead of lethal since other sources of KO's don't have a 
             // sparring mode, and they should always be lethal
             if(attacker.sparring_mode == CASUAL_COMBAT)
-                announce_combat_message(cause_of_ko_spar, center = src)
+                announce_combat_message(cause_of_ko_spar, center = victim)
                 return
-           
-            victim.increase_combat_ko(cause_of_ko_lethal, center = src)
+            else
+                increase_combat_ko(cause_of_ko_lethal, victim = victim)
 
-        increase_combat_ko(var/reason_of_increase, quantity = 1)
-            src.combat_ko_total += quantity
+        increase_combat_ko(var/reason_of_increase, quantity = 1, mob/victim)
+            var/mob/attacker = usr
 
-            if(src.combat_ko_total  >= KO_SYSTEM_UNCONSCIOUS_KO)
-                src.combat_ko_total  = KO_SYSTEM_UNCONSCIOUS_KO
-                reason_of_increase   = "[reason_of_increase]. [src] is now unconscious. "
+            victim.combat_ko_total += quantity
+
+            if(victim.combat_ko_total  >= KO_SYSTEM_UNCONSCIOUS_KO)
+                victim.combat_ko_total  = KO_SYSTEM_UNCONSCIOUS_KO
+                reason_of_increase   = "[reason_of_increase]. [victim] is now unconscious. "
                 
-                src.KO(src, allow_anger = FALSE, combat_ko_handled = TRUE)
+                victim.KO(attacker, allow_anger = FALSE, combat_ko_handled = TRUE)
 
-            src.is_waiting_for_healing = FALSE
+            victim.is_waiting_for_healing = FALSE
 
-            var/ko_message = "[reason_of_increase] ([src.combat_ko_total]/[KO_SYSTEM_UNCONSCIOUS_KO] KO's)."
+            var/ko_message = "[reason_of_increase] ([victim.combat_ko_total]/[KO_SYSTEM_UNCONSCIOUS_KO] KO's)."
 
-            announce_combat_message(ko_message, center = src)
+            victim.has_angered_before_ko   = FALSE
+            victim.Calm()
+            
+            victim.announce_combat_message(ko_message, center = victim)
 
-        decrease_combat_ko(var/reason_of_decrease, quantity = 1)
-            announce_combat_message(reason_of_decrease, center = src)
-            src.combat_ko_total -= quantity
+        decrease_combat_ko(var/reason_of_decrease, quantity = 1, mob/victim)
+            victim.announce_combat_message(reason_of_decrease, center = victim)
+            victim.combat_ko_total -= quantity
 
-            if(src.combat_ko_total < 0)
-                src.combat_ko_total = 0
+            if(victim.combat_ko_total < 0)
+                victim.combat_ko_total = 0
 
-        get_time_out_of_combat()
-            return world.time - src.last_attacked_time
+        get_time_out_of_combat(mob/victim)
+            return world.time - victim.last_attacked_time
 
-        has_entered_combat()
-            if(src.get_time_out_of_combat() <= KO_SYSTEM_OUT_OF_COMBAT_TIMER)
+        has_entered_combat(mob/victim)
+            if(victim.get_time_out_of_combat(victim = victim) <= KO_SYSTEM_OUT_OF_COMBAT_TIMER)
                 return TRUE
             return FALSE
 
-        is_out_of_combat()
-            if(src.combat_ko_total >= KO_SYSTEM_UNCONSCIOUS_KO && src.KO)
+        is_out_of_combat(mob/victim)
+            if(victim.combat_ko_total >= KO_SYSTEM_UNCONSCIOUS_KO && victim.KO)
                 return TRUE
 
-            if(!src.has_entered_combat())
+            if(!victim.has_entered_combat(victim = victim))
                 return TRUE
 
             return FALSE
 
         announce_combat_message(var/message, var/mob/center)
-
             for(var/mob/observer in view(22, center))
-                observer << message
-                observer.ChatLog(message, observer.key)
+                observer << "[message]"
+                observer.ChatLog("[message]", observer.key)
         
-        time_to_heal_ko()
+        time_to_heal_ko(mob/victim)
             var/time_to_heal = 1
             
-            if(src.combat_ko_total >= KO_SYSTEM_UNCONSCIOUS_KO)
+            if(victim.combat_ko_total >= KO_SYSTEM_UNCONSCIOUS_KO)
                 time_to_heal = KO_SYSTEM_UNCONSCIOUS_KO_DURATION
             else 
                 time_to_heal = KO_SYSTEM_NORMAL_KO_DURATION
@@ -76,24 +85,24 @@ mob
             // Z level 10 is the HBTC (Hyperbolic Time Chamber),
             // so we reduce heal to reflect that time passes faster there.
             // TODO: this should be done as a healing modifier instead.
-            if(src.z == Z_LEVEL_HBTC) 
+            if(victim.z == Z_LEVEL_HBTC) 
                 time_to_heal /= 6
 
             return time_to_heal
         
-        set_healing_modifier(var/modifier, var/reason, var/is_cummulative = FALSE)
-            if(modifier == healing_modifier)
+        set_healing_modifier(var/modifier, var/reason, var/is_cummulative = FALSE, mob/victim)
+            if(modifier == victim.healing_modifier)
                 return
 
             if(is_cummulative)
-                healing_modifier *= modifier
+                victim.healing_modifier *= modifier
 
-            var/modifier_change_reason = "[src]'s total time to heal has been modified from [healing_modifier] to [modifier]x due to [reason]."
+            var/modifier_change_reason = "[victim]'s total time to heal has been modified from [victim.healing_modifier] to [modifier]x due to [reason]."
 
-            healing_modifier                = modifier
-            has_healing_modifier_changed    = TRUE
+            victim.healing_modifier                 = modifier
+            victim.has_healing_modifier_changed     = TRUE
 
-            announce_combat_message(modifier_change_reason, center = src)
+            announce_combat_message(modifier_change_reason, center = victim)
 
         heal_spar_ko(mob/victim, time_to_heal)
             var/spar_ko_message = "[victim] will come up from their defeat in [round(time_to_heal/10, 1)] seconds."
@@ -114,14 +123,14 @@ mob
             // We can't use Spawn() here as it is possible for the player to have their healing time reduced by external factors.
             // For example, the player could be dragged to a regenerator, have someone heal them, and so on.
             while(elapsed_time < time_to_heal)
-                elapsed_time += 1
+                elapsed_time += 10
 
-                if(!is_out_of_combat())
+                if(!is_out_of_combat(victim = victim))
                     var/attack_message = "[victim] has been disrupted from healing their last combat KO."
                     announce_combat_message(attack_message, center = victim)
                     return
                 if(victim.has_healing_modifier_changed)
-                    var/new_time_to_heal                = victim.time_to_heal_ko()
+                    var/new_time_to_heal                = victim.time_to_heal_ko(victim = victim)
 
                     var/current_percentage_healed       = (elapsed_time / time_to_heal) * 100
                     var/new_percentage_healed           = (elapsed_time / new_time_to_heal) * 100
@@ -154,7 +163,7 @@ mob
                         announce_combat_message(time_remaining_message, center = victim)
                         on_threshold = TRUE
 
-                sleep(1)
+                sleep(10)
 
             if(victim.combat_ko_total >= KO_SYSTEM_UNCONSCIOUS_KO)
                 // Don't heal the player since they are severely injured and the fight should already be over
@@ -166,15 +175,17 @@ mob
             else
                 victim.FullHeal()
 
-            victim.decrease_combat_ko(healed_message)
+            victim.decrease_combat_ko(healed_message, victim = victim)
             victim.is_waiting_for_healing = FALSE
 
-        try_healing_combat_ko()
-            var/mob/victim              = src
-
-            var/time_to_heal            = victim.time_to_heal_ko()
+        try_healing_combat_ko(mob/victim)
+            var/time_to_heal            = victim.time_to_heal_ko(victim = victim)
             var/time_to_heal_message    = "[victim] will heal from their last Combat KO in [round(time_to_heal / 10, 1)] seconds."
             var/healed_message          = "[victim] has healed from their last Combat KO, and is now affected by [victim.combat_ko_total - 1] Combat KO's."
+
+            if(victim.is_out_of_combat(victim = victim))
+                victim.has_angered_before_ko = FALSE
+                victim.Calm()
 
             if(victim.combat_ko_total <= 0 && victim.KO)
                 heal_spar_ko(victim, time_to_heal)
@@ -182,7 +193,7 @@ mob
             if(victim.combat_ko_total <= 0) 
                 return
 
-            if(victim.is_out_of_combat())
+            if(victim.is_out_of_combat(victim = victim))
                 if(victim.is_waiting_for_healing) return
                 victim.is_waiting_for_healing = TRUE
 
@@ -205,12 +216,15 @@ mob
 
                     is_waiting_for_healing = FALSE
                 else
-                    var/time_until_healing = round((KO_SYSTEM_OUT_OF_COMBAT_TIMER - victim.get_time_out_of_combat()) / 10, 1)
+                    var/time_until_healing = round((KO_SYSTEM_OUT_OF_COMBAT_TIMER - victim.get_time_out_of_combat(victim = victim)) / 10, 1)
                     if(time_until_healing <  0) 
                         time_until_healing = 0
                         return
 
                     victim << "You are still considered in combat, and cannot heal from your last Combat KO. You will be able to heal in [time_until_healing] seconds."
                     last_combat_timeout_message = world.time
-                    sleep(300)
+                    if(time_until_healing < 300)
+                        sleep(time_until_healing)
+                    else
+                        sleep(300)
 
