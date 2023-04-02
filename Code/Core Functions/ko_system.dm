@@ -8,10 +8,6 @@ mob
 
     proc
         Cause_Combat_KO(var/mob/victim, var/mob/attacker)
-            world << "Cause_Combat_KO() called"
-            world << "victim: [victim]"
-            world << "attacker: [attacker]"
-            world << "spar mode: [attacker.sparring_mode]"
             var/cause_of_ko_spar    = "[victim] was defeated by [attacker] during a [CASUAL_COMBAT]."
             var/cause_of_ko_lethal  = "[victim] was defeated by [attacker] during a [LETHAL_COMBAT]."
 
