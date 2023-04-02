@@ -48,7 +48,7 @@ proc/LogicLoop()
         for(var/mob/player in world)
             player.execute_player_actions()
 
-        sleep(world.tick_lag)
+        sleep(1) //sleep(world.tick_lag)
         //if(world.tick_usage > 80) sleep(world.tick_lag)
     
 

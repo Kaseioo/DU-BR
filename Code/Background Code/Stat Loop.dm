@@ -1,3 +1,4 @@
+
 mob/proc/get_bp_loop()
 	set waitfor=0
 	while(src)
@@ -89,8 +90,13 @@ mob
 	proc
 		effectiveBaseBPMult()
 			return 1 * feat_bp_multiplier * LegendaryZeroDefenseBPMult() //THIS FACTORS JIREN ALIEN TOO. THE SAME LSSJ PROC FOR BOTH
-
+mob/var/tmp/last_bp_get_time = 0
+mob/var/tmp/last_bp_get_stored = 0
 mob/proc/get_bp(factor_powerup=1)
+	if(world.time - last_bp_get_time < 10)
+		return last_bp_get_stored
+
+	last_bp_get_time = world.time
 
 	effectiveBaseBp = (base_bp + hbtc_bp + unlockedBP) * effectiveBaseBPMult()
 
@@ -127,6 +133,7 @@ mob/proc/get_bp(factor_powerup=1)
 		if(world.time - last_ki_hit_zero < zero_ki_bp_debuff_duration * 10)
 			n *= zero_ki_bp_mult
 		if(n < 1) n = 1
+		last_bp_get_stored = n
 		return n
 
 	else
@@ -228,6 +235,7 @@ mob/proc/get_bp(factor_powerup=1)
 			bp *= 0.5
 
 		if(bp<1) bp=1
+		last_bp_get_stored = bp
 		return bp
 
 mob/proc/ApplyDeadzonePressure(bp)
@@ -254,108 +262,108 @@ mob/proc/Player_Loops(start_delay)
 	Recov_mult_decrease()
 	Regen_mult_decrease()
 	EMP_mine_loop()
-	sleep(world.tick_lag) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
+	sleep(1) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
 	villain_timer()
 	killing_spree_loop()
 	Scrap_Absorb_Revert()
 	Activate_NPCs_Loop()
-	sleep(world.tick_lag) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
+	sleep(1) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
 	zenkai_reset()
 	Buff_Drain_Loop()
 	buff_transform_drain()
 	God_Fist_loop()
 	precog_loop()
-	sleep(world.tick_lag) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
+	sleep(1) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
 	LSD()
 	Zombie_Virus_Loop()
 	Steroid_Loop()
 	update_radar_loop()
 	Start_Gravity_Loops()
-	sleep(world.tick_lag) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
+	sleep(1) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
 	auto_regen_mobs+=src
 	auto_recov_mobs+=src
-	sleep(world.tick_lag) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
+	sleep(1) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
 	Fly_loop()
 	ssj_inspire_loop()
 	ssj_drain_loop()
 	Faction_Update()
-	sleep(world.tick_lag) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
+	sleep(1) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
 	spawn if(src) if(Regenerating) death_regen(set_loc=0)
 	Overdrive_Loop()
 	Power_Control_Loop()
 	Limit_Breaker_Loop()
-	sleep(world.tick_lag) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
+	sleep(1) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
 	get_bp_loop()
 	Diarea_Loop()
 	Eye_Injury_Blindness()
-	sleep(world.tick_lag) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
+	sleep(1) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
 	Injury_removal_loop()
 	//spawn if(src) Hell_Tortures()
 	Train_Gain_Loop()
-	sleep(world.tick_lag) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
+	sleep(1) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
 	Health_Reduction_Loop()
 	Energy_Reduction_Loop()
 	Dead_In_Living_World_Loop()
-	sleep(world.tick_lag) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
+	sleep(1) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
 	Final_realm_loop()
 	Ki_shield_revert_loop()
-	sleep(world.tick_lag) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
+	sleep(1) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
 	Dig_loop()
 	Poison_Loop()
 	cyber_bp_Loop()
 	Knowledge_gain_loop()
-	sleep(world.tick_lag) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
+	sleep(1) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
 	Regenerator_loop()
 	Puranto_regen_loop()
 	Onion_Lad_Star()
-	sleep(world.tick_lag) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
+	sleep(1) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
 	SI_List()
 	Vampire_Infection_Rise()
 	Vampire_Power_Fall()
 	//AI_Train_Loop()
 	//GOOD
-	sleep(world.tick_lag) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
+	sleep(1) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
 	calmness_timer()
 	//spawn if(src) Network_Delay_Loop()
 	update_area_loop()
 	Detect_good_people()
 	//burnOnDay()
 	Match_counterpart_loop()
-	sleep(world.tick_lag) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
+	sleep(1) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
 	Counterpart_died_loop()
 	Refill_grab_power_loop()
 	Meditate_gain_loop()
 	Nanite_repair_loop()
-	sleep(world.tick_lag) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
+	sleep(1) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
 	Cache_equipped_weights()
 	Spam_kill_timer()
 	Taiyoken_Blindness_Timer()
 	Rebuff_timer_countdown()
-	sleep(world.tick_lag) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
+	sleep(1) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
 	Senzu_timer_countdown()
 	Senzu_overload_countdown()
 	Radiation_loop()
-	sleep(world.tick_lag) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
+	sleep(1) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
 	StunDecay()
 	//GOOD
 	Great_Ape_berserk_loop()
 	Give_power_refill_loop()
-	sleep(world.tick_lag) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
+	sleep(1) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
 	Good_attack_good_loop()
 	Evade_meter_refill_loop()
 	SaitamaLoop()
 	UpdateRaceStatsOnlyModeStatsLoop()
 	//GOOD
-	sleep(world.tick_lag) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
+	sleep(1) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
 	SetOffenseAndDefenseToMatchSpeed()
 	MajinLearnSkill()
 	KikohoDamageLoop()
-	sleep(world.tick_lag) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
+	sleep(1) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
 	BleedLoop()
 	//GOOD
 	StatOverlayUpdateLoop()
 	PopulateBuildTabs()
-	sleep(world.tick_lag) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
+	sleep(1) //just to break up this huge wall of procs from executing in 1 frame when someone logs in
 	UpdateSenseArrowPositionsLoop()
 	StaminaRechargeLoop()
 	TrainingTimeRestoreLoop()
@@ -834,6 +842,8 @@ mob/proc/Regenerator_loop(obj/items/Regenerator/r)
 					Health += 4 * RegenMod() * N * Server_Regeneration
 					if(Health>100) Health=100
 
+				if(!KO_SYSTEM_REGENERATOR_MODIFIER)
+					KO_SYSTEM_REGENERATOR_MODIFIER = 0.5
 				if(r.Double_Effectiveness)
 					src.set_healing_modifier(KO_SYSTEM_REGENERATOR_MODIFIER * 2, reason = "entering double effectiveness regenerator", victim = src)
 				else
@@ -855,7 +865,7 @@ mob/proc/Regenerator_loop(obj/items/Regenerator/r)
 		else sleep(10)
 	regenerator_obj = null
 	
-	src.set_healing_modifier(1, reason = "exited regenerator", victim = src)
+	src.set_healing_modifier(1, reason = "exiting regenerator", victim = src)
 
 mob/proc/RegenGrabDrop()
 	set waitfor=0
@@ -1374,7 +1384,7 @@ mob/proc/PowerupScreenShakeLoop(obj/Power_Control/pc)
 mob/proc/PowerUpKnockAwayLoop(obj/Power_Control/A)
 	set waitfor=0
 	while(A && A.Powerup == 1 && A.PC_Loop_Active)
-		var/delay = world.tick_lag
+		var/delay = 1
 		if(BPpcnt > 100)
 			standing_powerup = 0
 			if(!Auto_Attack && world.time - last_attacked_mob_time > 35 && world.time - last_evade_key_press > 30 && world.time - last_block_key_press > 30 && !Giving_Power)
