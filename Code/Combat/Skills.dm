@@ -1134,6 +1134,7 @@ mob/proc/Give_Power(obj/Give_Power/G)
 			break
 		sleep(2)
 	Giving_Power=0
+	M.set_healing_modifier(1, "stopped being given power", victim = M)
 mob/proc/Give_power_refill_loop()
 	set waitfor=0
 	while(src)

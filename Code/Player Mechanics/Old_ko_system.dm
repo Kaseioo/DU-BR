@@ -53,7 +53,7 @@ mob/proc/TryToCauseAnger(mob/Attacker, mob/Victim)
 			if(is_attacker_a_player && !attacker_caused_anger_recently)
 				can_trigger_anger = TRUE
 
-			if(has_calmed_from_anger || can_trigger_anger || !Victim.has_angered_before_ko)
+			if((has_calmed_from_anger || can_trigger_anger) && !Victim.has_angered_before_ko)
 				Victim.anger(reason = ko_reason)
 				Victim.recent_ko_reasons.Insert(1, ko_reason)
 				Victim.recent_ko_reasons.len = 3
@@ -165,9 +165,8 @@ mob/proc/TryToCauseAngerDueToKo(mob/Victim)
 		Victim.anger(reason = "being ko'd so much")
 		Victim.FullHeal()
 		
-mob/proc/KO(mob/Attacker, allow_anger=TRUE, combat_ko_handled = FALSE)
+mob/proc/KO(mob/Attacker, allow_anger=TRUE, combat_ko_handled = FALSE, mob/Victim = src)
 	set waitfor=0
-	var/mob/Victim = src
 	
 	if(!Victim.client || !Victim.empty_player) 
 		TryToKoNPC(Attacker, Victim)

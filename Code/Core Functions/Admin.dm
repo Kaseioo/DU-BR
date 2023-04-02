@@ -2321,8 +2321,8 @@ mob/Admin1/verb
 		Log(src,"[key] admin KO'd [M.key]")
 		// M.KO("admin")
 		// M.KO("admin") //bypass anger
-		KO(M)
-		KO(M)
+		KO(Victim = M)
+		KO(Victim = M)
 
 mob/Admin1/verb/Admin_Revive(mob/M in players)
 	set category="Admin"
