@@ -160,7 +160,7 @@ mob/proc/TryToCauseAngerDueToKo(mob/Victim)
 	if(Victim.client) 
 		is_player = TRUE
 
-	if(is_player && ShouldAnger(Victim) && prob(10))
+	if(is_player && ShouldAnger(Victim) && prob(10) && !Victim.Angry())
 		Victim << "<font color=yellow>Being defeated so much angers you...</font>"
 		Victim.anger(reason = "being ko'd so much")
 		Victim.FullHeal()

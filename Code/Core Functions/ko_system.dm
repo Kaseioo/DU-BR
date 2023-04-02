@@ -5,6 +5,7 @@ mob
         is_waiting_for_healing          = FALSE
         last_combat_timeout_message     = 0
         has_angered_before_ko           = FALSE
+        is_healing_something            = FALSE
 
     proc
         Cause_Combat_KO(var/mob/victim, var/mob/attacker)
@@ -26,7 +27,7 @@ mob
 
             if(victim.combat_ko_total  >= KO_SYSTEM_UNCONSCIOUS_KO)
                 victim.combat_ko_total  = KO_SYSTEM_UNCONSCIOUS_KO
-                reason_of_increase   = "[reason_of_increase]. [victim] is now unconscious. "
+                reason_of_increase   = "[reason_of_increase] [victim] is now unconscious. "
                 
                 victim.KO(attacker, allow_anger = FALSE, combat_ko_handled = TRUE)
 
@@ -118,6 +119,9 @@ mob
 
             // We can't use Spawn() here as it is possible for the player to have their healing time reduced by external factors.
             // For example, the player could be dragged to a regenerator, have someone heal them, and so on.
+            if(victim.is_healing_something)
+                return
+            victim.is_healing_something = TRUE
             while(elapsed_time < time_to_heal)
                 elapsed_time += 10
 
@@ -171,13 +175,14 @@ mob
             else
                 victim.FullHeal()
 
-            victim.decrease_combat_ko(healed_message, victim = victim)
             victim.is_waiting_for_healing = FALSE
+            victim.is_healing_something = FALSE
+            victim.decrease_combat_ko(healed_message, victim = victim)
 
         try_healing_combat_ko(mob/victim)
             var/time_to_heal            = victim.time_to_heal_ko(victim = victim)
-            var/time_to_heal_message    = "[victim] will heal from their last Combat KO in [round(time_to_heal / 10, 1)] seconds."
-            var/healed_message          = "[victim] has healed from their last Combat KO, and is now affected by [victim.combat_ko_total - 1] Combat KO's."
+            var/time_to_heal_message    = "[victim] will heal from their latest Combat KO ([victim.combat_ko_total]) in [round(time_to_heal / 10, 1)] seconds."
+            var/healed_message          = "[victim] has healed from their latest Combat KO, and is now affected by \[[victim.combat_ko_total] -> [victim.combat_ko_total - 1]\] Combat KO's."
 
             if(victim.is_out_of_combat(victim = victim))
                 victim.has_angered_before_ko = FALSE
@@ -219,8 +224,5 @@ mob
 
                     victim << "You are still considered in combat, and cannot heal from your last Combat KO. You will be able to heal in [time_until_healing] seconds."
                     last_combat_timeout_message = world.time
-                    if(time_until_healing < 300)
-                        sleep(time_until_healing)
-                    else
                         sleep(300)
 
