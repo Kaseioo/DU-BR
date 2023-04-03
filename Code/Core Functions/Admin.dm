@@ -1140,7 +1140,7 @@ var/list/Stat_Settings=list("Year"=0,"No cap"=0,"Rearrange"=0,"Hard Cap"=0,"Modl
 var/list/Admin_Logs=new
 proc/Log(mob/P,var/T)
 	//if(P.client&&P.key=="EXGenesis") return
-	Admin_Logs["[T] ([time2text(world.realtime,"Day DD hh:mm")])"]=world.realtime
+	Admin_Logs["<span style='color: blue'>[P.ckey] - <span style='color: yellow'>([time2text(world.realtime,"Day DD hh:mm")])</span></span><br>[T]"]=world.realtime
 
 
 mob/Admin3/verb/AllowScienceItem(mob/M in world)
@@ -1348,7 +1348,7 @@ mob/proc/admin_blame(mob/admin, var/blame, var/global_announce = FALSE)
 		Admin_Msg(blame)
 		Log(admin.key, blame)
 		if(global_announce)
-			world << "<span style='color: yellow;'>(world) [blame]</span>"
+			world << "<span style='color: yellow;'>\[world\]</span> [blame]"
 
 mob/Admin4/verb/Meteors()
 	set category="Admin"
@@ -2289,9 +2289,9 @@ mob/Admin2/verb/DeleteAtom(atom/Target in Delete_List(src))
 	set name = "Destroy"
 
 	if(ismob(Target)) world<<"<font color=#FFFF00>[Target] has been kicked from the server"
-	else Log(src,"[key] destroyed Atom [Target]")
-	del(Target)
+	else Log(src,"[key] destroyed [Target]")
 	admin_blame(src, "[key] has destroyed the atom [Target]")
+	del(Target)
 
 mob/Admin1/verb/Kick(mob/m in world)
 	set category = "Admin"
@@ -2360,7 +2360,7 @@ proc/Admin_Msg(Text,Optional=0)
 		for(var/mob/P in players) 
 			if(P.IsAdmin()) 
 				if(!Optional||P.AdminOn)
-					P << "<font size=[P.TextSize]><span style='color: cyan;'>(admin) [Text]</span></font>"
+					P << "<font size=[P.TextSize]><span style='color: cyan;'>\[admin\]</span> [Text]</font>"
 mob/Admin1/verb
 	Chat(msg as text)
 		set category="Admin"
@@ -2610,11 +2610,12 @@ mob/Admin3/verb/Edit(atom/a in world)
 			continue
 		html += "<td><a href=byond://?src=\ref[a];action=edit;var=[v]>"
 		html += v
-		// checks if a is a list
+
 		if(istype(a.vars[v], /list))
 			html  += "<td>[a.vars[v]]"
 			for(var/element in a.vars[v])
-				html += "<br>[element]"
+				html += "[element], "
+
 			html += "</td></tr>"
 		else 
 			html += "<td>[Value(a.vars[v])]</td></tr>"

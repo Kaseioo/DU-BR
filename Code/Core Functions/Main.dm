@@ -94,7 +94,7 @@ mob/proc/Choose_Login() if(client)
 				del(src)
 				return
 	Carry_over_imprisonments()
-	switch(alert(src,"Make your choice","","New","Load"))
+	switch(alert(src,"Make your choice","Login","New","Load"))
 		if("New")
 			if(world.time<300&&can_login)
 				alert(src,"You can not make a new character until at least 30 seconds have passed since the \

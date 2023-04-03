@@ -1,10 +1,11 @@
-mob/Admin1
+mob
 	proc
-		ViewEmoteWindow(mob/player, unwritten, type = "Emote", path = "emotelogs")
+		ViewEmoteWindow(mob/admin, mob/player, unwritten, type = "Emote", path = "emotelogs")
 			var/View={"
 				<html>
 					<head>
 						<title>[player] [type] Log</title>
+						 <meta charset="UTF-8">
 					</head>
 					
 					<body bgcolor="#000000">
@@ -16,11 +17,12 @@ mob/Admin1
 			var/XXX=file("Logs/[path]/[player.ckey]Current.html")
 			if(fexists(XXX))
 				var/list/File_List = list("Cancel")
+				var/last_line = ""
 
 				for(var/File in flist("Logs/[path]/[player.ckey]"))
 					File_List+=File
-				if(src)
-					var/File = input(src,"Which [type] log do you want to view?") in File_List
+				if(admin)
+					var/File = input(admin, "Which [type] log do you want to view?") in File_List
 					if(!File || File=="Cancel") return
 
 					var/emotefile = file2text(file("Logs/[path]/[File]"))
@@ -28,22 +30,43 @@ mob/Admin1
 					if(player)
 						View += unwritten
 
-					usr << "Viewing [File]"
-					usr << browse(View,"window=Log;size=800x600")
-					admin_blame(usr, "Opens [player]'s [type] log")
+					admin << "Viewing [File]"
+					admin << browse(View,"window=Log;size=800x600")
+					admin_blame(admin, "Opens [player]'s [type] log")
 			else
-				usr << "No logs found for [player.ckey]"
+				admin << "No logs found for [player.ckey]"
+	verb
+		ViewSelfRPWindow()
+			var/mob/M = src
+			set category="Other"
+			set name="View own RP Window"
+			ViewEmoteWindow(src, M, M.unwritten_emotelogs, "Emote", "emotelogs")
+			
+		ViewSelfDevelopmentRPWindow()
+			var/mob/M = src
+			set category="Other"
+			set name="View own Development RP Window"
+
+			ViewEmoteWindow(src, M, M.unwritten_emotelogs, "Development Emote", "emotelogs_dev")
+			
+		ViewSelfSayWindow()
+			var/mob/M = src
+			set category="Other"
+			set name="View own Chatlog"
+
+			ViewEmoteWindow(src, M, M.unwritten_chatlogs, "Chatlog", "ChatLogs")
+mob/Admin1
 	verb
 		ViewRPWindow(mob/M in players)
 			set category="Admin"
 			set name="View Player RP Window"
-			ViewEmoteWindow(M, M.unwritten_emotelogs, "Emote", "emotelogs")
+			ViewEmoteWindow(src, M, M.unwritten_emotelogs, "Emote", "emotelogs")
 			
 		ViewDevelopmentRPWindow(mob/M in players)
 			set category="Admin"
 			set name="View Player Development RP Window"
 
-			ViewEmoteWindow(M, M.unwritten_emotelogs, "Development Emote", "emotelogs_dev")
+			ViewEmoteWindow(src, M, M.unwritten_emotelogs, "Development Emote", "emotelogs_dev")
 mob
 	proc
 		PostEmoteRPWindow(text as text, key)
@@ -78,11 +101,11 @@ mob/proc
 		if(!client) return
 		if(!last_emotelog_write)
 			last_emotelog_write=world.time //prevent writing unecessarily when someone has just logged in
-		var/log_entry="<br><font color=white>([time2text(world.realtime,"DD/MM/YY hh:mm:ss")]) [info] ([the_key])"
+		var/log_entry="<br><font color=white><span style='font-size: 10pt'>([the_key]) - ([time2text(world.realtime,"DD/MM/YY hh:mm:ss")])</span>[info]"
 
 		if(world.time-last_emotelog_write < 100) // 10 seconds
 			unwritten_emotelogs += log_entry
-		else Write_emotelogs()
+		else Write_emotelogs(type=type)
 
 	Write_emotelogs(allow_splits=1, type)
 		if(!key) return

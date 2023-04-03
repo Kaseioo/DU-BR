@@ -271,21 +271,24 @@ mob/verb
 
 	Think(msg as text|null)
 		set category = "Other"
+		if(!usr.can_say) return
+		usr.can_say = 0
+		Say_Spark()
 
-		if(!msg) msg = input("Type a message that your character is thinking right now", "Thinking Chat") as null|text
+		if(!msg) msg = input("Type what your character is thinking right now", "Thinking Chat") as null|text
 		if(msg)
 			var/t = "<span style='font-size:10pt;color:[TextColor];>[name] thinks to themselves: <i>[msg]</i></span>"
 			for(var/mob/m in Say_Recipients())
-				if(m.last_drone_msg != msg || !drone_module)
-					if(lowertext(msg) == "stop" && m != src && client && m && m.client)
-						if(m.stop_messages.len > 5) m.stop_messages.len = 5
-						m.stop_messages.Insert(1, key)
-						m.stop_messages[key] = world.time
+				if(lowertext(msg) == "stop" && m != src && client && m && m.client)
+					if(m.stop_messages.len > 5) m.stop_messages.len = 5
+					m.stop_messages.Insert(1, key)
+					m.stop_messages[key] = world.time
+
 					m << t
 					m.ChatLog(t,key)
 					m.EmoteLog(t,key)
 					m.EmoteLog(t,key, type = "emotelogs_dev")
-					if(drone_module) m.last_drone_msg = msg
+		usr.End_Say()
 
 	SayCooldown()
 		set waitfor = 0
@@ -302,11 +305,14 @@ mob/verb
 		if(msg)
 			usr.can_say=0
 			spawn(1) if(usr) usr.can_say=1
+			
 			var/t="<span style='font-size:10pt;color:yellow;font-family:Walk The Moon'>[msg]</span>"
+			
+
 			t = "<span style='font-size:12pt;color:yellow;font-family:Walk The Moon'> ======[name]====== </span><br>[t]"
 
 			var/type = input("What type of emote is this?") as null|anything in list("Normal", "Character Development")
-			var/message = "<br><br><span style='font-size:10pt;color:yellow;font-family:Walk The Moon'>======| [name] às [time2text(world.timeofday,"YYYY-MM-DD hh:mm:ss")] |======<br><br><span style='color: white;'>[html_encode(msg)]</span></span>"
+			var/message = "<span style='font-size:10pt;color:yellow;font-family:Walk The Moon'>======| [name] |======<span style='color: white;'><br>[html_encode(msg)]</span></span>"
 			if(type == "Character Development")
 				PostDevelopmentRPWindow(message, key)
 			else 
@@ -315,7 +321,8 @@ mob/verb
 			for(var/mob/M in Say_Recipients())
 				M << message
 				M.ChatLog(message,key)
-				M.EmoteLog(message,key)
+				if(M != src)
+					M.EmoteLog(message,key)
 			
 		usr.End_Say()
 
@@ -386,11 +393,11 @@ mob/verb/Play_Music()
 	switch(choice)
 		if("Cancel") src<<sound(0)
 		if("Carnival Meme")
+			player_view(22,src) << sound(0)	
 			var/sound_repeat
 			switch(alert(src,"Loop music?","Options","No","Yes"))
 				if("Yes") sound_repeat=1
+
 			for(var/mob/player in player_view(22,src))
 				player << sound('carnival_meme.ogg',repeat=sound_repeat,volume=100)
 				player << "[src] has played [choice] for you. You can stop this by using the Stop Sounds verb."
-
-	player_view(22,src) << sound(0)	
