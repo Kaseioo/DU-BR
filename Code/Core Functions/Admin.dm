@@ -744,7 +744,7 @@ var/max_auto_leech=100
 
 mob/Admin2/verb/PlayerLogs(mob/M in players)
 	set category="Admin"
-	var/View={"{"<html>
+	var/View={"<html>
 	<head><title></head></title><body>
 	<body bgcolor="#000000"><font size=6><font color="#0099FF"><b><i>
 	<font color="#00FFFF">**[M]'s Logged Activities**<br><font size=4>
@@ -1259,7 +1259,7 @@ mob/Admin3/verb/SetGlobalScienceTabItems()
 	for(var/mob/player in players)				
 		for(var/obj/item in GLOBAL_SCIENCE_TAB_ITEMS)	
 			if(!(item in player.global_science_items))
-				global_science_items += item
+				player.global_science_items += item
 
 		for(var/obj/item in player.global_science_items)
 			if(!(item in GLOBAL_SCIENCE_TAB_ITEMS))
@@ -1272,11 +1272,18 @@ mob/Admin3/verb/SetGlobalScienceTabItems()
 mob/verb/View_Admin_Logs()
 	//set category="Other"
 	Update_Admin_Logs()
-	var/T={"<html><head><body><body bgcolor="#000000"><font size=3><b>
-	This logs the actions of the admins for all to read<p>
+	var/T= {"
+		<html>
+			<head>
+			<body>
+			<body bgcolor="#000000">
+				<font size=3>
+					<b>
+						This logs the actions of the admins for all to read<p>
 	"}
-	for(var/V in Admin_Logs) T+="<font color=[rgb(rand(0,255),rand(0,255),rand(0,255))]>[V]<br>"
-	usr<<browse(T,"window= ;size=700x600")
+	for(var/V in Admin_Logs) 
+		T += "<span style='color: white;'>[V]<br></span>"
+	usr << browse(T,"window= ;size=700x600")
 
 /*mob/Admin4/verb/Wipe_Admin_Logs()
 	set category = "Admin"
@@ -1309,6 +1316,7 @@ mob/proc/Illegal_Science()
 								Illegal_Science+=N.type
 							return
 						Illegal_Science+=O.type
+						admin_blame(src, "[key] has removed [O.name] from the illegal science list list.")
 
 				if("Add something back")
 					while(src)
@@ -1320,6 +1328,7 @@ mob/proc/Illegal_Science()
 						if(O=="All") Illegal_Science = new/list()
 						src << "Adding back [O.name] (Type: [O.type])"
 						Illegal_Science-=O.type
+						admin_blame(src, "[key] has added [O.name] back to the illegal science list list.")
 
 mob/Admin4/verb/Count(obj/A in view(src))
 	set category="Admin"
@@ -1333,6 +1342,13 @@ var/Earth_Only
 
 
 var/can_admin_vote = 0
+
+mob/proc/admin_blame(mob/admin, var/blame, var/global_announce = FALSE)
+	if(Admins[admin.key]>=1)
+		Admin_Msg(blame)
+		Log(admin.key, blame)
+		if(global_announce)
+			world << "<span style='color: yellow;'>(world) [blame]</span>"
 
 mob/Admin4/verb/Meteors()
 	set category="Admin"
@@ -1350,6 +1366,9 @@ mob/Admin4/verb/Meteors()
 		if(!Turf_List) return
 		var/turf/T=pick(Turf_List)
 		O.SafeTeleport(T)
+
+	var/blame = "[key] has spawned [Amount] meteors."
+	admin_blame(src, blame)
 
 mob/Admin2/verb/Bodies()
 	set category="Admin"
@@ -1373,6 +1392,7 @@ mob/Admin4/verb/AdminAutoAttack(mob/P in world)
 				Melee(from_auto_attack=1)
 			sleep(1)
 		Auto_Attack=0
+	admin_blame(src, "[key] has toggled admin auto attack on [P.key]")
 
 obj/Auto_Attack
 	hotbar_type="Melee"
@@ -1410,9 +1430,11 @@ mob/proc/Get_Icon_List()
 		for(var/obj/O in A) L+=O
 	for(var/atom/A in view(10,src)) L+=A
 	return L
+
 mob/Admin5/verb/Get_Icon(atom/A in Get_Icon_List())
 	set category="Admin"
 	src<<ftp(A.icon)
+
 mob/proc/Alter_Age(A)
 	Age+=A
 	real_age+=A
@@ -1435,18 +1457,23 @@ mob/Admin4/verb/Purge_Old_Saves()
 	for(var/File in flist("Save/"))
 		var/savefile/F=new("Save/[File]")
 		if(F["Last_Used"]<=world.realtime-864000*2) fdel("Save/[File]")
+
+	admin_blame(src, "[key] has purged old savefiles.")
 	world<<"<font color=#FFFF00>Savefile purge complete"
 
 mob/Admin3/verb/Enlarge(atom/A as mob|obj in world)
 	set category="Admin"
 	var/X=input(src,"Enter width in pixels") as num
-	var/Y=input(src,"Enter height in pixels") as num
-	if(A) A.Enlarge_Icon(X,Y)
+	var/Y=input(src,"Enter height in pixels") as num 
+	if(A)
+		A.Enlarge_Icon(X,Y)
+		admin_blame(src, "[key] has enlarged [A] to [X]x[Y] pixels.")
 
 mob/Admin3/verb/ChangeTransformSize(atom/a as mob|obj in world)
 	set category = "Admin"
 	var/size = input(src,"Size","Options",1) as num
 	a.SetTransformSize(size)
+	admin_blame(src, "[key] has changed the transform size of [a] to [size]")
 
 obj/Enlarge_Icon/verb/Enlarge()
 	set category="Other"
@@ -1478,6 +1505,7 @@ mob/Admin5/verb/Delete_File()
 				File_List-=File
 				fdel(File)
 				alert(src,"[File] deleted")
+		admin_blame(src, "[key] has deleted [File]")
 
 mob/Admin5/verb/GetFiles()
 	set category="Admin"
@@ -1496,12 +1524,15 @@ mob/Admin5/verb/GetFiles()
 
 mob/Admin4/verb/Hardboot()
 	set category="Admin"
+	admin_blame(src, "[key] has hardbooted the server.", TRUE)
 	world.Reboot()
 
 mob/Admin3/verb/Delete_Player_Save(mob/A in players)
 	set category="Admin"
 	switch(input(src,"Really delete [A.key]'s file?") in list("No","Yes"))
 		if("Yes") Delete_Save(A)
+	admin_blame(src, "[key] has deleted [A.key]'s savefile.")
+
 proc/Delete_Save(mob/M)
 	if(!M.key) return
 	var/Key=M.key
@@ -1524,7 +1555,7 @@ mob/verb/Races()
 
 mob/Admin1/verb/SendToSpawn(mob/A in players)
 	set category="Admin"
-	Log(src,"[key] sent [A] to their spawn")
+	admin_blame(src, "[key] has sent [A] to their spawn.")
 	A.Respawn()
 
 mob/proc/Rename_List()
@@ -1550,7 +1581,11 @@ mob/Admin1/verb/Rename(atom/A in Rename_List())
 	var/New_Name=input(src,"Renaming [A]","",Old_Name) as text
 	if(!A) return
 	A.name=New_Name
-	if(!A.name) A.name=Old_Name
+	admin_blame(src, "[key] has renamed [A] to [New_Name].")
+
+	if(!A.name) 
+		A.name=Old_Name
+		admin_blame(src, "[key] has failed to rename [A] to [New_Name].")
 
 mob/Admin2/verb/Reward(mob/A in players)
 	set category="Admin"
@@ -1558,14 +1593,14 @@ mob/Admin2/verb/Reward(mob/A in players)
 	list("BP","BP Mod","Energy","Resources","Skill Points","Cancel"))
 		if("Skill Points")
 			var/N=input(src,"How many skill points do you want to give [A]?") as num
+			if(N > 10000) N = 10000
 			A.Experience+=N
-			Admin_Msg("[key] gave [A] [N] skill points")
-			Log(src,"[key] gave [A.key] [N] skill points")
+
+			admin_blame(src, "[key] has given [A] ([A.key]) [N] skill points.")
 		if("Resources")
 			var/Amount=input(src,"How many resources?") as num
 			A.Alter_Res(Amount)
-			Admin_Msg("[key] gave [A] [Commas(Amount)]$")
-			Log(src,"[key] gave [A.key] [Commas(Amount)]$")
+			admin_blame(src, "[key] has given [A] ([A.key]) [Commas(Amount)] resources.")
 		if("BP")
 			var/Max = 0
 			for(var/mob/P in players) if(P.base_bp / P.bp_mod > Max) Max = P.base_bp / P.bp_mod
@@ -1579,9 +1614,9 @@ mob/Admin2/verb/Reward(mob/A in players)
 			Average *= A.bp_mod
 			var/Boost = input(src,"[A]'s BP: [Commas(A.base_bp)]. Current Relative Max Base BP of all players: [Commas(Max)]. Relative Average Base BP of all \
 			players: [Commas(Average)]. Relative means its adjusted to be relative to the BP Mod of whoever you are currently rewarding.") as num
+			if(Boost > 10000000000000) Boost = 10000000000000
 			if(round(A.base_bp) == Boost) return
-			Admin_Msg("[src] boosted [A]'s BP from [Commas(A.base_bp)] to [Commas(Boost)]")
-			Log(src,"[key] boosted [A.key]'s BP from [Commas(A.base_bp)] to [Commas(Boost)]")
+			admin_blame(src, "[key] has boosted [A]'s BP from [Commas(A.base_bp)] to [Commas(Boost)].")
 			A.base_bp = Boost
 		if("BP Mod")
 			var/Max=0
@@ -1595,8 +1630,7 @@ mob/Admin2/verb/Reward(mob/A in players)
 			var/Boost=input(src,"[A]'s BP Mod: [A.bp_mod]x. Current Max of all players: [Commas(Max)]x. Average of all \
 			players: [Commas(Average)]x.") as num
 			if(round(A.bp_mod)==Boost) return
-			Admin_Msg("[src] boosted [A]'s BP Mod from [Commas(A.bp_mod)] to [Commas(Boost)]")
-			Log(src,"[key] boosted [A.key]'s BP Mod from [Commas(A.bp_mod)] to [Commas(Boost)]")
+			admin_blame(src, "[key] has boosted [A]'s BP Mod from [A.bp_mod]x to [Boost]x.")
 			A.bp_mod=Boost
 		if("Energy")
 			var/Max=0
@@ -1609,15 +1643,15 @@ mob/Admin2/verb/Reward(mob/A in players)
 			Average/=Player_Count
 			var/Boost=input(src,"[A]'s Energy: [A.max_ki/A.Eff]. Current Max of all players: [Commas(Max)]. Average of all \
 			players: [Commas(Average)].") as num
-			Admin_Msg("[src] boosted [A]'s energy from [Commas(A.max_ki)] to [Commas(Boost*A.Eff)]")
-			Log(src,"[key] boosted [A.key]'s Energy from [Commas(A.max_ki)] to [Commas(Boost*A.Eff)]")
+			admin_blame(src, "[key] has boosted [A]'s Energy from [Commas(A.max_ki)] to [Commas(Boost*A.Eff)].")
 			A.max_ki=Boost*A.Eff
 mob/Admin3/verb/Map_Save()
 	set category="Admin"
-	Log(src,"[key] saved the map")
+	admin_blame(src, "[key] has saved the map.")
 	MapSave()
 mob/Admin3/verb/Save_Items()
 	set category="Admin"
+	admin_blame(src, "[key] has saved all items.")
 	SaveItems()
 mob/Admin2/verb/Objects()
 	set category="Admin"
@@ -1664,7 +1698,7 @@ mob/Admin3/verb/Warper()
 	A.gotox=input(src,"x location to send to") as num
 	A.gotoy=input(src,"y") as num
 	A.gotoz=input(src,"z") as num
-	Log(src,"[key] placed a warper at position [A.gotox], [A.gotoy], [A.gotoz]")
+	admin_blame(src, "[key] placed a warper at position [A.gotox], [A.gotoy], [A.gotoz]")
 	switch(input(src,"Does this warper go both ways?") in list("Yes","No"))
 		if("Yes")
 			var/obj/Warper/O=new(locate(A.gotox,A.gotoy,A.gotoz))
@@ -1692,6 +1726,7 @@ var
 
 mob/Admin4/verb/Pwipe_Settings()
 	set category="Admin"
+	admin_blame(src, "[key] has opened the pwipe settings menu. Current settings: Delete map: [pwipe_delete_map] Turf health: [pwipe_turf_health] Delete items: [pwipe_delete_items] Cost threshold: [pwipe_cost_threshold]")
 	switch(alert(src,"Does pwiping (also BP Resets) delete the map?","Options","Yes","No"))
 		if("Yes") pwipe_delete_map=1
 		if("No") pwipe_delete_map=0
@@ -1704,6 +1739,7 @@ mob/Admin4/verb/Pwipe_Settings()
 	if(!pwipe_delete_items)
 		pwipe_cost_threshold=input(src,"Set the cost threshold for items that will be kept, anything that \
 		costs more resources than this amount will be deleted","Options",pwipe_cost_threshold) as num
+	admin_blame(src, "[key] has changed the pwipe settings. New settings: Delete map: [pwipe_delete_map] Turf health: [pwipe_turf_health] Delete items: [pwipe_delete_items] Cost threshold: [pwipe_cost_threshold]")
 	/*switch(alert(src,"Does pwiping delete Feats?","Options","Yes","No"))
 		if("Yes") pwipe_delete_feats=1
 		if("No") pwipe_delete_feats=0*/
@@ -1712,7 +1748,7 @@ mob/Admin4/verb/Pwipe()
 	set category="Admin"
 	switch(input(src,"Are you SURE you want to delete all saves?") in list("No","Yes"))
 		if("Yes")
-			world<<"[key] deleted the savefiles."
+			admin_blame(src, "[key] has PWiped.", TRUE)
 			Wipe(delete_map=pwipe_delete_map,delete_items=pwipe_delete_items,cost_threshold=pwipe_cost_threshold,turf_health=pwipe_turf_health,\
 			delete_feats = pwipe_delete_feats)
 
@@ -1822,12 +1858,12 @@ obj/proc/Item_upgrade_reset_for_wipe()
 mob/Admin3/verb/AFKBoot()
 	set category="Admin"
 	for(var/mob/A in players) A.KickAFKPlayer()
-	Admins<<"Afk boot complete."
+	admin_blame(src, "[key] has AFK booted.", TRUE)
 
 mob/Admin1/verb/Kill(mob/A in world)
 	set instant=1
 	set category="Admin"
-	Log(src,"[key] killed [A] with the kill verb.")
+	admin_blame(src, "[key] has killed [A] with the kill verb.")
 	A.Death("admin")
 
 mob/Admin4/verb/Errors()
@@ -1860,7 +1896,7 @@ mob/Admin4/verb/Update()//(var/F as file)
 	set category="Admin"
 	var/F=input("Choose file") as file
 	fcopy(F,"[F]")
-	Log(src,"[key] updated")
+	admin_blame(src, "[key] has updated [F].")
 
 obj/Music
 	New()
@@ -1900,6 +1936,7 @@ mob/Admin1/verb/RemoveOverlays(atom/A in Admin_Overlays_List())
 	set category="Admin"
 	A.overlays-=A.overlays
 	A.underlays-=A.underlays
+	admin_blame(src, "[key] has removed all overlays from [A].")
 
 proc/Find_Text(var/Hay,var/list/Needle,var/Start,var/End)
 	if(!Hay||!Needle) return 0
@@ -1926,6 +1963,7 @@ mob/Admin4/verb/PlayFile(S as file)
 			if(A=="Cancel") return
 			A.Play_File(S,Repeat)
 		if("All Near You") for(var/mob/A in player_view(30,src)) if(A.client) A.Play_File(S,Repeat)
+	admin_blame(src, "[key] has played [S] for [Repeat?"everyone":"everyone near them"].")
 
 mob/proc/Play_File(S as file,Repeat=0)
 	if(Find_Text("[S]",list(".bmp",".png",".jpg",".gif"))) src<<browse(S)
@@ -1966,6 +2004,7 @@ mob/Admin4/verb/Replace(atom/A as turf|obj in view(10))
 				Q.Savable=0
 				if(Save) Turfs+=Q
 				del(E)
+	admin_blame(src, "[key] has replaced all [A.type] with [B].")
 
 var/list/Give_List
 obj/var/Givable=1
@@ -1989,7 +2028,7 @@ mob/Admin2/verb/GiveItem(mob/A in world, Search as text)
 		Give_Rank(A)
 		return
 	A.contents+=new O.type
-	Log(src,"[key] gave [A.key] a [O]")
+	admin_blame(src, "[key] has given [A.key] a [O].")
 
 var/list/Make_List
 obj/var/Makeable=1
@@ -2015,7 +2054,7 @@ mob/Admin2/verb/Make(mob/A in world, Search as text)
 	var/mob/M=new O.type(locate(A.x,A.y,A.z))
 	if(ismob(M)) M.Savable_NPC=1
 	spawn(10) if(M) M.SafeTeleport(loc)
-	Log(src,"[key] made a [M]")
+	admin_blame(src, "[key] has made a [M].")
 
 mob/Admin2/verb/Forms()
 	set category="Admin"
@@ -2039,7 +2078,7 @@ mob/Admin3/verb/Reboot()
 	else
 		var/confirm=input("Are you sure you wish to do this? (Reboot)") in list("Yes","No")
 		if(confirm=="No") return
-	Log(src,"[key] rebooted the server")
+	admin_blame(src, "[key] has rebooted the server.", TRUE)
 	Admin_Reboot()
 
 proc/Admin_Reboot(save_world=1)
@@ -2064,6 +2103,7 @@ mob/Admin5/verb/Shutdown()
 				for(var/obj/items/Shikon_Jewel/s in M)
 					s.Move(M.base_loc())
 				M.Save()
+			admin_blame(src, "[key] has shut down the server.", TRUE)
 			SaveWorld()
 			shutdown()
 
@@ -2079,10 +2119,10 @@ mob/Admin5/verb/Shutdown()
 			world<<"[key] ruined the server"
 			del(world)*/
 
-mob/Admin1/verb/Message(msg as text)
+mob/Admin1/verb/Message(msg as message)
 	set category="Admin"
 	world<<"<font size=2><font color=yellow>[msg]"
-	Admin_Msg("[src] just used message.")
+	admin_blame(src, "[key] has sent a message to the server.")
 
 /*mob/Admin3/verb/Terraform()
 	set category="Admin"
@@ -2107,8 +2147,9 @@ mob/Admin4/verb
 			AdminOn=1
 
 mob/Admin1/verb
-	Narrate(msg as text)
+	Narrate(msg as message)
 		set category="Admin"
+		admin_blame(src, "[key] has narrated: [msg]")
 		player_view(15,src)<<"<font color=#FFFF00>[msg]"
 
 	Stream_Music_to_Everyone()
@@ -2131,6 +2172,7 @@ mob/Admin1/verb
 					m << "<font color=cyan>[src] played music for you: [sound]"
 					m << sound
 					ips += m.client.address
+		admin_blame(src, "[key] has played music for everyone: [sound]")
 
 	StopAllSoundsGlobally()
 		set category = "Admin"
@@ -2139,6 +2181,7 @@ mob/Admin1/verb
 			if(m.client)
 				m << "<font color=cyan>[src] stopped all sounds for you."
 				m << sound(null)
+		admin_blame(src, "[key] has stopped all sounds for everyone.")
 
 	IP(mob/M in players)
 		set category="Admin"
@@ -2170,6 +2213,7 @@ mob/Admin3/verb
 			f["key"]<<key
 			fcopy("Save/[M.key]","Save/[key]")
 			Load()
+		admin_blame(src, "[key] has entered [M]'s character.")
 
 mob/proc/MassReviveAlert()
 	set waitfor=0
@@ -2195,6 +2239,8 @@ mob/Admin2/verb
 			if(summon) M.SafeTeleport(loc)
 			if(Yes)
 				M.MassReviveAlert()
+		admin_blame(src, "[key] has mass revived everyone.")
+		
 	MassSummon()
 		set category="Admin"
 		var/confirm=input("Are you sure you wish to do this? (Mass Summon)") in list("Yes","No")
@@ -2209,6 +2255,7 @@ mob/Admin2/verb
 				for(var/mob/Enemy/P)
 					P.SafeTeleport(locate(x+rand(-2,2),y+rand(-2,2),z))
 					if(!P.z) del(P)
+		admin_blame(src, "[key] has mass summoned everyone.")
 
 mob/Admin2/verb/Dead()
 	set category="Admin"
@@ -2233,19 +2280,23 @@ mob/Admin2/verb/Delete(Search as text)
 	for(var/atom/A in L) if(findtext(A.name,Search)) L2+=A
 	var/atom/A=input(src,"Delete what?") in L2
 	if(ismob(A)) world<<"<font color=#FFFF00>[A] has been kicked from the server"
-	else Log(src,"[key] deleted [A]")
+	admin_blame(src, "[key] has deleted [A]")
 	del(A)
+
 
 mob/Admin2/verb/DeleteAtom(atom/Target in Delete_List(src))
 	set category="Admin"
 	set name = "Destroy"
+
 	if(ismob(Target)) world<<"<font color=#FFFF00>[Target] has been kicked from the server"
 	else Log(src,"[key] destroyed Atom [Target]")
 	del(Target)
+	admin_blame(src, "[key] has destroyed the atom [Target]")
 
 mob/Admin1/verb/Kick(mob/m in world)
 	set category = "Admin"
 	clients << "<font color=#FFFF00>[m] has been kicked from the server"
+	admin_blame(src, "[key] has kicked [m]")
 	m.Logout()
 
 mob/Admin2/verb
@@ -2255,7 +2306,7 @@ mob/Admin2/verb
 		var/xx=input(src,"X Location?") as num
 		var/yy=input(src,"Y Location?") as num
 		var/zz=input(src,"Z Location?") as num
-		Log(src,"[key] xyz teleported to ([xx],[yy],[zz])")
+		admin_blame(src, "[key] has teleported [M] to ([xx],[yy],[zz])")
 		switch(input(src,"Are you sure?") in list ("Yes", "No",)) if("Yes") M.SafeTeleport(locate(xx,yy,zz))
 
 mob/Admin3/verb
@@ -2267,7 +2318,7 @@ mob/Admin3/verb
 				if(!A.ssj&&!A.SSjAble) A.SSj()
 				else if(A.ssj==1) A.SSj2()
 				else if(A.ssj==2) A.SSj3()
-				if(A.client) Log(src,"[key] Omegafied [A.key]")
+				admin_blame(src, "[key] has given [A] super yasai")
 
 mob/Admin1/verb/AdminHeal(mob/A in world)
 	set category="Admin"
@@ -2279,6 +2330,7 @@ mob/Admin1/verb/AdminHeal(mob/A in world)
 				for(var/obj/Injuries/B in A.injury_list) if(I!=B) del(B)
 				del(I)
 		break
+	admin_blame(src, "[key] has admin healed [A]")
 	A.Add_Injury_Overlays()
 
 mob/Admin2/verb/AllowOOC()
@@ -2290,6 +2342,7 @@ mob/Admin2/verb/AllowOOC()
 	else
 		OOC=1
 		world<<"OOC is enabled."
+	admin_blame(src, "[key] has toggled OOC")
 /*mob/Admin3/verb/Clean()
 	set category="Admin"
 	var/Amount=0
@@ -2302,17 +2355,22 @@ mob/Admin2/verb/AllowOOC()
 		Amount+=1
 		del(A)
 	src<<"[Amount] Blasts Deleted"*/
-proc/Admin_Msg(Text,Optional=0) if(Text) for(var/mob/P in players) if(P.IsAdmin()) if(!Optional||P.AdminOn)
-	P<<"<font size=[P.TextSize]>[Text]"
+proc/Admin_Msg(Text,Optional=0)
+	if(Text) 
+		for(var/mob/P in players) 
+			if(P.IsAdmin()) 
+				if(!Optional||P.AdminOn)
+					P << "<font size=[P.TextSize]><span style='color: cyan;'>(admin) [Text]</span></font>"
 mob/Admin1/verb
 	Chat(msg as text)
 		set category="Admin"
-		Admin_Msg("(Admin)<font color=[TextColor]>[key]: [msg]",1)
+		Admin_Msg("<font color=[TextColor]>[key]: [msg]",1)
 
-	Announce(msg as text)
+	Announce(msg as message)
 		set category="Admin"
 		set instant=1
-		for(var/mob/M in players) M<<"<font size=[M.TextSize]><font color=white>(Admin) <font color=[TextColor]>[key]: <font color=white>[html_encode(msg)]"
+		for(var/mob/M in players) M<<"<font size=[M.TextSize]><font color=white> <font color=[TextColor]>[key]: <font color=white>[html_encode(msg)]"
+		admin_blame(src, "[key] has announced [msg]")
 
 mob/Admin1/verb
 	KO_Someone(mob/M in world)
@@ -2323,23 +2381,26 @@ mob/Admin1/verb
 		// M.KO("admin") //bypass anger
 		KO(Victim = M)
 		KO(Victim = M)
+		admin_blame(src, "[key] has KO'd [M]")
 
 mob/Admin1/verb/Admin_Revive(mob/M in players)
 	set category="Admin"
 	var/confirm=input("Are you sure you wish to do this? (Admin Revive - [M.name])") in list("Yes","No")
 	if(confirm=="No") return
-	Log(src,"[key] revived [M.key]")
+	admin_blame(src, "[key] has revived [M]")
+
 	M.UnKO()
 	M.Revive()
+	
 mob/Admin2/verb/World_Heal()
 	set category="Admin"
 	var/confirm=input("Are you sure you wish to do this? (World Heal)") in list("Yes","No")
 	if(confirm=="No") return
-	Log(src,"[key] world healed")
+	admin_blame(src, "[key] has world healed everyone")
 	spawn for(var/mob/M in players) M.FullHeal()
 mob/Admin1/verb/Teleport(mob/M in Summon_List())
 	set category="Admin"
-	Log(src,"[key] teleported to [M.key]")
+	admin_blame(src, "[key] has teleported to [M]")
 	SafeTeleport(M.loc)
 
 var/Gain=1
@@ -2356,7 +2417,7 @@ mob/Admin1/verb/Summon(mob/M in Summon_List())
 	set category="Admin"
 	var/confirm=input("Are you sure you wish to do this? (Summon - [M.name])") in list("Yes","No")
 	if(confirm=="No") return
-	Log(src,"[key] summoned [M.key]")
+	admin_blame(src, "[key] has summoned [M]")
 	M.SafeTeleport(loc)
 
 var/list/Mutes=new
@@ -2376,16 +2437,16 @@ mob/Admin1/verb
 			var/duration=input("How long is the mute in hours?",3) as num
 			Mutes[M.key]=world.realtime+(duration*(60*60*10))
 			world<<"[M] has been muted for [duration] hours."
-			Log(src,"[key] muted [M.key]")
+			admin_blame(src, "[key] has muted [M]")
 		else
 			Mutes.Remove(M.key)
 			world<<"[M] has been un-muted."
-			Log(src,"[key] unmuted [M.key]")
+			admin_blame(src, "[key] has unmuted [M]")
 	MassUnMute()
 		set category="Admin"
 		var/confirm=input("Are you sure you wish to do this?") in list("Yes","No")
 		if(confirm=="No") return
-		Log(src,"[key] unmuted everyone.")
+		admin_blame(src, "[key] has unmuted everyone")
 		for(var/A in Mutes)
 			world<<"[A] was unmuted"
 			Mutes-=A
@@ -2432,24 +2493,26 @@ mob/Admin1/verb
 						Ban()
 						return
 					L=Bans[Unban]
-					world<<"[displaykey] unbanned [L["Key"]]"
-					Log(src,"[key] unbanned [L["Key"]]")
+					admin_blame(src, "[key] has unbanned [L["Key"]]", TRUE)
 					Bans-=Unban
 					Save_Ban()
 				if("Unban All")
 					var/confirm=input("Are you sure you wish to do this? (Mass Unban)") in list("Yes","No")
 					if(confirm=="No") return
-					world<<"[src] massunbanned."
+
 					for(var/V in Bans)
 						var/list/L=Bans[V]
 						world<<"[L["Key"]] was unbanned"
 						Bans-=V
-					world<<"Mass unban complete."
-					Log(src,"[key] mass unbanned")
+					admin_blame(src, "[key] has mass unbanned everyone", TRUE)
 					Save_Ban()
 			return
 		var/mob/M=P
 		if(!M||!M.client) return
+		if(Admins[M.key] > Admins[src.key])
+			src << "You cannot ban an admin with a higher rank than you."
+			return
+
 		var/Key=M.displaykey
 		var/IP=M.client.address
 		var/CID=M.client.computer_id
@@ -2458,7 +2521,7 @@ mob/Admin1/verb
 		if(Timer<0.1) Timer=0.1
 		//if(Timer>240) Timer=240
 		Apply_Ban(M,Timer,Key,Reason,key,IP,CID)
-		Log(src,"[key] banned [Key]")
+		admin_blame(src, "[key] has banned [Key]", TRUE)
 
 mob/Admin1/verb/Manual_Ban()
 	set category="Admin"
@@ -2470,7 +2533,7 @@ mob/Admin1/verb/Manual_Ban()
 	if(t<0.1) t=0.1
 	//if(t>240) t=240
 	Apply_Ban(null,t,k,r,key,i,c)
-	Log(src,"[key] manual banned [k]")
+	admin_blame(src, "[key] has manually banned [k]", TRUE)
 
 var
 	maxBanTime = 0 //hours
@@ -2519,7 +2582,7 @@ mob/Admin3/verb/MassKO()
 	set category="Admin"
 	var/confirm=input("Are you sure you wish to do this? (Mass KO)") in list("Yes","No")
 	if(confirm=="No") return
-	Log(src,"[key] knocked out everyone.")
+	admin_blame(src, "[key] has knocked out everyone", TRUE)
 	for(var/mob/A in players) if(A.client) spawn A.KO("admin")
 
 mob/proc/Edit_List()
@@ -2547,20 +2610,29 @@ mob/Admin3/verb/Edit(atom/a in world)
 			continue
 		html += "<td><a href=byond://?src=\ref[a];action=edit;var=[v]>"
 		html += v
-		html += "<td>[Value(a.vars[v])]</td></tr>"
+		// checks if a is a list
+		if(istype(a.vars[v], /list))
+			html  += "<td>[a.vars[v]]"
+			for(var/element in a.vars[v])
+				html += "<br>[element]"
+			html += "</td></tr>"
+		else 
+			html += "<td>[Value(a.vars[v])]</td></tr>"
 
 	usr << browse(html, "window=[a];size=400x700")
 	
-	Log(src, "[key] opened the edit sheet for [a]")
+	admin_blame(src, "[key] opened the edit sheet for [a]")
 
 atom/Topic(href, hrefs[])
 	if(hrefs["action"] == "edit")
 		if(!usr || !usr.client || !usr.IsAdmin()) return
+		var/mob/admin = usr
 		var/v = hrefs["var"]
 		//this is to try and prevent a teleport hack
 		if(ismob(src) && src:client && "[v]" in list("x","y","z","loc"))
 			return
 		var/class = input(usr, "[v]") as null|anything in list("Number", "Text", "File", "Empty List", "Nothing")
+
 		if(!class) return
 		switch(class)
 			if("Nothing") vars[v] = null
@@ -2568,7 +2640,7 @@ atom/Topic(href, hrefs[])
 			if("Number") vars[v]=input(usr, "", "", vars[v]) as num
 			if("File") vars[v]=input(usr, "", "", vars[v]) as file
 			if("Empty list") vars[v] = new/list
-		Log(usr, "[usr.key] edited [src]'s [v] var to [Value(vars[v])]")
+
 		usr:Edit(src)
 		. = ..()
 
