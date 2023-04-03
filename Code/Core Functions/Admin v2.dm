@@ -55,9 +55,6 @@ mob/Admin4/verb/Server_Control_Panel()
 	set name = "Server Control Panel"
 	src.ServerSettings()
 
-mob/Admin5/verb/Test_Creation()
-	set category = "Yeet"
-	set name = "Test Creation Process"
 	//src.EditInfo()
 
 
