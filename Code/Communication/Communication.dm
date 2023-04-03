@@ -8,7 +8,7 @@ mob/proc
 		if(!client) return
 		if(!last_chatlog_write) last_chatlog_write=world.time //prevent writing unecessarily when someone has just logged in
 		var/log_entry="<br><font color=white>([time2text(world.realtime,"DD/MM/YY hh:mm:ss")]) [info] ([the_key])"
-		if(world.time-last_chatlog_write<100) // 10 seconds
+		if(world.time-last_chatlog_write < 100) // 10 seconds
 			unwritten_chatlogs+=log_entry
 		else Write_chatlogs()
 
@@ -189,7 +189,7 @@ mob/proc/Say_Recipients()
 	return L
 
 mob/var/tmp/list/stop_messages=new
-
+mob/var/tmp/neko_collar_adds_tilde = FALSE
 mob/verb
 	Ignore_GlobalSay()
 		set category="Other"
@@ -240,6 +240,12 @@ mob/verb
 				M.ChatLog(t,key)
 		usr.Say_Spark()
 
+	ToggleNekoCollar()
+		set category = "Other"
+		set name = "Toggle Neko Collar"
+
+		neko_collar_adds_tilde = !neko_collar_adds_tilde
+
 	Say(msg as text|null)
 		set category = "Other"
 		if(!usr.can_say) return
@@ -248,7 +254,7 @@ mob/verb
 		if(!msg) msg = input("Type a message for people in sight to see", "Local Chat") as null|text
 		if(msg)
 			for(var/obj/items/Clothes/Neko_Collar/neko in item_list)
-				if(neko.suffix == "Equipped")
+				if(neko.suffix == "Equipped" && neko_collar_adds_tilde)
 					msg = "[msg]～"
 			var/t = "<span style='font-size:10pt;color:[TextColor];font-family:Walk The Moon'>[name]: [msg]</span>"
 			for(var/mob/m in Say_Recipients())
@@ -262,6 +268,24 @@ mob/verb
 					if(drone_module) m.last_drone_msg = msg
 			if(client) troll_respond(msg)
 		usr.End_Say()
+
+	Think(msg as text|null)
+		set category = "Other"
+
+		if(!msg) msg = input("Type a message that your character is thinking right now", "Thinking Chat") as null|text
+		if(msg)
+			var/t = "<span style='font-size:10pt;color:[TextColor];>[name] thinks to themselves: <i>[msg]</i></span>"
+			for(var/mob/m in Say_Recipients())
+				if(m.last_drone_msg != msg || !drone_module)
+					if(lowertext(msg) == "stop" && m != src && client && m && m.client)
+						if(m.stop_messages.len > 5) m.stop_messages.len = 5
+						m.stop_messages.Insert(1, key)
+						m.stop_messages[key] = world.time
+					m << t
+					m.ChatLog(t,key)
+					m.EmoteLog(t,key)
+					m.EmoteLog(t,key, type = "emotelogs_dev")
+					if(drone_module) m.last_drone_msg = msg
 
 	SayCooldown()
 		set waitfor = 0
@@ -284,13 +308,14 @@ mob/verb
 			var/type = input("What type of emote is this?") as null|anything in list("Normal", "Character Development")
 			var/message = "<br><br><span style='font-size:10pt;color:yellow;font-family:Walk The Moon'>======| [name] às [time2text(world.timeofday,"YYYY-MM-DD hh:mm:ss")] |======<br><br><span style='color: white;'>[html_encode(msg)]</span></span>"
 			if(type == "Character Development")
-				PostDevelopmentRPWindow(message)
+				PostDevelopmentRPWindow(message, key)
 			else 
-				PostEmoteRPWindow(message)
+				PostEmoteRPWindow(message, key)
 
 			for(var/mob/M in Say_Recipients())
-				M << t
-				M.ChatLog(t,key)
+				M << message
+				M.ChatLog(message,key)
+				M.EmoteLog(message,key)
 			
 		usr.End_Say()
 
@@ -336,6 +361,8 @@ mob/verb/Who()
 	var/Who={"<body bgcolor="#000000"><font color="#CCCCCC">"}
 	var/Amount=0
 	Who+="<br>Key ( Name )"
+	if(IsAdmin() && !SHOW_CHAR_NAME_ON_WHO)
+		Who += " You are only seeing Name because you are an admin!"
 	var/list/a=new
 	for(var/mob/m in players) a+=m
 	for(var/mob/Troll/t) a.Insert(rand(1, a.len), t)
@@ -355,94 +382,15 @@ mob/verb/Who()
 	
 mob/verb/Play_Music()
 	set category="Other"
-	switch(input(src,"You can play some built in music for whatever reason.") in \
-	list("Cancel","Gohan","Gohan 2","Goku SSj","Goku SSj3","Super Namek","Ai Wo Torimodose",\
-	"Ai Wo Torimodose 2","Pikkon","Vegeta","Ssj Vegeta","Ussj Trunks","Ginyu","Cell the Boogieman",\
-	"Majin Buu","Cell powers up","Prince of Saiyans","Super Buu"))
+	var/choice = input(src, "You can play some built in music for whatever reason.") as null|anything in list("Cancel", "Carnival Meme")
+	switch(choice)
 		if("Cancel") src<<sound(0)
-		if("Gohan")
+		if("Carnival Meme")
 			var/sound_repeat
 			switch(alert(src,"Loop music?","Options","No","Yes"))
 				if("Yes") sound_repeat=1
-			spawn player_view(10,src)<<sound('Gohanangers.ogg',repeat=sound_repeat,volume=100)
-		if("Gohan 2")
-			var/sound_repeat
-			switch(alert(src,"Loop music?","Options","No","Yes"))
-				if("Yes") sound_repeat=1
-			spawn player_view(10,src)<<sound('GohanHitsTree.ogg',repeat=sound_repeat,volume=40)
-		if("Goku SSj")
-			var/sound_repeat
-			switch(alert(src,"Loop music?","Options","No","Yes"))
-				if("Yes") sound_repeat=1
-			spawn player_view(10,src)<<sound('DBZ Goku Super Saiyan Theme.ogg',repeat=sound_repeat,volume=100)
-		if("Goku SSj3")
-			var/sound_repeat
-			switch(alert(src,"Loop music?","Options","No","Yes"))
-				if("Yes") sound_repeat=1
-			spawn player_view(10,src)<<sound('SSJ3Powerup.ogg',repeat=sound_repeat,volume=100)
-		if("Super Namek")
-			var/sound_repeat
-			switch(alert(src,"Loop music?","Options","No","Yes"))
-				if("Yes") sound_repeat=1
-			spawn player_view(10,src)<<sound('Super Namek.ogg',repeat=sound_repeat,volume=60)
-		if("Ai Wo Torimodose")
-			var/sound_repeat
-			switch(alert(src,"Loop music?","Options","No","Yes"))
-				if("Yes") sound_repeat=1
-			spawn player_view(10,src)<<sound('Ai Wo Torimodose 2.ogg',repeat=sound_repeat,volume=60)
-		if("Ai Wo Torimodose 2")
-			var/sound_repeat
-			switch(alert(src,"Loop music?","Options","No","Yes"))
-				if("Yes") sound_repeat=1
-			spawn player_view(10,src)<<sound('Ai Wo Torimodose.ogg',repeat=sound_repeat,volume=80)
-		if("Pikkon")
-			var/sound_repeat
-			switch(alert(src,"Loop music?","Options","No","Yes"))
-				if("Yes") sound_repeat=1
-			spawn player_view(10,src)<<sound('PikkonsTheme.ogg',repeat=sound_repeat,volume=60)
-		if("Vegeta")
-			var/sound_repeat
-			switch(alert(src,"Loop music?","Options","No","Yes"))
-				if("Yes") sound_repeat=1
-			spawn player_view(10,src)<<sound('Vegeta.ogg',repeat=sound_repeat,volume=60)
-		if("Ssj Vegeta")
-			var/sound_repeat
-			switch(alert(src,"Loop music?","Options","No","Yes"))
-				if("Yes") sound_repeat=1
-			spawn player_view(10,src)<<sound('Ssj Vegeta.ogg',repeat=sound_repeat,volume=100)
-		if("Ussj Trunks")
-			var/sound_repeat
-			switch(alert(src,"Loop music?","Options","No","Yes"))
-				if("Yes") sound_repeat=1
-			spawn player_view(10,src)<<sound('Ussj Trunks.ogg',repeat=sound_repeat,volume=60)
-		if("Ginyu")
-			var/sound_repeat
-			switch(alert(src,"Loop music?","Options","No","Yes"))
-				if("Yes") sound_repeat=1
-			spawn player_view(10,src)<<sound('Ginyu.ogg',repeat=sound_repeat,volume=50)
-		if("Cell the Boogieman")
-			var/sound_repeat
-			switch(alert(src,"Loop music?","Options","No","Yes"))
-				if("Yes") sound_repeat=1
-			spawn player_view(10,src)<<sound('Boogieman.ogg',repeat=sound_repeat,volume=70)
-		if("Majin Buu")
-			var/sound_repeat
-			switch(alert(src,"Loop music?","Options","No","Yes"))
-				if("Yes") sound_repeat=1
-			spawn player_view(10,src)<<sound('BuuIsFighting.ogg',repeat=sound_repeat,volume=80)
-		if("Cell powers up")
-			var/sound_repeat
-			switch(alert(src,"Loop music?","Options","No","Yes"))
-				if("Yes") sound_repeat=1
-			spawn player_view(10,src)<<sound('CellPowersUp.ogg',repeat=sound_repeat,volume=80)
-		if("Prince of Saiyans")
-			var/sound_repeat
-			switch(alert(src,"Loop music?","Options","No","Yes"))
-				if("Yes") sound_repeat=1
-			spawn player_view(10,src)<<sound('PrinceofSaiyans.ogg',repeat=sound_repeat,volume=100)
-		if("Super Buu")
-			var/sound_repeat
-			switch(alert(src,"Loop music?","Options","No","Yes"))
-				if("Yes") sound_repeat=1
-			spawn player_view(10,src)<<sound('SuperBuu.ogg',repeat=sound_repeat,volume=80)
-	player_view(10,src)<<sound(0)	
+			for(var/mob/player in player_view(22,src))
+				player << sound('carnival_meme.ogg',repeat=sound_repeat,volume=100)
+				player << "[src] has played [choice] for you. You can stop this by using the Stop Sounds verb."
+
+	player_view(22,src) << sound(0)	
