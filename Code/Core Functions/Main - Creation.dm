@@ -70,6 +70,7 @@ mob/proc/Go_to_spawn(First_time = 0, butNotInShipArea)
 			base_bp=rand(1,150)
 			Decline=20
 			Decline_Rate=0.25
+			Intelligence=0.6
 		if(s.desc=="Jungle Planet")
 			base_bp*=2
 			max_ki=1000*Eff
