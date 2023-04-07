@@ -492,8 +492,8 @@ var/can_things_be_broken = 1
 mob/verb/ToggleBreakingThings()
 	set category = "Other"
 	set name = "Toggle Breaking Walls and Objects"
-	CAN_BREAK_TURFS = !CAN_BREAK_TURFS
-	src << "You will now [CAN_BREAK_TURFS ? "be able to" : "not be able to"] break things such as Walls and Objects. This does not affect Science Items.."
+	can_things_be_broken = !can_things_be_broken
+	src << "You will now [can_things_be_broken ? "be able to" : "not be able to"] break things such as Walls and Objects. This does not affect Science Items."
 
 mob/verb/ToggleSparringMode()
 	var/mode = input("Choose sparring mode", "Sparring mode", CASUAL_COMBAT) in list(CASUAL_COMBAT, LETHAL_COMBAT)
@@ -545,8 +545,8 @@ mob/proc/AlertSparringMode(var/mob/attacker, var/mob/victim)
 
 mob/proc/WallBreakPower()
 	if(is_saitama) return 1.#INF
-	if(!can_things_be_broken) return 0
-	if(!CAN_BREAK_TURFS) return 0
+	if(!can_things_be_broken) return 1
+	if(!CAN_BREAK_TURFS) return 1
 
 	//if(BP < Tech_BP * 0.5) return 0
 
@@ -598,6 +598,8 @@ mob/Admin5/verb/testwallbreakpower(mob/m in world)
 	src<<"[m] can break [Commas(m.WallBreakPower())] BP walls"
 
 mob/proc/Is_wall_breaker()
+	if(!can_things_be_broken) return 0
+	if(!CAN_BREAK_TURFS) return 0
 	if(percent_of_wall_breakers >= 100) return 1
 	var/stronger_people=0
 	for(var/mob/m in players) if((m.base_bp+m.hbtc_bp)/m.bp_mod>(base_bp+hbtc_bp)/bp_mod) stronger_people++
