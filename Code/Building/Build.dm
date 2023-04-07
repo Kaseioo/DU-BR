@@ -135,6 +135,7 @@ mob/Admin4/verb/Load_External_Map_File()
 	if(!f)
 		clients << "No file was chosen"
 		return
+	admin_blame(src, "[key] loaded an external map into the game.", TRUE)
 	MapLoadExternal(f)
 
 //load an external map file on top of everything that is already loaded, this is for like if admins are building special admin buildings on another server

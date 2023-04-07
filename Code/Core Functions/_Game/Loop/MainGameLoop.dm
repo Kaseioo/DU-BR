@@ -5,6 +5,11 @@ mob/proc/cycle_energies()
         var/Energy/energy = player.energies[name]
             energy.cycle_energy()
 
+mob/proc/update_logging_system()
+    var/mob/player = src
+    player.Write_chatlogs()
+    sleep(100)
+
 /*
     NOTHING that goes here must have an internal loop for ticking itself.
     Every single proc must execute for a single tick.
@@ -32,6 +37,7 @@ mob/proc/execute_player_actions()
     try_healing_combat_ko(victim = player)
 
     player.cycle_energies()
+    player.update_logging_system()
 
 /*
     We are going to name this LogicLoop rather than GameLoop because BYOND

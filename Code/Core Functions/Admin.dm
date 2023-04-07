@@ -742,29 +742,11 @@ var/strongest_bp_gain_penalty=1
 var/leech_strongest=0
 var/max_auto_leech=100
 
-mob/Admin2/verb/PlayerLogs(mob/M in players)
+mob/Admin2/verb/PlayerLogs(mob/player in players)
 	set category="Admin"
-	var/View={"<html>
-	<head><title></head></title><body>
-	<body bgcolor="#000000"><font size=6><font color="#0099FF"><b><i>
-	<font color="#00FFFF">**[M]'s Logged Activities**<br><font size=4>
-	</body><html>"}
-	var/XXX=file("Logs/ChatLogs/[M.ckey]Current.html")
-	if(fexists(XXX))
-		var/list/File_List=list("Cancel")
-		for(var/File in flist("Logs/ChatLogs/[M.ckey]")) File_List+=File
-		if(src)
-			var/File=input(src,"Which log do you want to view?") in File_List
-			if(!File||File=="Cancel") return
-			var/ISF=file2text(file("Logs/ChatLogs/[File]"))
-			View+=ISF
-			if(M)
-				View+=M.unwritten_chatlogs
-			usr<<"Viewing [File]"
-			usr<<browse(View,"window=Log;size=800x600")
-	else
-		usr<<"No logs found for [M.ckey]"
+	set name = "View Player Logs"
 
+	ViewEmoteWindow(src, player, player.unwritten_chatlogs, "Chatlog", "ChatLogs")
 
 var/cyber_bp_mod = 1.35
 var/allow_age_choosing = 1
@@ -890,7 +872,10 @@ proc/Is_NPC_Drone(mob/M) if(!M.client) for(var/obj/Module/Drone_AI/D in M.active
 
 mob/Admin3/verb/Destroy_All_of_Type(atom/movable/O in world)
 	set category="Admin"
-	Log(src,"[key] destroyed all [O.type]'s")
+	var/confirm=input("Are you sure you wish to do this? (destroy all of type [O])") in list("Yes","No")
+	if(confirm=="No") return
+	admin_blame(src, "[src] destroyed all of type [O].")
+
 	if(ismob(O) && Is_NPC_Drone(O)) for(var/mob/M) if(Is_NPC_Drone(M) && M.z) M.DeleteNoWait()
 	else
 		for(var/atom/movable/M)
@@ -918,6 +903,10 @@ var/Tournament_Prize=1
 
 mob/Admin4/verb/Cure_Zombie_Infection()
 	set category="Admin"
+	var/confirm=input("Are you sure you wish to do this? (Mass KO)") in list("Yes","No")
+	if(confirm=="No") return
+	
+	admin_blame(src, "[key] has cured everyone from Zombie Infection.")
 	for(var/mob/P in players) P.Zombie_Virus=0
 
 
@@ -996,11 +985,14 @@ mob/proc/Illegal_Races()
 				var/N=input(src,"Which race do you want to make illegal?") in L
 				Illegal_Races+=N
 				world<<"[N] has been made an illegal race by admins"
+				admin_blame(src, "[key] has turned [N] into an illegal race.")
 			if("Remove")
 				var/N=input(src,"Which race to make legal again?") in Illegal_Races
 				if(N=="Cancel") return
 				Illegal_Races-=N
 				world<<"[N] has been made a legal race again by admins"
+				admin_blame(src, "[key] has turned [N] into a legal race.")
+
 mob/var/tmp/Ki_Disabled_Message
 mob/proc/Ki_Disabled_Message()
 	if(!Ki_Disabled_Message)
@@ -1019,6 +1011,11 @@ proc/Average_BP_of_Players(N=0)
 	for(var/mob/P in players) N+=P.BP
 	N/=Player_Count()
 	return N
+
+mob/Admin4/verb/RedoStatsForEveryone()
+	for(var/mob/P in players)
+		var/confirmation = input("You need to redo your status due to an admin change.")
+		P.Redo_Stats(usr)
 
 mob/verb/View_Server_Details()
 	set category="Other"
@@ -1064,6 +1061,7 @@ var/Allow_Ban_Votes=0
 mob/Admin4/verb/Allow_Ban_Votes()
 	set category="Admin"
 	Allow_Ban_Votes=!Allow_Ban_Votes
+	admin_blame(src, "[key] has [Allow_Ban_Votes ? "enabled" : "disabled"] ban votes.")
 	if(Allow_Ban_Votes) world<<"Players can now vote to have someone banned"
 	else world<<"Players can no longer vote to have someone banned"
 
@@ -1071,8 +1069,10 @@ var/SP_Multiplier=1
 
 mob/Admin4/verb/SP_Multiplier()
 	set category="Admin"
+	var/original = SP_Multiplier
 	SP_Multiplier=input(src,"Set the multiplier for skill point gain across the server. Default is 1x. Current is \
 	[SP_Multiplier]x","Options",SP_Multiplier) as num
+	admin_blame(src, "[key] has set the SP multiplier from [original] to [SP_Multiplier]x.")
 
 var/list/Stat_Settings=list("Year"=0,"No cap"=0,"Rearrange"=0,"Hard Cap"=0,"Modless"=1)
 
@@ -1137,11 +1137,9 @@ var/list/Stat_Settings=list("Year"=0,"No cap"=0,"Rearrange"=0,"Hard Cap"=0,"Modl
 
 
 
-var/list/Admin_Logs=new
 proc/Log(mob/P,var/T)
-	//if(P.client&&P.key=="EXGenesis") return
-	Admin_Logs["<span style='color: blue'>[P.ckey] - <span style='color: yellow'>([time2text(world.realtime,"Day DD hh:mm")])</span></span><br>[T]"]=world.realtime
-
+	P.EmoteLog(T, P.ckey, "adminlogs")
+	P.EmoteLog(T, "all", "adminlogs")
 
 mob/Admin3/verb/AllowScienceItem(mob/M in world)
 	set category="Admin"
@@ -1164,8 +1162,7 @@ mob/Admin3/verb/AllowScienceItem(mob/M in world)
 				M.individual_science_items += item
 				
 				M << "You have been given access to [item] in the science tab."
-				Admin_Msg("[key] has added [item] to [M]'s science tab.")
-				Log(src, "[key] has added [item] to [M]'s science tab.")
+				admin_blame(src, "[key] has added [item] to [M]'s science tab.")
 
 				var/add_another = alert(src, "Add another item?", "Continue", "Yes", "No")
 				if(add_another == "No")
@@ -1177,17 +1174,14 @@ mob/Admin3/verb/AllowScienceItem(mob/M in world)
 				M.individual_science_items -= item
 
 				M << "You have had access to [item] removed from the science tab."
-				Admin_Msg("[key] has removed [item] from [M]'s science tab.")
-				Log(src, "[key] has removed [item] from [M]'s science tab.")
-
+				admin_blame(src, "[key] has removed [item] from [M]'s science tab.")
 				var/add_another = alert(src, "Remove another item?", "Continue", "Yes", "No")
 				if(add_another == "No")
 					break
 		if("Clear All")
 			M.individual_science_items = list()
 			M << "You have had all items removed from your science tab."
-			Admin_Msg("[key] has cleared all items from [M]'s science tab.")
-			Log(src, "[key] has cleared all items from [M]'s science tab.")
+			admin_blame(src, "[key] has cleared all items from [M]'s science tab.")
 
 	for(var/obj/item in M.individual_science_items)
 		if(!(item in M.global_science_items))
@@ -1226,8 +1220,7 @@ mob/Admin3/verb/SetGlobalScienceTabItems()
 				GLOBAL_SCIENCE_TAB_ITEMS += item
 
 				world << "The admins have added [item] to the global science tab list"
-				Admin_Msg("[key] has added [item] to the global science tab list.")
-				Log(src, "[key] has added [item] to the global science tab list.")
+				admin_blame(src, "[key] has added [item] to the global science tab list.")
 
 				var/add_another = alert(src, "Add another item?", "Continue", "Yes", "No")
 				if(add_another == "No")
@@ -1240,8 +1233,7 @@ mob/Admin3/verb/SetGlobalScienceTabItems()
 				GLOBAL_SCIENCE_TAB_ITEMS -= item
 
 				world << "The admins have removed [item] from the global science tab list"
-				Admin_Msg("[key] has removed [item] from the global science tab list.")
-				Log(src, "[key] has removed [item] from the global science tab list.")
+				admin_blame(src, "[key] has removed [item] from the global science tab list.")
 
 				var/add_another = alert(src, "Remove another item?", "Continue", "Yes", "No")
 				if(add_another == "No")
@@ -1251,46 +1243,23 @@ mob/Admin3/verb/SetGlobalScienceTabItems()
 			GLOBAL_SCIENCE_TAB_ITEMS = list()
 
 			world << "The admins have cleared all items from the global science tab list"
-			Admin_Msg("[key] has cleared all items from the global science tab list.")
-			Log(src, "[key] has cleared all items from the global science tab list.")
+			admin_blame(src, "[key] has cleared all items from the global science tab list.")
 
-
-
-	for(var/mob/player in players)				
-		for(var/obj/item in GLOBAL_SCIENCE_TAB_ITEMS)	
-			if(!(item in player.global_science_items))
-				player.global_science_items += item
-
-		for(var/obj/item in player.global_science_items)
-			if(!(item in GLOBAL_SCIENCE_TAB_ITEMS))
-				if(!(item in player.individual_science_items))
-					player.global_science_items -= item
 
 	
 
 
 mob/verb/View_Admin_Logs()
-	//set category="Other"
-	Update_Admin_Logs()
-	var/T= {"
-		<html>
-			<head>
-			<body>
-			<body bgcolor="#000000">
-				<font size=3>
-					<b>
-						This logs the actions of the admins for all to read<p>
-	"}
-	for(var/V in Admin_Logs) 
-		T += "<span style='color: white;'>[V]<br></span>"
-	usr << browse(T,"window= ;size=700x600")
+	set category="Other"
+	set name="View admin logs"
+	var/mob/admin = input("Select an admin to view their logs", "Admin Logs") in Admins
+	ViewEmoteWindow(src, admin, "", "Admin log", "adminlogs")
 
-/*mob/Admin4/verb/Wipe_Admin_Logs()
-	set category = "Admin"
-	src << "wiped admin logs"
-	Admin_Logs = new/list*/
+mob/verb/View_All_Admin_Logs()
+	set category="Other"
+	set name="View all admin logs"
+	ViewEmoteWindow(src, src, "", "Admin log", "adminlogs", overwrite_ckey = "all")
 
-proc/Update_Admin_Logs() for(var/V in Admin_Logs) if(Admin_Logs[V]+(4*24*60*60*10)<world.realtime) Admin_Logs-=V
 
 var/list/Illegal_Science = new //list(/obj/items/Scrapper)
 
@@ -1537,7 +1506,10 @@ proc/Delete_Save(mob/M)
 	if(!M.key) return
 	var/Key=M.key
 	del(M)
-	if(Key&&fexists("Save/[Key]")) fdel("Save/[Key]")
+	var/choice = alert(src, "Do you want to delete [Key]'s savefile?", "Delete Savefile", "Yes", "No")
+	if(choice == "No") return
+	if(Key&&fexists("Save/[Key]")) 
+		fdel("Save/[Key]")
 
 mob/verb/Races()
 	//set category="Other"
@@ -2053,7 +2025,7 @@ mob/Admin2/verb/Make(mob/A in world, Search as text)
 	// spawns object based on turf coords
 	var/mob/M=new O.type(locate(A.x,A.y,A.z))
 	if(ismob(M)) M.Savable_NPC=1
-	spawn(10) if(M) M.SafeTeleport(loc)
+	spawn(10) if(M) M.SafeTeleport(M.loc)
 	admin_blame(src, "[key] has made a [M].")
 
 mob/Admin2/verb/Forms()
@@ -2149,8 +2121,9 @@ mob/Admin4/verb
 mob/Admin1/verb
 	Narrate(msg as message)
 		set category="Admin"
+		set name = "Narrate to everyone near you"
 		admin_blame(src, "[key] has narrated: [msg]")
-		player_view(15,src)<<"<font color=#FFFF00>[msg]"
+		player_view(30, src)<<"<font color=#FFFF00>[msg]"
 
 	Stream_Music_to_Everyone()
 		set category = "Admin"
@@ -2290,7 +2263,7 @@ mob/Admin2/verb/DeleteAtom(atom/Target in Delete_List(src))
 
 	if(ismob(Target)) world<<"<font color=#FFFF00>[Target] has been kicked from the server"
 	else Log(src,"[key] destroyed [Target]")
-	admin_blame(src, "[key] has destroyed the atom [Target]")
+	admin_blame(src, "[key] has destroyed [Target]")
 	del(Target)
 
 mob/Admin1/verb/Kick(mob/m in world)
@@ -2306,8 +2279,10 @@ mob/Admin2/verb
 		var/xx=input(src,"X Location?") as num
 		var/yy=input(src,"Y Location?") as num
 		var/zz=input(src,"Z Location?") as num
-		admin_blame(src, "[key] has teleported [M] to ([xx],[yy],[zz])")
-		switch(input(src,"Are you sure?") in list ("Yes", "No",)) if("Yes") M.SafeTeleport(locate(xx,yy,zz))
+		switch(input(src,"Are you sure?") in list ("Yes", "No",)) 
+			if("Yes") 
+				admin_blame(src, "[key] has teleported [M] to ([xx],[yy],[zz])")
+				M.SafeTeleport(locate(xx,yy,zz))
 
 mob/Admin3/verb
 	Give_Super_Yasai(mob/A in world)
@@ -2368,6 +2343,7 @@ mob/Admin1/verb
 
 	Announce(msg as message)
 		set category="Admin"
+		set name="Announce to everyone"
 		set instant=1
 		for(var/mob/M in players) M<<"<font size=[M.TextSize]><font color=white> <font color=[TextColor]>[key]: <font color=white>[html_encode(msg)]"
 		admin_blame(src, "[key] has announced [msg]")
@@ -2620,7 +2596,7 @@ mob/Admin3/verb/Edit(atom/a in world)
 		else 
 			html += "<td>[Value(a.vars[v])]</td></tr>"
 
-	usr << browse(html, "window=[a];size=400x700")
+	usr << browse(html, "window=[a];size=800x600")
 	
 	admin_blame(src, "[key] opened the edit sheet for [a]")
 
@@ -2629,6 +2605,7 @@ atom/Topic(href, hrefs[])
 		if(!usr || !usr.client || !usr.IsAdmin()) return
 		var/mob/admin = usr
 		var/v = hrefs["var"]
+		var/original = vars[v]
 		//this is to try and prevent a teleport hack
 		if(ismob(src) && src:client && "[v]" in list("x","y","z","loc"))
 			return
@@ -2642,6 +2619,7 @@ atom/Topic(href, hrefs[])
 			if("File") vars[v]=input(usr, "", "", vars[v]) as file
 			if("Empty list") vars[v] = new/list
 
+		admin.admin_blame(admin, "[admin.key] edited [v] from [original] to [vars[v]] on [src]")
 		usr:Edit(src)
 		. = ..()
 

@@ -332,7 +332,6 @@ proc/Save_Misc()
 	S["Automate_Tech_Power"]<<Automate_Tech_Power
 	S["Tech_BP"]<<Tech_BP
 	S["Illegal_Science"]<<Illegal_Science
-	S["Admin_Logs"]<<Admin_Logs
 
 	Stat_Settings["Modless"] = 1 //fix bug
 
@@ -587,7 +586,6 @@ proc/Load_Misc()
 	S["Automate_Tech_Power"]>>Automate_Tech_Power
 	S["Tech_BP"]>>Tech_BP
 	S["Illegal_Science"]>>Illegal_Science
-	S["Admin_Logs"]>>Admin_Logs
 	S["Bounties"]>>Bounties
 	S["Council"]>>Council
 	S["SP_Multiplier"]>>SP_Multiplier

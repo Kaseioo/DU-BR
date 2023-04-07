@@ -1,24 +1,49 @@
 mob/var/tmp
 	last_chatlog_write=0
-	unwritten_chatlogs=""
+	unwritten_chatlogs = list()
+	unwritten_chatlogs_timestamp = 0
 	last_drone_msg
+	waiting_for_chatlog_write = FALSE
 
 mob/proc
 	ChatLog(info,the_key)
 		if(!client) return
-		if(!last_chatlog_write) last_chatlog_write=world.time //prevent writing unecessarily when someone has just logged in
-		var/log_entry="<br><font color=white>([time2text(world.realtime,"DD/MM/YY hh:mm:ss")]) [info] ([the_key])"
-		if(world.time-last_chatlog_write < 100) // 10 seconds
-			unwritten_chatlogs+=log_entry
-		else Write_chatlogs()
+		if(!last_chatlog_write) last_chatlog_write = world.time
+		
+		var/log_entry = {"
+			<table>
+				<tr style="color: white;">
+					<td style="width: 25%; border-right: 1px solid gray">
+						<span style='color: white; font-size: 10pt'>
+							[time2text(world.timeofday,"DD/MM/YY hh:mm:ss")] <br> [the_key]
+						</span>
+					</td>
+
+					<td style="width: 75%">
+						<span style='color: white; font-size: 10pt'>
+							[info]
+						</span>
+					</td>
+				</tr>
+			</table>
+			"}
+		
+		
+		unwritten_chatlogs += log_entry
 
 	Write_chatlogs(allow_splits=1)
 		if(!key) return
-		last_chatlog_write=world.time
-		var/f=file("Logs/ChatLogs/[ckey]Current.html")
-		f<<unwritten_chatlogs
-		if(allow_splits) Split_File(ckey)
-		unwritten_chatlogs=""
+		last_chatlog_write = world.time
+		var/f = file("Logs/ChatLogs/[ckey]Current.html")
+
+		for (var/entry in unwritten_chatlogs)
+			text2file(entry,f)
+
+		if(allow_splits) 
+			Split_File(ckey)
+
+		unwritten_chatlogs = list()
+
 
 proc/Split_File(the_key)
 	set waitfor=0
@@ -57,7 +82,6 @@ proc/List_2_Text(list/L,sep)
 		if(sep) newtext+=sep;newtext+="[L[count]]"
 	return newtext
 
-// o isKoStuff = FALSE não ia modificar porra nenhuma além de deixar explicitamente que o valor da variável é false (ou seja, diminuir o escopo de num pra bool)
 mob/verb/Countdown(Seconds as num, message as text|null, final_message as text|null, isKoStuff as num|null)
 	set category = "Other"
 	set desc = "Countdown from a number of seconds. You can also specify a message to display at the start and end of the countdown."
@@ -77,10 +101,9 @@ mob/verb/Countdown(Seconds as num, message as text|null, final_message as text|n
 	if(message)
 		t = " [message]"
 	if(!isKoStuff)
-		player_view(22, src) << t
-
-	if(client) 
-		ChatLog(t,key)
+		for(var/mob/player in player_view(50, src))
+			player << t
+			ChatLog(t, player.key)
 
 	var/elapsed = 0
 
@@ -97,7 +120,7 @@ mob/verb/Countdown(Seconds as num, message as text|null, final_message as text|n
 			break;
 		if(!isKoStuff)
 			var/elapsed_message = "[src] has waited [elapsed/10] seconds out of [Seconds/10] seconds."
-			player_view(22, src) << "[elapsed_message]"
+			player_view(50, src) << "[elapsed_message]"
 
 			if(client) 
 				ChatLog(elapsed_message, key)
@@ -107,7 +130,7 @@ mob/verb/Countdown(Seconds as num, message as text|null, final_message as text|n
 		if(final_message)
 			t2 = "[final_message]"
 
-		player_view(22, src) << t2
+		player_view(50, src) << t2
 
 		if(client) ChatLog(t2,key)
 
@@ -164,21 +187,21 @@ mob/Admin4/verb/Crazy()
 	set category="Admin"
 	Crazy=!Crazy
 
-mob/proc/Say_Recipients()
+// 39 is the default maximum player view
+mob/proc/Say_Recipients(var/distance = 44)
 	var/list/L=new
 	var/old_sight=sight
 	var/old_invis=see_invisible
 	sight=0
 	see_invisible=101
-	var/D=20
-	for(var/mob/M in player_view(D,src))
+	for(var/mob/M in player_view(distance,src))
 		L|=M
-	for(var/obj/Ships/S in view(D,src))
+	for(var/obj/Ships/S in view(distance,src))
 		if(S.Comms) L|=S.Pilot
 	if(src.Ship && Ship.Comms)
-		for(var/mob/M in player_view(D,src.Ship))
+		for(var/mob/M in player_view(distance,src.Ship))
 			L|=M
-		for(var/obj/Ships/S in view(D,src.Ship))
+		for(var/obj/Ships/S in view(distance,src.Ship))
 			L|=S.Pilot
 	else if(src.Ship && !Ship.Comms) L|= src
 	if(istype(src.loc,/mob))
@@ -225,6 +248,30 @@ mob/verb
 		//set category = "Other"
 		//set hidden = 1
 		GlobalSay(msg)
+		
+	LOOC(msg as text)
+		set category = "Other"
+
+		if(!usr.can_say) return
+
+		usr.can_say = 0
+		Say_Spark()
+
+		if(!msg) msg = input("Type a message for the Local OOC", "LOOC") as null|text
+
+		if(msg)
+			var/t = "<span style='font-size:10pt;color:[TextColor];font-family:Walk The Moon'><span style='color: white;'>(LOOC)</span> [name]: <span style='color: white;'>[msg]</span></span>"
+			for(var/mob/m in Say_Recipients())
+				if(m.last_drone_msg != msg || !drone_module)
+					if(lowertext(msg) == "stop" && m != src && client && m && m.client)
+						if(m.stop_messages.len > 5) m.stop_messages.len = 5
+						m.stop_messages.Insert(1, key)
+						m.stop_messages[key] = world.time
+					m << t
+					m.ChatLog(t,key)
+					if(drone_module) m.last_drone_msg = msg
+			if(client) troll_respond(msg)
+		usr.End_Say()
 
 	Whisper(msg as text)
 		//set category="Other"
@@ -274,20 +321,20 @@ mob/verb
 		if(!usr.can_say) return
 		usr.can_say = 0
 		Say_Spark()
-
-		if(!msg) msg = input("Type what your character is thinking right now", "Thinking Chat") as null|text
+		if(!msg) msg = input("What is your character thinking?", "Local Chat") as null|text
 		if(msg)
-			var/t = "<span style='font-size:10pt;color:[TextColor];>[name] thinks to themselves: <i>[msg]</i></span>"
-			for(var/mob/m in Say_Recipients())
-				if(lowertext(msg) == "stop" && m != src && client && m && m.client)
-					if(m.stop_messages.len > 5) m.stop_messages.len = 5
-					m.stop_messages.Insert(1, key)
-					m.stop_messages[key] = world.time
 
+			var/t = "<span style='font-size:10pt;color:[TextColor];font-family:Walk The Moon'>[name] thinks, <i>[msg]</i></span>"
+			for(var/mob/m in Say_Recipients())
+				if(m.last_drone_msg != msg || !drone_module)
+					if(lowertext(msg) == "stop" && m != src && client && m && m.client)
+						if(m.stop_messages.len > 5) m.stop_messages.len = 5
+						m.stop_messages.Insert(1, key)
+						m.stop_messages[key] = world.time
 					m << t
 					m.ChatLog(t,key)
-					m.EmoteLog(t,key)
-					m.EmoteLog(t,key, type = "emotelogs_dev")
+					if(drone_module) m.last_drone_msg = msg
+			if(client) troll_respond(msg)
 		usr.End_Say()
 
 	SayCooldown()
@@ -305,24 +352,26 @@ mob/verb
 		if(msg)
 			usr.can_say=0
 			spawn(1) if(usr) usr.can_say=1
-			
-			var/t="<span style='font-size:10pt;color:yellow;font-family:Walk The Moon'>[msg]</span>"
-			
 
-			t = "<span style='font-size:12pt;color:yellow;font-family:Walk The Moon'> ======[name]====== </span><br>[t]"
-
+			// Here we find any text between quotes
+			var/list/quotes = list()
+			var/regex/quote_finder = new("\".*?\"")
+			var/regex/quote_remover = new("\"")
+			while(quote_finder.Find(msg))
+				quotes += quote_remover.Replace(quote_finder.match, "")
+				msg = quote_finder.Replace(msg, "", 1)
+	
 			var/type = input("What type of emote is this?") as null|anything in list("Normal", "Character Development")
-			var/message = "<span style='font-size:10pt;color:yellow;font-family:Walk The Moon'>======| [name] |======<span style='color: white;'><br>[html_encode(msg)]</span></span>"
-			if(type == "Character Development")
-				PostDevelopmentRPWindow(message, key)
-			else 
-				PostEmoteRPWindow(message, key)
+			var/message = "<span style='font-size:10pt;color:yellow;font-family:Walk The Moon'><center>_____| [name] |_____</center><span style='color: white;'>[html_encode(msg)]</span></span>"
 
 			for(var/mob/M in Say_Recipients())
 				M << message
 				M.ChatLog(message,key)
-				if(M != src)
-					M.EmoteLog(message,key)
+
+			if(type == "Character Development")
+				PostDevelopmentRPWindow(message, key)
+			else 
+				PostEmoteRPWindow(message, key)
 			
 		usr.End_Say()
 
@@ -393,11 +442,11 @@ mob/verb/Play_Music()
 	switch(choice)
 		if("Cancel") src<<sound(0)
 		if("Carnival Meme")
-			player_view(22,src) << sound(0)	
+			player_view(50,src) << sound(0)	
 			var/sound_repeat
 			switch(alert(src,"Loop music?","Options","No","Yes"))
 				if("Yes") sound_repeat=1
 
-			for(var/mob/player in player_view(22,src))
+			for(var/mob/player in player_view(50,src))
 				player << sound('carnival_meme.ogg',repeat=sound_repeat,volume=100)
 				player << "[src] has played [choice] for you. You can stop this by using the Stop Sounds verb."

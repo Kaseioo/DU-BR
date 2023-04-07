@@ -461,7 +461,7 @@ mob/proc/Death(mob/Z,Force_Death=0,drone_sd=0,lose_hero=1,lose_immortality=1)
 		for(var/mob/m in player_view(center=src))
 			var/t="[src] was just killed by [Z]!"
 			m<<t
-			m.ChatLog(t)
+			m.ChatLog(t, src.key)
 
 	if(client && Z && ismob(Z) && Z.client && lord_freeza_obj && Z.z==lord_freeza_obj.z && viewable(lord_freeza_obj,Z,44))
 		lord_freeza_obj.Lord_Freeza_kill_someone(Z)
