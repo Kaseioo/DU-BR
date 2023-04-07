@@ -1179,6 +1179,8 @@ upForm
 			initFormVar("admin", "limitbreak_minimum_duration", 				LIMIT_BREAK_MIN_DURATION)
 			initFormVar("admin", "limitbreak_maximum_duration", 				LIMIT_BREAK_MAX_DURATION)
 
+			initFormVar("admin", "KO_SYSTEM_FULL_HEAL_IN_SPAR", 				KO_SYSTEM_FULL_HEAL_IN_SPAR)
+
 
 			initFormVar("admin", "hakai_cooldown", hakai_cooldown)
 			initFormVar("admin", "hakai_bp_advantage_needed", hakai_bp_advantage_needed)
@@ -1242,6 +1244,8 @@ upForm
 					if("limitbreak_maximum_mastery") 				setFormVar(fname, name, text2num(value))
 					if("limitbreak_minimum_duration") 				setFormVar(fname, name, text2num(value))
 					if("limitbreak_maximum_duration") 				setFormVar(fname, name, text2num(value))
+
+					if("KO_SYSTEM_FULL_HEAL_IN_SPAR") 				setFormVar(fname, name, text2num(value))
 					
 
 					if("hakai_cooldown") setFormVar(fname, name, text2num(value))
@@ -1306,6 +1310,8 @@ upForm
 					LIMIT_BREAK_MAX_MASTERY					= getFormVar("admin", "limitbreak_maximum_mastery")
 					LIMIT_BREAK_MIN_DURATION		= getFormVar("admin", "limitbreak_minimum_duration")
 					LIMIT_BREAK_MAX_DURATION		= getFormVar("admin", "limitbreak_maximum_duration")
+
+					KO_SYSTEM_FULL_HEAL_IN_SPAR			= getFormVar("admin", "KO_SYSTEM_FULL_HEAL_IN_SPAR")
 
 					hakai_cooldown= getFormVar("admin", "hakai_cooldown")
 					hakai_bp_advantage_needed= getFormVar("admin", "hakai_bp_advantage_needed")
@@ -1432,6 +1438,10 @@ upForm
 				
 				<tr height="1em" valign="top"><td width="30%"><br><b>Planet Destroy Immunity Timer: <td width="60%"><center>(Changes Planet Destroy Immunity Time)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="planet_destroy_immunity_time" value="[getFormVar("admin","planet_destroy_immunity_time")]" size="3" maxlength="20"/><span class="error">[errors["planet_destroy_immunity_time"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Planet Destroy BP Requirement: <td width="60%"><center>(Changes Planet Destroy Bp Requirement)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="planet_destroy_bp_requirement" value="[getFormVar("admin","planet_destroy_bp_requirement")]" size="3" maxlength="20"/><span class="error">[errors["planet_destroy_bp_requirement"]]</span></td></tr>
+
+				<tr><td><br><center><b>Sparring</b></center></td></tr>
+
+				<tr height="1em" valign="top"><td width="30%"><br><b>Comes back from spar in Full Health: <td width="60%"><center>(0 = False, 1 = True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="KO_SYSTEM_FULL_HEAL_IN_SPAR" value="[getFormVar("admin","KO_SYSTEM_FULL_HEAL_IN_SPAR")]" size="3" maxlength="1"/><span class="error">[errors["KO_SYSTEM_FULL_HEAL_IN_SPAR"]]</span></td></tr>
 
 		  <tr height="1em">
 			  	<td colspan="4" align="right"> <input type="submit" value="Submit" />

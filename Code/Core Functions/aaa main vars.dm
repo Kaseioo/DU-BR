@@ -172,6 +172,7 @@ var
 	KO_SYSTEM_OUT_OF_COMBAT_TIMER		= 2  * 10 * 60	// 2 minutes  (120 seconds)
 	KO_SYSTEM_OUT_OF_COMBAT				= 5  * 10 * 60	// 5 minutes  (300 seconds)
 	KO_SYSTEM_HEAL_ANNOUNCE_TIMER		= 3  * 10 * 10	// 30 seconds 
+	KO_SYSTEM_FULL_HEAL_IN_SPAR			= FALSE			// If TRUE, the player come back from the KO in full health
 
 	KO_SYSTEM_STATS_AFFECT_HEAL_TIME	= TRUE			// If TRUE, the higher the regen stat, the faster the healing
 	KO_SYSTEM_DEATH_REGEN_HEALS_KO		= TRUE			// If TRUE, the death regen will heal the player back to the KO before KO_SYSTEM_UNCONSCIOUS_KO
@@ -203,6 +204,9 @@ var
 var
 	CLONING_SYSTEM_LIFESPAN_LOSS		= 0.95			// 95% of original lifespan. This DOES multiply the original lifespan, so its exponential
 	CLONING_SYSTEM_POTENTIAL_LOSS		= 0.72			// 72% of original. This does NOT multiply the original potential, it is a flat loss
+
+// New character settings
+	START_WITH_RACIAL_SKILLS 			= TRUE
 
 mob/var
 	sparring_mode						= CASUAL_COMBAT

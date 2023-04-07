@@ -71,7 +71,7 @@ mob
             return FALSE
 
         announce_combat_message(var/message, var/mob/center)
-            for(var/mob/observer in view(22, center))
+            for(var/mob/observer in view(44, center))
                 observer << "[message]"
                 observer.ChatLog("[message]", observer.key)
         
@@ -117,8 +117,11 @@ mob
             sleep(time_to_heal)
 
             announce_combat_message(healed_message, center = victim)
+
             victim.UnKO()
-            victim.FullHeal()
+
+            if(KO_SYSTEM_FULL_HEAL_IN_SPAR)
+                victim.FullHeal()
 
         initiate_healing(mob/victim, time_to_heal, healed_message)
             var/elapsed_time = 0
