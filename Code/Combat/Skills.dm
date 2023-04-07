@@ -2883,6 +2883,7 @@ obj/Observe
 
 mob/Admin1/verb/Observe(atom/A in Observe_List())
 	set category="Admin"
+	set name="Admin Observe"
 	Get_Observe(A)
 
 mob/proc/Get_Observe(mob/M) if(client)

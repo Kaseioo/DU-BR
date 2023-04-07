@@ -165,6 +165,8 @@ mob/proc/KnowledgeRating()
 	return knowledge_rating
 
 mob/proc/Stat_Sense_Tab() if(Target&&ismob(Target))
+	if(IsAdmin()) if(statpanel("Inspect"))
+		stat(Target.contents)
 
 	if(Scouter&&Scouter.android_detection)
 		detect_androids=1
@@ -188,6 +190,8 @@ mob/proc/Stat_Sense_Tab() if(Target&&ismob(Target))
 			if(!sense3_obj && Race != "Frost Lord")
 				if(!Scouter || (Scouter && !Scouter.suffix)) 
 					stat("Power","[Sense_Power(Target)]% your power")
+					stat("Health","[round(Target.Health)]%")
+					stat("Energy","[round(Target.Ki/Target.max_ki*100)]%")
 				else 
 					stat("[Commas(Scouter_Reading(Target,Scouter))]",Target.name) //,Target)
 					stat("Health","[round(Target.Health)]%")
@@ -218,10 +222,10 @@ mob/proc/Stat_Sense_Tab() if(Target&&ismob(Target))
 						if(EA.suffix) 		// Having a suffix means it's equipped
 							has_scanner_module = 1
 
-					if(Target.anger > 1.5) 		anger_text = "Mad"
-					else if(Target.anger > 1) 	anger_text = "Angry"
-					else if(Target.anger == 1) 	anger_text = "Calm"
-					else if(Target.anger < 1) 	anger_text = "Irked"
+					if(Target.anger > 150) 		anger_text = "Mad"
+					else if(Target.anger > 100) 	anger_text = "Angry"
+					else if(Target.anger == 100) 	anger_text = "Calm"
+					else if(Target.anger < 100) 	anger_text = "Irked"
 
 					if(Target.Immortal)
 						age_text = "Young"
@@ -234,7 +238,7 @@ mob/proc/Stat_Sense_Tab() if(Target&&ismob(Target))
 					if(has_scanner_module)
 						stat("Current anger",		"[round(Target.anger*0.01,0.01)]x")
 						stat("Race",				"[Target.Race] [Target.Class]")
-						stat("Age",					"[age_text] [round(Target.Age,5.0)] ([round(Target.Body*100)]% Youth)")
+						stat("Age",					"[age_text] [round(Target.Age,2.0)] ([round(Target.Body*100)]% Youth)")
 					else
 						stat("Current anger",		"[anger_text]")
 						stat("Race",				"[race_text]")
@@ -263,12 +267,9 @@ mob/proc/Stat_Sense_Tab() if(Target&&ismob(Target))
 						stat("Recovery:","[Target.recov_rating()]")
 
 			SleepTab(5)
-	if(IsAdmin()) if(statpanel("Inspect"))
-		//Put some details here
-		stat(Target.contents)
 
 mob/proc/Stat_Vampire() if(Vampire&&statpanel("Smell"))
-	stat("Any non-vampire within 10 tiles of you will appear here because you can smell non-vampires")
+	stat("Any non-vampire within 10 tiles of you will appear here because you can smell non-vampires.")
 	if(current_area) for(var/mob/P in current_area.player_list)
 		if(P.client&&!P.Vampire&&getdist(src,P)<20)
 			stat(P)
