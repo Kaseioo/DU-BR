@@ -252,7 +252,7 @@ var/speedDelayMultMod = 2.3
 
 mob/proc/Speed_delay_mult(severity = 1)
 
-	var/ratio = Spd /60
+	var/ratio = Spd / avg_speed
 	var/mod = 1 //1 = perfectly average
 	var/minMod = 0.45 //was 0.25
 	if(ratio > 1) //high speed
