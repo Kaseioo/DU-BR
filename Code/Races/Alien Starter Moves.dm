@@ -60,7 +60,7 @@ mob/proc/Alien_Stuff()
 	"Less bp loss from low health (10 AP)"=10,\
 	"Giant Form (15 AP)" = 15,\
 	"Imitate (8 AP)" = 8,\
-	"Gyren Alien (50 AP)" = 50,\
+	//"Gyren Alien (50 AP)" = 50,
 	"Unlock Potential (25 AP)" = 25,\
 	)
 
