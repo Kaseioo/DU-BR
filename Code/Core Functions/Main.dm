@@ -53,7 +53,7 @@ var/cur_majin_stat_version = 2
 
 mob/var/stat_version=0
 
-var/cur_stat_ver = 1004 //move this to 1003 next time because 1002 is taken, we rolled this back
+var/cur_stat_ver = 1005 //move this to 1003 next time because 1002 is taken, we rolled this back
 
 
 mob/var/Mob_ID=0
@@ -194,6 +194,7 @@ mob/proc/Choose_Login() if(client)
 	//	alert(src,"Due to recent changes in the stat system you must now redo your stats before you can do anything")
 	//	Redo_Stats()
 	stat_version=3
+
 
 	if(regen<=0||recov<=0)
 		src<<"<font size=6><font color=red>Your character was deleted for using the Android stat bug"
@@ -339,9 +340,9 @@ mob/proc
 			alert(src,"Due to recent changes to Majins, you must now redo your stats before you can do anything")
 			Redo_Stats()*/
 
-		/*if(stat_version < cur_stat_ver)
+		if(stat_version < cur_stat_ver)
 			alert(src,"Due to recent changes in the stat system you must now redo your stats before you can do anything")
-			Redo_Stats()*/
+			Redo_Stats()
 		stat_version = cur_stat_ver
 
 		if(regen<=0||recov<=0)
@@ -691,7 +692,9 @@ mob/proc/Doll()
 	Decline=35
 	Decline_Rate=2
 	Class = "Spirit Doll"
-	if(!(locate(/obj/Fly) in src)) contents+=new/obj/Fly
+	if(START_WITH_RACIAL_SKILLS)
+		if(!(locate(/obj/Fly) in src)) 
+			contents+=new/obj/Fly
 
 mob/proc/Tsujin()
 	alert(src,"Tsujins share the same planet as the Yasai, and are very similar to Humans, but better with \
@@ -735,6 +738,7 @@ mob/proc/Majin()
 	leech_rate=3
 	med_mod=1
 	zenkai_mod=1
+	if(START_WITH_RACIAL_SKILLS)
 	contents.Add(new/obj/Attacks/Genki_Dama/Death_Ball,new/obj/Attacks/Spin_Blast,new/obj/Attacks/Blast,new/obj/Attacks/Charge,\
 	new/obj/Attacks/Beam,new/obj/Fly,new/obj/Absorb,new/obj/Shadow_Spar)
 	base_bp=1500
@@ -762,8 +766,9 @@ mob/proc/Bio()
 	med_mod=1
 	zenkai_mod=1.3
 	gravity_mastered=25
-	contents.Add(new/obj/Attacks/Genki_Dama/Death_Ball,new/obj/Attacks/Blast,new/obj/Attacks/Charge,\
-	new/obj/Attacks/Beam,new/obj/Fly,new/obj/Absorb)
+	if(START_WITH_RACIAL_SKILLS)
+		contents.Add(new/obj/Attacks/Genki_Dama/Death_Ball,new/obj/Attacks/Blast,new/obj/Attacks/Charge,\
+		new/obj/Attacks/Beam,new/obj/Fly,new/obj/Absorb)
 	base_bp=500
 	hbtc_bp=rand(1500,1900)
 	if(base_bp < highest_relative_base_bp * bp_mod * 0.4) base_bp = highest_relative_base_bp * bp_mod * 0.4
@@ -790,7 +795,8 @@ mob/proc/Onion_Lad()
 	med_mod=1
 	zenkai_mod=0.5
 	gravity_mastered=3
-	contents.Add(new/obj/Attacks/Sokidan,new/obj/Fly,new/obj/Attacks/Charge)
+	if(START_WITH_RACIAL_SKILLS)
+		contents.Add(new/obj/Attacks/Sokidan,new/obj/Fly,new/obj/Attacks/Charge)
 	base_bp=rand(120,150)
 	ascension_bp*=0.9
 
@@ -819,9 +825,10 @@ mob/proc/Puranto()
 	med_mod=4 //we hardcoded this to be nerfed. check at the end of new/load for the real Puranto mod
 	zenkai_mod=0.25
 	Regenerate=0.3
-	contents.Add(new/obj/SplitForm,new/obj/Meditate_Level_2,new/obj/Attacks/Blast,new/obj/Attacks/Charge,\
-	new/obj/Attacks/Beam,new/obj/Fly,new/obj/Regeneration,new/obj/Zanzoken,new/obj/Power_Control,\
-	new/obj/Attacks/Piercer)
+	if(START_WITH_RACIAL_SKILLS)
+		contents.Add(new/obj/SplitForm,new/obj/Meditate_Level_2,new/obj/Attacks/Blast,new/obj/Attacks/Charge,\
+		new/obj/Attacks/Beam,new/obj/Fly,new/obj/Regeneration,new/obj/Zanzoken,new/obj/Power_Control,\
+		new/obj/Attacks/Piercer)
 	base_bp=rand(80,120)
 	ascension_bp*=0.7
 	stun_resistance_mod=2
@@ -853,7 +860,8 @@ mob/proc/Half_Yasai()
 	ssj2mod*=2
 	ssj3mod*=0.5
 	base_bp=5
-	contents.Add(new/obj/Attacks/Masenko)
+	if(START_WITH_RACIAL_SKILLS)
+		contents.Add(new/obj/Attacks/Masenko)
 
 var/elite_chance=8
 
@@ -912,9 +920,10 @@ mob/proc/Elite_starting_bp()
 	return bp*bp_mod
 
 mob/proc/Elite_Yasai() if(Class!="Elite")
-	contents.Add(new/obj/Attacks/Charge,new/obj/Attacks/Explosion,new/obj/Attacks/Beam,\
-	new/obj/Attacks/Onion_Gun,new/obj/Attacks/Final_Flash,new/obj/Fly,new/obj/Attacks/Kienzan,\
-	new/obj/Attacks/Shockwave,new/obj/Attacks/Blast)
+	if(START_WITH_RACIAL_SKILLS)
+		contents.Add(new/obj/Attacks/Charge,new/obj/Attacks/Explosion,new/obj/Attacks/Beam,\
+		new/obj/Attacks/Onion_Gun,new/obj/Attacks/Final_Flash,new/obj/Fly,new/obj/Attacks/Kienzan,\
+		new/obj/Attacks/Shockwave,new/obj/Attacks/Blast)
 	base_bp=Elite_starting_bp()
 	if(base_bp<1000) base_bp=1000
 
@@ -970,8 +979,9 @@ mob/proc/Icer()
 	med_mod=1
 	zenkai_mod=0.5
 	gravity_mastered = 25
-	contents.Add(new/obj/Attacks/Genki_Dama/Death_Ball,new/obj/Attacks/Explosion,new/obj/Attacks/Ray,\
-	new/obj/Power_Control,new/obj/Attacks/Blast,new/obj/Attacks/Charge,new/obj/Fly,new/obj/Attacks/Beam)
+	if(START_WITH_RACIAL_SKILLS)
+		contents.Add(new/obj/Attacks/Genki_Dama/Death_Ball,new/obj/Attacks/Explosion,new/obj/Attacks/Ray,\
+		new/obj/Power_Control,new/obj/Attacks/Blast,new/obj/Attacks/Charge,new/obj/Fly,new/obj/Attacks/Beam)
 	base_bp=300
 	hbtc_bp=rand(900,1200)
 	ascension_bp*=1.35
@@ -997,8 +1007,9 @@ mob/proc/Kai()
 	leech_rate=2
 	med_mod=4
 	zenkai_mod=0.25
-	contents.Add(new/obj/Attacks/Sokidan,new/obj/Reincarnation,new/obj/Attacks/Charge,new/obj/Attacks/Beam,\
-	new/obj/Fly,new/obj/Power_Control,new/obj/Observe,new/obj/Telepathy)
+	if(START_WITH_RACIAL_SKILLS)
+		contents.Add(new/obj/Attacks/Sokidan,new/obj/Reincarnation,new/obj/Attacks/Charge,new/obj/Attacks/Beam,\
+		new/obj/Fly,new/obj/Power_Control,new/obj/Observe,new/obj/Telepathy)
 	base_bp=2000
 	hbtc_bp=rand(1300,1900)
 	ascension_bp*=1
@@ -1022,7 +1033,8 @@ mob/proc/Demigod()
 	zenkai_mod=1
 	base_bp=200
 	hbtc_bp=rand(700,900)
-	contents.Add(new/obj/Meditate_Level_2,new/obj/Heal,new/obj/Shadow_Spar,new/obj/Zanzoken)
+	if(START_WITH_RACIAL_SKILLS)
+		contents.Add(new/obj/Meditate_Level_2,new/obj/Heal,new/obj/Shadow_Spar,new/obj/Zanzoken)
 	ascension_bp*=0.8
 mob/proc/Demon()
 	Race="Demon"
@@ -1045,8 +1057,9 @@ mob/proc/Demon()
 	leech_rate=1
 	med_mod=3
 	zenkai_mod=0.5
-	contents.Add(new/obj/Attacks/Genki_Dama/Death_Ball,new/obj/Attacks/Charge,\
-	new/obj/Attacks/Beam,new/obj/Fly,new/obj/Absorb)
+	if(START_WITH_RACIAL_SKILLS)
+		contents.Add(new/obj/Attacks/Genki_Dama/Death_Ball,new/obj/Attacks/Charge,\
+		new/obj/Attacks/Beam,new/obj/Fly,new/obj/Absorb)
 	base_bp=2000
 	hbtc_bp=rand(0,300)
 	ascension_bp*=0.9
@@ -1099,5 +1112,6 @@ mob/proc/Alien()
 	leech_rate=1.2
 	med_mod=1
 	zenkai_mod=1
-	contents.Add(new/obj/Fly,new/obj/Attacks/Charge,new/obj/Attacks/Beam)
+	if(START_WITH_RACIAL_SKILLS)
+		contents.Add(new/obj/Fly,new/obj/Attacks/Charge,new/obj/Attacks/Beam)
 	ascension_bp*=1

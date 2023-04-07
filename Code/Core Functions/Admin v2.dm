@@ -54,7 +54,7 @@ mob/Admin4/verb/Server_Control_Panel()
 	set category = "Admin"
 	set name = "Server Control Panel"
 	src.ServerSettings()
-
+	admin_blame(src, "[key] has opened the server control panel.")
 	//src.EditInfo()
 
 
@@ -615,7 +615,7 @@ upForm
 			initFormVar("admin", "defaultScreenSize", defaultScreenSize)
 			initFormVar("admin", "max_screen_size", max_screen_size)
 
-			initFormVar("admin", "can_things_be_broken", can_things_be_broken)
+			initFormVar("admin", "CAN_BREAK_TURFS", CAN_BREAK_TURFS)
 			initFormVar("admin", "SHOW_CHAR_NAME_ON_WHO", SHOW_CHAR_NAME_ON_WHO)
 			
 			initFormVar("admin", "SENSE_SYSTEM_SHOW_VAGUE_INFO", SENSE_SYSTEM_SHOW_VAGUE_INFO)
@@ -681,7 +681,7 @@ upForm
 					if("defaultScreenSize") setFormVar(fname, name, text2num(value))
 					if("max_screen_size") setFormVar(fname, name, text2num(value))
 
-					if("can_things_be_broken") setFormVar(fname, name, text2num(value))
+					if("CAN_BREAK_TURFS") setFormVar(fname, name, text2num(value))
 					if("SHOW_CHAR_NAME_ON_WHO") setFormVar(fname, name, text2num(value))
 
 					if("SENSE_SYSTEM_SHOW_STAT_BUILD") setFormVar(fname, name, text2num(value))
@@ -745,7 +745,7 @@ upForm
 					defaultScreenSize= getFormVar("admin", "defaultScreenSize")
 					max_screen_size= getFormVar("admin", "max_screen_size")
 
-					can_things_be_broken= getFormVar("admin", "can_things_be_broken")
+					CAN_BREAK_TURFS= getFormVar("admin", "CAN_BREAK_TURFS")
 					SHOW_CHAR_NAME_ON_WHO= getFormVar("admin", "SHOW_CHAR_NAME_ON_WHO")
 
 					SENSE_SYSTEM_SHOW_STAT_BUILD = getFormVar("admin", "SENSE_SYSTEM_SHOW_STAT_BUILD")
@@ -836,7 +836,7 @@ upForm
 				<tr height="1em" valign="top"><td width="30%"><b>Default View Radius: <td width="60%"><center>(Default View Radius)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="defaultScreenSize" value="[getFormVar("admin","defaultScreenSize")]" size="3" maxlength="20"/><span class="error">[errors["defaultScreenSize"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Max View Radius: <td width="60%"><center>(Changes Max Screen Size)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="max_screen_size" value="[getFormVar("admin","max_screen_size")]" size="3" maxlength="20"/><span class="error">[errors["max_screen_size"]]</span></td></tr>
 				
-				<tr height="1em" valign="top"><td width="30%"><b>Can things (turfs, walls and objects) be broken?: <td width="60%"><center>(0 = False, 1 = True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="can_things_be_broken" value="[getFormVar("admin","can_things_be_broken")]" size="3" maxlength="20"/><span class="error">[errors["can_things_be_broken"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Can things (turfs, walls and objects) be broken?: <td width="60%"><center>(0 = False, 1 = True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="CAN_BREAK_TURFS" value="[getFormVar("admin","CAN_BREAK_TURFS")]" size="3" maxlength="20"/><span class="error">[errors["CAN_BREAK_TURFS"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Show Character names on Who?: <td width="60%"><center>(0 = False, 1 = True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="SHOW_CHAR_NAME_ON_WHO" value="[getFormVar("admin","SHOW_CHAR_NAME_ON_WHO")]" size="3" maxlength="20"/><span class="error">[errors["SHOW_CHAR_NAME_ON_WHO"]]</span></td></tr>
 				
 				<tr height="1em" valign="top"><td width="30%"><b>Show stat builds on Sense 3/Scan?: <td width="60%"><center>(0 = False, 1 = True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="SENSE_SYSTEM_SHOW_STAT_BUILD" value="[getFormVar("admin","SENSE_SYSTEM_SHOW_STAT_BUILD")]" size="3" maxlength="20"/><span class="error">[errors["SENSE_SYSTEM_SHOW_STAT_BUILD"]]</span></td></tr>
@@ -1003,6 +1003,8 @@ upForm
 			initFormVar("admin", "DO_VAMPIRES_INFECT_ON_BITE", DO_VAMPIRES_INFECT_ON_BITE)
 			initFormVar("admin", "VAMPIRE_POWER_FALL_INTERVAL", VAMPIRE_POWER_FALL_INTERVAL)
 
+			initFormVar("admin", "START_WITH_RACIAL_SKILLS", START_WITH_RACIAL_SKILLS)
+
 			M << "Variables loaded. [src.type]"
 
 		ProcessVariable(fname, name, value)
@@ -1020,6 +1022,8 @@ upForm
 					if("DO_VAMPIRES_INFECT_ON_BITE") setFormVar(fname, name, text2num(value))
 					if("VAMPIRE_POWER_FALL_INTERVAL") setFormVar(fname, name, text2num(value))
 
+					if("START_WITH_RACIAL_SKILLS") setFormVar(fname, name, text2num(value))
+
 
 		FormSetTempVars(fname)
 			var/mob/M = src.getHost()
@@ -1035,6 +1039,8 @@ upForm
 					DO_VAMPIRES_NEED_TO_FEED= getFormVar("admin", "DO_VAMPIRES_NEED_TO_FEED")
 					DO_VAMPIRES_INFECT_ON_BITE= getFormVar("admin", "DO_VAMPIRES_INFECT_ON_BITE")
 					VAMPIRE_POWER_FALL_INTERVAL= getFormVar("admin", "VAMPIRE_POWER_FALL_INTERVAL")
+
+					START_WITH_RACIAL_SKILLS= getFormVar("admin", "START_WITH_RACIAL_SKILLS")
 
 
 		FormSubmitSuccess(fname, client/C)
@@ -1075,7 +1081,8 @@ upForm
 				<tr height="1em" valign="top"><td width="30%"><b>Do Vampires Need to Feed? <td width="60%"><center>(0 = False, 1 = True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="DO_VAMPIRES_NEED_TO_FEED" value="[getFormVar("admin","DO_VAMPIRES_NEED_TO_FEED")]" size="3" maxlength="1"/><span class="error">[errors["DO_VAMPIRES_NEED_TO_FEED"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Do Vampire Bites infect other players? <td width="60%"><center>(0=False, 1=True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="DO_VAMPIRES_INFECT_ON_BITE" value="[getFormVar("admin","DO_VAMPIRES_INFECT_ON_BITE")]" size="3" maxlength="1"/><span class="error">[errors["DO_VAMPIRES_INFECT_ON_BITE"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Interval for Vampire Power to fall (vampire bpmod) <td width="60%"><center>(150 = 15 seconds, 600 = 60 seconds. 150 = 1 hour until lose all Vampire Power (so 1500 would be 10 hours). Minimum is 150)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="VAMPIRE_POWER_FALL_INTERVAL" value="[getFormVar("admin","VAMPIRE_POWER_FALL_INTERVAL")]" size="3" maxlength="10"/><span class="error">[errors["VAMPIRE_POWER_FALL_INTERVAL"]]</span></td></tr>
-				
+
+				<tr height="1em" valign="top"><td width="30%"><b>Do Players Start with Racial Skills? <td width="60%"><center>(0 = False, 1 = True)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="START_WITH_RACIAL_SKILLS" value="[getFormVar("admin","START_WITH_RACIAL_SKILLS")]" size="3" maxlength="1"/><span class="error">[errors["START_WITH_RACIAL_SKILLS"]]</span></td></tr>
 		  <tr height="1em">
 			  	<td colspan="4" align="right"> <input type="submit" value="Submit" />
 			  	<input type="reset" value="Reset" /> </td>
