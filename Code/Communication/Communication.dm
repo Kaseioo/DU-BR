@@ -13,13 +13,13 @@ mob/proc
 		var/log_entry = {"
 			<table>
 				<tr style="color: white;">
-					<td style="width: 25%; border-right: 1px solid gray">
+					<td style="width: 15vw; border-right: 1px solid gray">
 						<span style='color: white; font-size: 10pt'>
 							[time2text(world.timeofday,"DD/MM/YY hh:mm:ss")] <br> [the_key]
 						</span>
 					</td>
 
-					<td style="width: 75%">
+					<td style="width: 85vw">
 						<span style='color: white; font-size: 10pt'>
 							[info]
 						</span>
@@ -251,7 +251,6 @@ mob/verb
 		
 	LOOC(msg as text)
 		set category = "Other"
-
 		if(!usr.can_say) return
 
 		usr.can_say = 0
@@ -353,14 +352,6 @@ mob/verb
 			usr.can_say=0
 			spawn(1) if(usr) usr.can_say=1
 
-			// Here we find any text between quotes
-			var/list/quotes = list()
-			var/regex/quote_finder = new("\".*?\"")
-			var/regex/quote_remover = new("\"")
-			while(quote_finder.Find(msg))
-				quotes += quote_remover.Replace(quote_finder.match, "")
-				msg = quote_finder.Replace(msg, "", 1)
-	
 			var/type = input("What type of emote is this?") as null|anything in list("Normal", "Character Development")
 			var/message = "<span style='font-size:10pt;color:yellow;font-family:Walk The Moon'><center>_____| [name] |_____</center><span style='color: white;'>[html_encode(msg)]</span></span>"
 
@@ -436,17 +427,24 @@ mob/verb/Who()
 	Who+="<br>Amount: [Amount]"
 	src<<browse(Who,"window=Who;size=600x600")
 	
+mob/var/tmp/last_play_music = 0
 mob/verb/Play_Music()
 	set category="Other"
-	var/choice = input(src, "You can play some built in music for whatever reason.") as null|anything in list("Cancel", "Carnival Meme")
-	switch(choice)
-		if("Cancel") src<<sound(0)
-		if("Carnival Meme")
-			player_view(50,src) << sound(0)	
-			var/sound_repeat
-			switch(alert(src,"Loop music?","Options","No","Yes"))
-				if("Yes") sound_repeat=1
 
-			for(var/mob/player in player_view(50,src))
-				player << sound('carnival_meme.ogg',repeat=sound_repeat,volume=100)
-				player << "[src] has played [choice] for you. You can stop this by using the Stop Sounds verb."
+	if(last_play_music + 300 > world.time)
+		src << "You can only play music every 30 seconds."
+		return
+		
+	var/list/available_musics = list(
+		"Cancel" = sound(0),
+		"Carnival Meme" = sound('carnival_meme.ogg',repeat=0,volume=50),
+	)
+
+	var/choice = input(src, "You can play some built in music for whatever reason.") as null|anything in available_musics
+	last_play_music = world.time
+	if(choice == "Cancel") return
+	for(var/mob/player in player_view(50,src))
+		player << sound(0)
+		player << available_musics[choice]
+		player << "[src] has played [choice] for you. You can stop this by using the Stop Sounds verb."
+		player.ChatLog("[src] has played [choice] for you. You can stop this by using the Stop Sounds verb.", src.key)

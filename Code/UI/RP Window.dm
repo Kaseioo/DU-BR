@@ -51,21 +51,21 @@ mob
 			var/mob/M = src
 			set category="Other"
 			set name="View own RP Window"
-			ViewEmoteWindow(src, M, M.unwritten_emotelogs, "Emote", "emotelogs")
+			ViewEmoteWindow(src, M, M.unwritten_emotelogs, "Emote", "emotelogs", M.ckey)
 			
 		ViewSelfDevelopmentRPWindow()
 			var/mob/M = src
 			set category="Other"
 			set name="View own Development RP Window"
 
-			ViewEmoteWindow(src, M, M.unwritten_emotelogs, "Development Emote", "emotelogs_dev")
+			ViewEmoteWindow(src, M, M.unwritten_emotelogs, "Development Emote", "emotelogs_dev", M.ckey)
 			
 		ViewSelfSayWindow()
 			var/mob/M = src
 			set category="Other"
 			set name="View own Chatlog"
 
-			ViewEmoteWindow(src, M, M.unwritten_chatlogs, "Chatlog", "ChatLogs")
+			ViewEmoteWindow(src, M, M.unwritten_chatlogs, "Chatlog", "ChatLogs", M.ckey)
 mob/Admin1
 	verb
 		ViewRPWindow(mob/M in players)
@@ -109,8 +109,8 @@ mob/var/tmp
 
 
 mob/proc
-	EmoteLog(info, the_key, type="emotelogs")
-		if(!client) return
+	EmoteLog(info, the_key, type="emotelogs", needs_client = TRUE)
+		if(!client && needs_client) return
 		if(!last_emotelog_write)
 			last_emotelog_write=world.time //prevent writing unecessarily when someone has just logged in
 		var/log_entry = {"
