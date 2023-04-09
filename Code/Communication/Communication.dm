@@ -438,6 +438,12 @@ mob/verb/Play_Music()
 	var/list/available_musics = list(
 		"Cancel" = sound(0),
 		"Carnival Meme" = sound('carnival_meme.ogg',repeat=0,volume=50),
+		"Asiyah Layer" = sound('Asiyah_Layer.ogg',repeat=0,volume=50),
+		"Iron Lotus" = sound('Iron_Lotus.ogg',repeat=0,volume=50),
+		"Kiryu G Ki Ll" = sound('Kiryu_G_Ki_Ll.ogg',repeat=0,volume=50),
+		"Blumenkranz" = sound('Blumenkranz.ogg',repeat=0,volume=50),
+		"The Rumble of Scientific Triumph" = sound('The_Rumble_of_Scientific_Triumph.ogg',repeat=0,volume=50),
+		"Cepheid - Gaia" = sound('Cepheid_gaia.ogg',repeat=0,volume=50),
 	)
 
 	var/choice = input(src, "You can play some built in music for whatever reason.") as null|anything in available_musics
