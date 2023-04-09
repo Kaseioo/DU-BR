@@ -1180,6 +1180,12 @@ upForm
 			initFormVar("admin", "limitbreak_maximum_duration", 				LIMIT_BREAK_MAX_DURATION)
 
 			initFormVar("admin", "KO_SYSTEM_FULL_HEAL_IN_SPAR", 				KO_SYSTEM_FULL_HEAL_IN_SPAR)
+			initFormVar("admin", "melee_delay_severity", 						melee_delay_severity)
+			initFormVar("admin", "GLOBAL_MELEE_SPEED_OFFSET", 					GLOBAL_MELEE_SPEED_OFFSET)
+			initFormVar("admin", "bp_exponent", 								bp_exponent)
+			initFormVar("admin", "one_shot_start", one_shot_start)
+			initFormVar("admin", "global_beam_deflect_mod", global_beam_deflect_mod)
+			initFormVar("admin", "GLOBAL_ACCURACY_EXPONENT", GLOBAL_ACCURACY_EXPONENT)
 
 
 			initFormVar("admin", "hakai_cooldown", hakai_cooldown)
@@ -1187,6 +1193,7 @@ upForm
 			initFormVar("admin", "BASE_MOVE_DELAY", BASE_MOVE_DELAY)
 			initFormVar("admin", "planet_destroy_immunity_time", planet_destroy_immunity_time)
 			initFormVar("admin", "planet_destroy_bp_requirement", planet_destroy_bp_requirement)
+
 			M << "Variables loaded. [src.type]"
 
 		ProcessVariable(fname, name, value)
@@ -1246,6 +1253,11 @@ upForm
 					if("limitbreak_maximum_duration") 				setFormVar(fname, name, text2num(value))
 
 					if("KO_SYSTEM_FULL_HEAL_IN_SPAR") 				setFormVar(fname, name, text2num(value))
+					if("melee_delay_severity") 						setFormVar(fname, name, text2num(value))
+					if("GLOBAL_MELEE_SPEED_OFFSET") 				setFormVar(fname, name, text2num(value))
+					if("global_beam_deflect_mod") 					setFormVar(fname, name, text2num(value))
+					if("bp_exponent") setFormVar(fname, name, text2num(value))
+					if("one_shot_start") setFormVar(fname, name, text2num(value))
 					
 
 					if("hakai_cooldown") setFormVar(fname, name, text2num(value))
@@ -1253,6 +1265,7 @@ upForm
 					if("BASE_MOVE_DELAY") setFormVar(fname, name, text2num(value))
 					if("planet_destroy_immunity_time") setFormVar(fname, name, text2num(value))
 					if("planet_destroy_bp_requirement") setFormVar(fname, name, text2num(value))
+					if("GLOBAL_ACCURACY_EXPONENT") setFormVar(fname, name, text2num(value))
 
 
 		FormSetTempVars(fname)
@@ -1313,6 +1326,13 @@ upForm
 
 					KO_SYSTEM_FULL_HEAL_IN_SPAR			= getFormVar("admin", "KO_SYSTEM_FULL_HEAL_IN_SPAR")
 
+					melee_delay_severity = getFormVar("admin", "melee_delay_severity")
+					GLOBAL_MELEE_SPEED_OFFSET = getFormVar("admin", "GLOBAL_MELEE_SPEED_OFFSET")
+					bp_exponent = getFormVar("admin", "bp_exponent")
+					one_shot_start = getFormVar("admin", "one_shot_start")
+					global_beam_deflect_mod = getFormVar("admin", "global_beam_deflect_mod")
+					GLOBAL_ACCURACY_EXPONENT = getFormVar("admin", "GLOBAL_ACCURACY_EXPONENT")
+
 					hakai_cooldown= getFormVar("admin", "hakai_cooldown")
 					hakai_bp_advantage_needed= getFormVar("admin", "hakai_bp_advantage_needed")
 					BASE_MOVE_DELAY= getFormVar("admin", "BASE_MOVE_DELAY")
@@ -1364,7 +1384,7 @@ upForm
 				<tr height="1em" valign="top"><td width="30%"><br><b>Allow Ultra Instinct: <td width="60%"><center>(0=Off, 1=On)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="allow_ultra_instinct" value="[getFormVar("admin","allow_ultra_instinct")]" size="3" maxlength="1"/><span class="error">[errors["allow_ultra_instinct"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Allow Dragon Rush: <td width="60%"><center>(0=Off, 1=On)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="allow_dragon_rush" value="[getFormVar("admin","allow_dragon_rush")]" size="3" maxlength="1"/><span class="error">[errors["allow_dragon_rush"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Allow Custom Buffs: <td width="60%"><center>(0=Off, 1=On)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="custom_buffs_allowed" value="[getFormVar("admin","custom_buffs_allowed")]" size="3" maxlength="1"/><span class="error">[errors["custom_buffs_allowed"]]</span></td></tr>
-				
+				<tr height="1em" valign="top"><td width="30%"><b>Global Beam Deflect Mod: <td width="60%"><center>(How easy beams are deflected. Default: 0.6)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="global_beam_deflect_mod" value="[getFormVar("admin","global_beam_deflect_mod")]" size="3" maxlength="10"/><span class="error">[errors["global_beam_deflect_mod"]]</span></td></tr>
 				<tr><td><br><center><b>Settings</b></center></td></tr>
 				
 				<tr height="1em" valign="top"><td width="30%"><br><b>Force Cyber BP on KOd: <td width="60%"><center>(0=Disallowed, 1=Allowed)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="can_cyber_KOd_people" value="[getFormVar("admin","can_cyber_KOd_people")]" size="3" maxlength="1"/><span class="error">[errors["can_cyber_KOd_people"]]</span></td></tr>
@@ -1372,7 +1392,9 @@ upForm
 				<tr height="1em" valign="top"><td width="30%"><b>Enable Ignore SI: <td width="60%"><center>(0=Off, 1=On)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="can_ignore_SI" value="[getFormVar("admin","can_ignore_SI")]" size="3" maxlength="1"/><span class="error">[errors["can_ignore_SI"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Perma-Death: <td width="60%"><center>(0=Off, 1=On)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="Perma_Death" value="[getFormVar("admin","Perma_Death")]" size="3" maxlength="1"/><span class="error">[errors["Perma_Death"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Death Setting:<td width="60%"><center>(Changes Death Mode)</center></td></b></td><td width="10%" colspan="3"><select class="form" name="death_setting" value="[getFormVar("admin","death_setting")]" size="3" /><option value="default">Default</option><option value="Rebirth upon death">Auto Reincarnate</option></select><span class="error">[errors["death_setting"]]</span></td></tr>
-				
+				<tr height="1em" valign="top"><td width="30%"><b>BP Exponent:<td width="60%"><center>(How bpwalls scale)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="bp_exponent" value="[getFormVar("admin","bp_exponent")]" size="3" maxlength="10"/><span class="error">[errors["bp_exponent"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Accuracy Exponent:<td width="60%"><center>(0.5 = scales 50% as much as BP, 0.2 = scales 20% as much as BP)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="GLOBAL_ACCURACY_EXPONENT" value="[getFormVar("admin","GLOBAL_ACCURACY_EXPONENT")]" size="3" maxlength="10"/><span class="error">[errors["GLOBAL_ACCURACY_EXPONENT"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>One Shot Start:<td width="60%"><center>(4 = 4x more BP)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="one_shot_start" value="[getFormVar("admin","one_shot_start")]" size="3" maxlength="10"/><span class="error">[errors["one_shot_start"]]</span></td></tr>
 				<tr><td><br><center><b>Stats</b></center></td></tr>
 				
 				<tr height="1em" valign="top"><td width="30%"><br><b>Server Regeneration: <td width="60%"><center>(Changes Server Regeneration)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="Server_Regeneration" value="[getFormVar("admin","Server_Regeneration")]" size="3" maxlength="20"/><span class="error">[errors["Server_Regeneration"]]</span></td></tr>
@@ -1380,6 +1402,8 @@ upForm
 				<tr height="1em" valign="top"><td width="30%"><b>KO Time Multiplier: <td width="60%"><center>(1x Timer = 80 Seconds w/ 1x Regen)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="KO_Time" value="[getFormVar("admin","KO_Time")]" size="3" maxlength="20"/><span class="error">[errors["KO_Time"]]</span></td></tr>
 				
 				<tr height="1em" valign="top"><td width="30%"><b>Melee Power: <td width="60%"><center>(Melee Damage Multiplier)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="melee_power" value="[getFormVar("admin","melee_power")]" size="3" maxlength="20"/><span class="error">[errors["melee_power"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Melee speed delay severity <td width="60%"><center>(Default: 0.52)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="melee_delay_severity" value="[getFormVar("admin","melee_delay_severity")]" size="3" maxlength="20"/><span class="error">[errors["melee_delay_severity"]]</span></td></tr>
+				<tr height="1em" valign="top"><td width="30%"><b>Melee speed offset <td width="60%"><center>(100 = 100% based on average speed, 50 = 50% based on average speed)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="GLOBAL_MELEE_SPEED_OFFSET" value="[getFormVar("admin","GLOBAL_MELEE_SPEED_OFFSET")]" size="3" maxlength="20"/><span class="error">[errors["GLOBAL_MELEE_SPEED_OFFSET"]]</span></td></tr>
 				<tr height="1em" valign="top"><td width="30%"><b>Ki Power: <td width="60%"><center>(Ki Damage Multiplier)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="ki_power" value="[getFormVar("admin","ki_power")]" size="3" maxlength="20"/><span class="error">[errors["ki_power"]]</span></td></tr>
 				
 				<tr height="1em" valign="top"><td width="30%"><b>Stun Time Multiplier: <td width="60%"><center>(Multiplies Stun Duration)</center></td></b></td><td width="10%" colspan="3"><input class="form" type="text" name="global_stun_mod" value="[getFormVar("admin","global_stun_mod")]" size="3" maxlength="20"/><span class="error">[errors["global_stun_mod"]]</span></td></tr>

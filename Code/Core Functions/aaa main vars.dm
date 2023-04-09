@@ -60,7 +60,7 @@ var
 
 	base_melee_damage = 3.5
 	base_melee_delay = 3 //was 3
-	melee_delay_severity = 0.7 //was 0.52
+	melee_delay_severity = 0.75 //was 0.52
 	lowSpeedDmgAdd = 0.2
 
 	superior_force_exponent = 0.35 //was .4
@@ -153,6 +153,8 @@ mob/var/energies
 
 var
 	ANGER_SYSTEM_TIME_BETWEEN_ANGERS	= 10 * 10 * 1	// 10 seconds //5 minutes (300 seconds)
+	GLOBAL_MELEE_SPEED_OFFSET			= 0				// directly sum into melee speed formula
+	GLOBAL_ACCURACY_EXPONENT 			= bp_exponent
 
 var
 	SHOW_CHAR_NAME_ON_WHO 				= FALSE	

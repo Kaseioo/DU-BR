@@ -668,7 +668,8 @@ mob/proc/get_melee_accuracy(mob/m)
 
 	var/accuracy=100
 	if(ismob(m))
-		accuracy = base_melee_accuracy * (BP/m.BP)**bp_exponent
+		var/bp_influence_in_acc = bp_exponent * GLOBAL_ACCURACY_EXPONENT
+		accuracy = base_melee_accuracy * (BP/m.BP) ** bp_influence_in_acc
 		accuracy *= Speed_accuracy_mult(defender=m)
 		//DEFENSE
 		var/off_vs_def = Acc_mult(Off / m.Def)

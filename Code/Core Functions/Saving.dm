@@ -222,6 +222,8 @@ proc/SaveWorld(save_map=1, allow_auto_reboot=1, delete_pending_objs=1)
 		Save_Bodies()
 		Save_NPCs()
 	if(allow_auto_reboot && world.time>auto_reboot_hours * 60 * 60 * 10 && !Tournament)
+		world << "<font size=3><font color=#FFFF00>A Scheduled Reboot is going to happen in 2 minutes."
+		sleep(1200)
 		Admin_Reboot(save_world=0)
 	else
 		if(delete_pending_objs) DeletePendingObjects()
@@ -576,6 +578,10 @@ proc/Save_Misc()
 	S["KO_SYSTEM_T_HEAL_USAGE_LIMIT"] 				<< KO_SYSTEM_T_HEAL_USAGE_LIMIT
 	S["KO_SYSTEM_T_HEAL_FAIL_COOLDOWN"] 			<< KO_SYSTEM_T_HEAL_FAIL_COOLDOWN
 	S["KO_SYSTEM_SENSU_COOLDOWN"] 					<< KO_SYSTEM_SENSU_COOLDOWN
+
+	S["melee_delay_severity"] 						<< melee_delay_severity
+	S["GLOBAL_MELEE_SPEED_OFFSET"] 					<< GLOBAL_MELEE_SPEED_OFFSET
+	S["GLOBAL_ACCURACY_EXPONENT"] 					<< GLOBAL_ACCURACY_EXPONENT
 proc/Load_Misc()
 	LoadCustomDecors()
 	if(!fexists("Misc")) return
@@ -731,6 +737,9 @@ proc/Load_Misc()
 	S["KO_SYSTEM_T_HEAL_USAGE_LIMIT"] 	>> KO_SYSTEM_T_HEAL_USAGE_LIMIT
 	S["KO_SYSTEM_T_HEAL_FAIL_COOLDOWN"] >> KO_SYSTEM_T_HEAL_FAIL_COOLDOWN
 	S["KO_SYSTEM_SENSU_COOLDOWN"] 		>> KO_SYSTEM_SENSU_COOLDOWN
+	S["melee_delay_severity"] 			>> melee_delay_severity
+	S["GLOBAL_MELEE_SPEED_OFFSET"] 		>> GLOBAL_MELEE_SPEED_OFFSET
+	S["GLOBAL_ACCURACY_EXPONENT"] 		>> GLOBAL_ACCURACY_EXPONENT
 
 	if("can_admin_vote" in S) S["can_admin_vote"]>>can_admin_vote
 	if("allow_guests" in S) S["allow_guests"]>>allow_guests

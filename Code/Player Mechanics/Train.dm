@@ -89,10 +89,10 @@ mob/verb/Show_BP_Gains()
 	set category = "Other"
 	report_bp_gains = !report_bp_gains
 	if(report_bp_gains)
-		src << "<font color=cyan>You will now get messages telling you how much BP you gained every 5 seconds"
+		src << "<font color=cyan>You will now get messages telling you how much BP you gained every 5 seconds."
 		reporter_loop()
 	else
-		src << "<font color=cyan>BP gain messages off"
+		src << "<font color=cyan>BP gain messages off."
 
 mob/proc/reporter_loop()
 	set waitfor=0
@@ -103,7 +103,7 @@ mob/proc/reporter_loop()
 		var/gained=base_bp-old_bp
 		gained=round(gained,0.0001)
 		old_bp=base_bp
-		src<<"Gained +[Commas(gained)] base bp"
+		src<<"Gained +[gained] base bp."
 		sleep(50)
 	reporter_looping=0
 
@@ -252,7 +252,10 @@ var/speedDelayMultMod = 2.3
 
 mob/proc/Speed_delay_mult(severity = 1)
 
-	var/ratio = Spd / avg_speed
+	var/average_speed_influence = (avg_speed / 100) * GLOBAL_MELEE_SPEED_OFFSET 
+	var/ratio = Spd / average_speed_influence
+	if(ratio < 0.01) ratio = 0.01
+
 	var/mod = 1 //1 = perfectly average
 	var/minMod = 0.45 //was 0.25
 	if(ratio > 1) //high speed
@@ -625,7 +628,7 @@ mob/proc/Meditate(from_ai_train)
 				src<<"You can not meditate when it is your turn to fight"
 				return
 			God_FistStop()
-			Action="Meditating"
+			Action = "Meditating"
 			Meditate_gain_loop()
 			Knowledge_gain_loop()
 			dir=SOUTH
