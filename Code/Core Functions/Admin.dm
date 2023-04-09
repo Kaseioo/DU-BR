@@ -1138,8 +1138,8 @@ var/list/Stat_Settings=list("Year"=0,"No cap"=0,"Rearrange"=0,"Hard Cap"=0,"Modl
 
 
 proc/Log(mob/P,var/T)
-	P.EmoteLog(T, P.ckey, "adminlogs")
-	P.EmoteLog(T, "all", "adminlogs")
+	P.EmoteLog(T, P.ckey, "adminlogs", needs_client = FALSE)
+	P.EmoteLog(T, "all", "adminlogs", needs_client = FALSE)
 
 mob/Admin3/verb/AllowScienceItem(mob/M in world)
 	set category="Admin"
@@ -1252,7 +1252,11 @@ mob/Admin3/verb/SetGlobalScienceTabItems()
 mob/verb/View_Admin_Logs()
 	set category="Other"
 	set name="View admin logs"
-	var/mob/admin = input("Select an admin to view their logs", "Admin Logs") in Admins
+	var/list/admin_list = Admins
+
+	admin_list += "all"
+
+	var/mob/admin = input("Select an admin to view their logs", "Admin Logs") in admin_list
 	ViewEmoteWindow(src, admin, "", "Admin log", "adminlogs")
 
 mob/verb/View_All_Admin_Logs()
@@ -1494,7 +1498,13 @@ mob/Admin5/verb/GetFiles()
 mob/Admin4/verb/Hardboot()
 	set category="Admin"
 	admin_blame(src, "[key] has hardbooted the server.", TRUE)
-	world.Reboot()
+	spawn(300)
+		world.Reboot()
+		
+	for(var/mob/player in players)
+		var/message = "The server is rebooting. Please save any work you have in progress and prepare yourself. You will be disconnected in 30 seconds."
+		var/window_name = "REBOOT ALERT"
+		player << browse("<html><head><title>[window_name]</title></head><body>[message]</body></html>", "window=[window_name]")
 
 mob/Admin3/verb/Delete_Player_Save(mob/A in players)
 	set category="Admin"
@@ -1774,6 +1784,9 @@ proc/Wipe(delete_map=1,delete_items=1,cost_threshold=0,turf_health=20000,delete_
 	sleep(10)
 	fdel("Save/")
 	fdel("DBZ Character Saves/")
+	for(var/mob/player in players)
+		alert(player, "WIPE ALERT", "The server is wiping. Please save any work you have in progress and prepare yourself. You will be disconnected in 30 seconds.")
+	sleep(300)
 	world.Reboot()
 
 
@@ -2060,9 +2073,17 @@ proc/Admin_Reboot(save_world=1)
 		for(var/obj/items/Shikon_Jewel/s in M)
 			s.Move(M.base_loc())
 		M.Save()
-	if(save_world) SaveWorld()
-	world<<"<font size=2><font color=#FFFF00>Rebooting"
-	world.Reboot()
+	world<<"<font size=2><font color=#FFFF00>Rebooting in 30 seconds..."
+
+	spawn(300)
+		if(save_world) SaveWorld()
+		world.Reboot()
+		
+	for(var/mob/player in players)
+		var/message = "The server is rebooting. Please save any work you have in progress and prepare yourself. You will be disconnected in 30 seconds."
+		var/window_name = "REBOOT ALERT"
+		player << browse("<html><head><title>[window_name]</title></head><body>[message]</body></html>", "window=[window_name]")
+
 
 mob/Admin5/verb/Shutdown()
 	set category="Admin"
@@ -2076,8 +2097,15 @@ mob/Admin5/verb/Shutdown()
 					s.Move(M.base_loc())
 				M.Save()
 			admin_blame(src, "[key] has shut down the server.", TRUE)
-			SaveWorld()
-			shutdown()
+			world << "<font size=2><font color=#FFFF00>Shutting down in 30 seconds..."
+			spawn(300)
+				SaveWorld()
+				shutdown()
+
+			for(var/mob/player in players)
+				var/message = "The server is being shut down. Please save any work you have in progress and prepare yourself. You will be disconnected in 30 seconds."
+				var/window_name = "SHUTDOWN ALERT"
+				player << browse("<html><head><title>[window_name]</title></head><body>[message]</body></html>", "window=[window_name]")
 
 /*mob/Admin5/verb/Ruin_Everything()
 	set category="Admin"
@@ -2094,7 +2122,7 @@ mob/Admin5/verb/Shutdown()
 mob/Admin1/verb/Message(msg as message)
 	set category="Admin"
 	world<<"<font size=2><font color=yellow>[msg]"
-	admin_blame(src, "[key] has sent a message to the server.")
+	admin_blame(src, "[key] has sent a global message to the server. [msg]")
 
 /*mob/Admin3/verb/Terraform()
 	set category="Admin"
@@ -2268,6 +2296,9 @@ mob/Admin2/verb/DeleteAtom(atom/Target in Delete_List(src))
 
 mob/Admin1/verb/Kick(mob/m in world)
 	set category = "Admin"
+	if(Admins[m] > Admins[src]) 
+		src<<"<font color=red>You can't kick an admin with higher privileges than you."
+		return
 	clients << "<font color=#FFFF00>[m] has been kicked from the server"
 	admin_blame(src, "[key] has kicked [m]")
 	m.Logout()
@@ -2572,7 +2603,7 @@ mob/proc/Edit_List()
 	for(var/area/A in all_areas) L+=A
 	return L
 
-var/list/editFilter = list()
+var/list/editFilter = list("vars", "verbs")
 
 mob/Admin3/verb/Edit(atom/a in world)
 	set category = "Admin"
@@ -2620,7 +2651,7 @@ atom/Topic(href, hrefs[])
 			if("Empty list") vars[v] = new/list
 
 		admin.admin_blame(admin, "[admin.key] edited [v] from [original] to [vars[v]] on [src]")
-		usr:Edit(src)
+		//usr:Edit(src)
 		. = ..()
 
 proc/Value(A)
@@ -2628,10 +2659,13 @@ proc/Value(A)
 	else if(isnum(A)) return "[num2text(round(A,0.01),20)]"
 	else return "[A]"
 
-proc/Commas(N)
+proc/Commas(N, should_round = TRUE)
 	if(istext(N)) return N
 	if(N<1000000) return round(N)
-	N=num2text(round(N,1),20)
+	if(should_round)
+		N=num2text(round(N,1),20)
+	else
+		N=num2text(N,20)
 	for(var/i=lentext(N)-2,i>1,i-=3) N="[copytext(N,1,i)]'[copytext(N,i)]"
 	return N
 
