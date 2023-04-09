@@ -2613,8 +2613,12 @@ mob/Admin3/verb/Edit(atom/a in world)
 	html += "<table width=10%>"
 
 	for(var/v in a.vars)
+		var/encoded_var = a.vars[v]
 		if("[v]" in editFilter)
 			continue
+		if("[v]" == "player_desc")
+			encoded_var = html_encode(a.vars[v])
+
 		html += "<td><a href=byond://?src=\ref[a];action=edit;var=[v]>"
 		html += v
 
@@ -2625,7 +2629,7 @@ mob/Admin3/verb/Edit(atom/a in world)
 
 			html += "</td></tr>"
 		else 
-			html += "<td>[Value(a.vars[v])]</td></tr>"
+			html += "<td>[Value(encoded_var)]</td></tr>"
 
 	usr << browse(html, "window=[a];size=800x600")
 	
