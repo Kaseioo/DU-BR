@@ -49,7 +49,7 @@ mob/proc/Add_hotbar_proxies()
 		global_hotbar_proxies = list(new/obj/Build_Menu,new/obj/Manual_Attack,new/obj/Train,new/obj/Meditate,new/obj/Power_Up,new/obj/Power_Down,new/obj/Grab,\
 		new/obj/Local_chat,new/obj/World_chat,new/obj/Emote,new/obj/Countdown,new/obj/Learn,new/obj/Teach,new/obj/Injure,\
 		new/obj/Lethal_toggle,new/obj/Dig_for_resources,new/obj/Use_object,new/obj/Play_Music,new/obj/Block,new/obj/Evade,new/obj/Flash_Step, \
-		new/obj/Move_Left, new/obj/Move_Right, new/obj/Move_Up, new/obj/Move_Down, new/obj/Defend, new/obj/Dice_Roll)
+		new/obj/Move_Left, new/obj/Move_Right, new/obj/Move_Up, new/obj/Move_Down, new/obj/Defend, new/obj/Dice_Roll, new/obj/Local_World_chat, new/obj/Think)
 	for(var/obj/o in global_hotbar_proxies)
 		if(!(locate(o.type) in src))
 			contents += new o.type
@@ -232,6 +232,22 @@ obj/World_chat
 		set waitfor=0
 		set hidden=1
 		usr.OOC()
+
+obj/Local_World_chat
+	hotbar_type="Other"
+	can_hotbar=1
+	verb/Hotbar_use()
+		set waitfor=0
+		set hidden=1
+		usr.LOOC()
+
+obj/Think
+	hotbar_type="Other"
+	can_hotbar=1
+	verb/Hotbar_use()
+		set waitfor=0
+		set hidden=1
+		usr.Think()
 
 obj/Emote
 	hotbar_type="Other"
