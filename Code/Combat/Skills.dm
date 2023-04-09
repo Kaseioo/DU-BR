@@ -740,11 +740,15 @@ obj/Soul_Weapon
 		usr.Soul_Weapon(src)
 
 mob/proc/Soul_Weapon(obj/Soul_Weapon/soul_weapon)
+	set name = "Soul Weapon"
+	set desc = "Mold your Soul power into a weapon that affects the world in a variety of ways."
+	
 	var/mob/player = usr
 
 	if(soul_weapon.already_exists)
 		var/choice = alert("Your soul is already formed into a Weapon. Do you want to destroy it?","Destroy Soul Weapon?","Yes","No")
 		if(choice == "Yes")
+			item_list 			-= soul_weapon.weapon
 			player.contents 	-= soul_weapon.weapon
 			del(soul_weapon.weapon)
 
