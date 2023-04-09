@@ -750,12 +750,17 @@ obj/Third_Eye
 var
 	thirdEyeMasteryMult = 2
 
+var/tmp/original_med_mod = 0
 mob/proc/Third_Eye()
 	if(third_eye) return
 	third_eye = 1
 	Calm()
 	bp_mult+=0.2
-	med_mod*=2
+	original_med_mod = med_mod
+	if(original_med_mod > 5)
+		med_mod = 8
+	else
+		med_mod*=2
 	mastery_mod*=thirdEyeMasteryMult
 	zenkai_mod/=5
 	overlays+='Third Eye.dmi'
@@ -767,7 +772,10 @@ mob/proc/Third_Eye_Revert()
 	if(!third_eye) return
 	third_eye = 0
 	bp_mult-=0.2
-	med_mod/=2
+	if(original_med_mod > 5)
+		med_mod = original_med_mod
+	else
+		med_mod /= 2
 	mastery_mod/=thirdEyeMasteryMult
 	zenkai_mod*=5
 	overlays-='Third Eye.dmi'

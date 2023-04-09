@@ -491,13 +491,10 @@ mob/proc
 
 		switch(src.Race)
 			if("Demon")
-				src.energies = list(
-					"Soul Energy"   	= new /Energy("Soul Energy"),
-				)
+				src.give_energy_type("Soul Energy")
 				
-		src.energies = list(
-			"Mental Energy" 	= new /Energy("Mental Energy")
-		)
+		src.give_energy_type("Mental Energy")
+
 
 		Player_Loops()
 
