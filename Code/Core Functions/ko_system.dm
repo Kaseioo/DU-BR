@@ -119,7 +119,7 @@ mob
             announce_combat_message(healed_message, center = victim)
 
             victim.UnKO()
-
+            victim.has_angered_before_ko = FALSE
             if(KO_SYSTEM_FULL_HEAL_IN_SPAR)
                 victim.FullHeal()
 
@@ -188,6 +188,7 @@ mob
 
             victim.is_waiting_for_healing = FALSE
             victim.is_healing_something = FALSE
+            victim.has_angered_before_ko = FALSE
             victim.decrease_combat_ko(healed_message, victim = victim)
 
         try_healing_combat_ko(mob/victim)
@@ -221,8 +222,8 @@ mob
                     announce_combat_message(unko_message, center = victim)
 
                     is_waiting_for_healing = TRUE
-
                     sleep(time_to_heal)
+                    victim.has_angered_before_ko = FALSE
                     victim.FullHeal()
                     announce_combat_message(healed_message, center = victim)
 
